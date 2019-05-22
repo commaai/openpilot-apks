@@ -1,0 +1,6 @@
+index.android.bundle
+index.android.bundle.map
+.idea
+node_modules/
+*.apk
+yarn-error.log

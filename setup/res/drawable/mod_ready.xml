@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (c) 2016 The CyanogenMod Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="256dp"
+        android:height="114dp"
+        android:viewportWidth="256"
+        android:viewportHeight="114">
+
+    <path android:fillColor="@color/white"
+          android:pathData="M40,113.7V77.1h14.3c7.5,0,12.3,4,12.3,11.1c0,6.2-3,9.4-8.6,10.6l8,14.9h-5.8l-7.7-14.5h-7.4v14.5H40z
+            M45.2,94.6h8.7 c4.6,0,7.5-1.9,7.5-6.3c0-4.2-2.5-6.4-7.5-6.4h-8.6v12.7H45.2z
+            M78.7,113.7V77.1h22.4V82H84v10.6h15.7v4.7H84V109h17.2v4.8
+            L78.7,113.7L78.7,113.7z
+            M136.5,113.7L134,107h-15.7l-2.4,6.7h-5.4l13.2-36.6h5l13.2,36.6H136.5z
+            M126.1,84.7l-6.2,17.8h12.6 l-6.2-17.8H126.1z
+            M152.7,113.7V77.1h11.7c8.1,0,15.9,5.6,15.9,18.3c0,13.6-7.6,18.4-16.2,18.4L152.7,113.7L152.7,113.7z
+            M158,108.9 h5.9c6.9,0,10.8-3.8,10.8-13.6c0-8.8-4-13.4-10.5-13.4H158V108.9z
+            M198.8,113.7V98.3l-12-21.2h5.7l8.8,16.4h0.1l8.9-16.4h5.7
+            l-12,21.2v15.4C204,113.7,198.8,113.7,198.8,113.7z
+            M73.1,20.8c0-11.3-9.2-20.5-20.6-20.5H0.2v58.1h9.3V9.5H32v48.8h9.3V9.5h11.3
+            c6.2,0,11.3,5.1,11.3,11.3v37.5h9.3L73.1,20.8L73.1,20.8z
+            M164.5,26.6v-3.4v-2.4c0-11.3-9.2-20.5-20.6-20.5h-26.7
+            c-11.3,0-20.5,9.2-20.5,20.5v4.6v1.2V32v1.7v4.2c0,11.3,9.2,20.5,20.5,20.5h26.7c11.3,0,20.6-9.2,20.6-20.5v-2.3V32V26.6z
+            M155.2,37.8c0,6.2-5.1,11.3-11.3,11.3h-26.7c-6.2,0-11.3-5.1-11.3-11.3v-17c0-6.2,5.1-11.3,11.3-11.3h26.7
+            c6.2,0,11.3,5.1,11.3,11.3V37.8z
+            M235.2,0.3H188v58.1h47.2c11.3,0,20.6-9.2,20.6-20.5v-17C255.8,9.5,246.6,0.3,235.2,0.3z
+            M246.5,37.8c0,6.2-5.1,11.3-11.3,11.3h-38V9.5h38c6.2,0,11.3,5.1,11.3,11.3V37.8z" />
+</vector>

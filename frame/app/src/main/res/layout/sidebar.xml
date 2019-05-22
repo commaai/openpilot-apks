@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="100dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/alpha_black"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/nav_apps"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="top"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/nav_icon_settings"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_settings" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/sidebarIndicators"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_height="0dp"
+            android:layout_width="75dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/indicator_network_signal"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:src="@drawable/ic_network_0" />
+            <LinearLayout
+                android:layout_width="79dp"
+                android:layout_height="39dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="8dp">
+                <TextView
+                    android:id="@+id/network_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+                <ImageView
+                    android:id="@+id/indicator_battery_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="14dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/indicator_battery_50" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/sidebarMetrics"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+        <RelativeLayout
+            android:id="@+id/sidebarMetricStorageBorder"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/border_white"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/sidebarMetricStorageEdge"
+                android:layout_width="6dp"
+                android:layout_height="fill_parent"
+                android:src="@drawable/edge_white_left" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/sidebarMetricStorageValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="56%"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/sidebarMetricStorageLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:text="STORAGE"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/sidebarMetricTempBorder"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/border_white"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/sidebarMetricTempEdge"
+                android:layout_width="6dp"
+                android:layout_height="fill_parent"
+                android:src="@drawable/edge_white_left" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/sidebarMetricTempValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="114 F"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/sidebarMetricTempLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="EON TEMP"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="26dp"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/sidebarMetricPandaBorder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_white"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/sidebarMetricPandaEdge"
+                android:layout_width="6dp"
+                android:layout_height="fill_parent"
+                android:src="@drawable/edge_white_left" />
+            <TextView
+                android:id="@+id/sidebarMetricPandaValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="32dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="NO PANDA"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/nav_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/nav_icon_home"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:alpha="0.65"
+            android:src="@drawable/icon_comma" />
+    </LinearLayout>
+</LinearLayout>

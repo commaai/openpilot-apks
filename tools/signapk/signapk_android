@@ -1,0 +1,4 @@
+#!/system/bin/sh
+export LD_LIBRARY_PATH=/system/lib64
+export CLASSPATH="$PWD"/signapk.android.jar
+exec app_process "$PWD" com.android.signapk.SignApk "$@"

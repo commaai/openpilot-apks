@@ -1,0 +1,15 @@
+# Node
+node_modules/
+.expo/
+npm-debug.*
+
+# Android
+build/
+.idea
+.gradle
+local.properties
+*.iml
+android/app/src/main/assets/
+
+# Metro
+metro.config.js
