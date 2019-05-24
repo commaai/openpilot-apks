@@ -37,7 +37,6 @@ chmod +x /usr/lib/android-sdk/tools/bin/*
 sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27"
 sdkmanager "extras;android;m2repository"
 sdkmanager "extras;google;m2repository"
-Could not find any matches for com.google.android.gms:play-services-gcm:+ as no versions of com.google.android.gms:play-services-gcm are available
 sdkmanager --licenses
 ```
 
