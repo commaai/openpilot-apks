@@ -36,6 +36,7 @@ unzip -o sdk-tools.zip -d "/usr/lib/android-sdk/"
 chmod +x /usr/lib/android-sdk/tools/bin/*
 sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27"
 sdkmanager --install "extras;android;m2repository"
+sdkmanager --licenses
 ```
 
 ### Offroad Dependencies
