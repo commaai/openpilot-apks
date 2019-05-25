@@ -108,45 +108,45 @@ class Settings extends Component {
         ]);
     }
 
-    handleChangedSpeedLimitOffset(operator) {
-        const { speedLimitOffset, isMetric } = this.props;
-        let _speedLimitOffset;
-        let _speedLimitOffsetInt;
-        switch (operator) {
-          case 'increment':
-              if (isMetric) {
-                  _speedLimitOffset = kphToMps(Math.max(Math.min(speedLimitOffsetInt + 1, 25), -15));
-                  _speedLimitOffsetInt = Math.round(mpsToKph(_speedLimitOffset));
-              } else {
-                  _speedLimitOffset = mphToMps(Math.max(Math.min(speedLimitOffsetInt + 1, 15), -10));
-                  _speedLimitOffsetInt = Math.round(mpsToMph(_speedLimitOffset));
-              }
-              break;
-          case 'decrement':
-              if (isMetric) {
-                  _speedLimitOffset = kphToMps(Math.max(Math.min(speedLimitOffsetInt - 1, 25), -15));
-                  _speedLimitOffsetInt = Math.round(mpsToKph(_speedLimitOffset));
-              } else {
-                  _speedLimitOffset = mphToMps(Math.max(Math.min(speedLimitOffsetInt - 1, 15), -10));
-                  _speedLimitOffsetInt = Math.round(mpsToMph(_speedLimitOffset));
-              }
-              break;
-        }
-        this.setState({ speedLimitOffsetInt: _speedLimitOffsetInt });
-        this.props.setSpeedLimitOffset(_speedLimitOffset);
-    }
+    // handleChangedSpeedLimitOffset(operator) {
+    //     const { speedLimitOffset, isMetric } = this.props;
+    //     let _speedLimitOffset;
+    //     let _speedLimitOffsetInt;
+    //     switch (operator) {
+    //       case 'increment':
+    //           if (isMetric) {
+    //               _speedLimitOffset = kphToMps(Math.max(Math.min(speedLimitOffsetInt + 1, 25), -15));
+    //               _speedLimitOffsetInt = Math.round(mpsToKph(_speedLimitOffset));
+    //           } else {
+    //               _speedLimitOffset = mphToMps(Math.max(Math.min(speedLimitOffsetInt + 1, 15), -10));
+    //               _speedLimitOffsetInt = Math.round(mpsToMph(_speedLimitOffset));
+    //           }
+    //           break;
+    //       case 'decrement':
+    //           if (isMetric) {
+    //               _speedLimitOffset = kphToMps(Math.max(Math.min(speedLimitOffsetInt - 1, 25), -15));
+    //               _speedLimitOffsetInt = Math.round(mpsToKph(_speedLimitOffset));
+    //           } else {
+    //               _speedLimitOffset = mphToMps(Math.max(Math.min(speedLimitOffsetInt - 1, 15), -10));
+    //               _speedLimitOffsetInt = Math.round(mpsToMph(_speedLimitOffset));
+    //           }
+    //           break;
+    //     }
+    //     this.setState({ speedLimitOffsetInt: _speedLimitOffsetInt });
+    //     this.props.setSpeedLimitOffset(_speedLimitOffset);
+    // }
 
-    handleChangedIsMetric() {
-        const { isMetric, speedLimitOffset } = this.props;
-        const { speedLimitOffsetInt } = this.state;
-        if (isMetric) {
-            this.setState({ speedLimitOffsetInt: parseInt(mpsToMph(speedLimitOffset)) })
-            this.props.setMetric(false);
-        } else {
-            this.setState({ speedLimitOffsetInt: parseInt(mpsToKph(speedLimitOffset)) })
-            this.props.setMetric(true);
-        }
-    }
+    // handleChangedIsMetric() {
+    //     const { isMetric, speedLimitOffset } = this.props;
+    //     const { speedLimitOffsetInt } = this.state;
+    //     if (isMetric) {
+    //         this.setState({ speedLimitOffsetInt: parseInt(mpsToMph(speedLimitOffset)) })
+    //         this.props.setMetric(false);
+    //     } else {
+    //         this.setState({ speedLimitOffsetInt: parseInt(mpsToKph(speedLimitOffset)) })
+    //         this.props.setMetric(true);
+    //     }
+    // }
 
     renderSettingsMenu() {
         const {
@@ -231,7 +231,7 @@ class Settings extends Component {
         const {
             params: {
                 IsDriverMonitoringEnabled: isDriverMonitoringEnabled,
-                IsRecordFront: isRecordFront,
+                RecordFront: recordFront,
                 IsFcwEnabled: isFcwEnabled,
                 IsMetric: isMetric,
                 LongitudinalControl: hasLongitudinalControl,
@@ -269,7 +269,7 @@ class Settings extends Component {
                         <X.TableCell
                             type='switch'
                             title='Record and Upload Driver Camera'
-                            value={ !!parseInt(isRecordFront) }
+                            value={ !!parseInt(recordFront) }
                             iconSource={ Icons.network }
                             description='Upload data from the driver facing camera and help improve the Driver Monitoring algorithm.'
                             isExpanded={ expandedCell == 'record_front' }
@@ -292,7 +292,7 @@ class Settings extends Component {
                             description='Display speed in km/h instead of mp/h and temperature in °C instead of °F.'
                             isExpanded={ expandedCell == 'metric' }
                             handleExpanded={ () => this.handleExpanded('metric') }
-                            handleChanged={ () => this.handleChangedIsMetric() } />
+                            handleChanged={ this.props.setMetric } />
                       </X.Table>
                       {/*
                       <X.Table color='darkBlue'>
@@ -682,8 +682,8 @@ const mapDispatchToProps = dispatch => ({
     setMetric: (useMetricUnits) => {
         dispatch(updateParam(Params.KEY_IS_METRIC, (useMetricUnits | 0).toString()));
     },
-    setRecordFront: (isRecordFront) => {
-        dispatch(updateParam(Params.KEY_RECORD_FRONT, (isRecordFront | 0).toString()));
+    setRecordFront: (recordFront) => {
+        dispatch(updateParam(Params.KEY_RECORD_FRONT, (recordFront | 0).toString()));
     },
     setCellularEnabled: (useCellular) => {
         dispatch(updateParam(Params.KEY_UPLOAD_CELLULAR, (useCellular | 0).toString()));
