@@ -60,7 +60,7 @@ sudo make install
 
 ## Build
 
-**Note**: Clone this repository under the [openpilot](https://github.com/commaai/openpilot) repository before building.  If you have not generated the capnp java files in the openpilot/cereal/ director you need to run "make" in that directory to generate the files needed for building Offroad.  This only needs to be done once.
+Clone or move this repository under the [openpilot](https://github.com/commaai/openpilot) repository before building.  If you have not generated the capnp java files in the openpilot/cereal/ director you need to run "make" in that directory to generate the files needed for building Offroad.  This only needs to be done once.
 
 See build.sh in project directories.
 
