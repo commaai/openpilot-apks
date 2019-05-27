@@ -50,9 +50,17 @@ Yarn:
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
+
+Install capnpc-java:
+git clone https://github.com/capnproto/capnproto-java.git
+cd capnproto-java/
+make
+sudo make install
 ```
 
 ## Build
+
+Clone or move this repository under the [openpilot](https://github.com/commaai/openpilot) repository before building.  If you have not generated the capnp java files in the openpilot/cereal/ director you need to run "make" in that directory to generate the files needed for building Offroad.  This only needs to be done once.
 
 See build.sh in project directories.
 
