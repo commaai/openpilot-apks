@@ -26,7 +26,7 @@ import java.nio.channels.Channels
 
 import org.capnproto.Serialize;
 import ai.comma.openpilot.cereal.Log as CLog
-import ai.comma.openpilot.cereal.Log.Live100Data.ControlState
+import ai.comma.openpilot.cereal.Log.ControlsState.ControlState
 import android.net.wifi.WifiManager
 import android.net.NetworkInfo
 import android.os.*
@@ -391,7 +391,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             }
 
             val log = reader.getRoot(CLog.Event.factory)
-            assert(log.isLive100)
+            assert(log.isControlsState)
         }
     } */
 
