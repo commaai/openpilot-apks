@@ -115,8 +115,6 @@ export default StyleSheet.create({
         borderRadius: 0,
         borderWidth: 0,
         height: '100%',
-        borderRadius: 0,
-        borderWidth: 0,
         width: '100%',
     },
     onboardingVisualLead: {
