@@ -1415,16 +1415,16 @@ combined-stream@1.0.6, combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-"comma-api@git+ssh://git@github.com/commaai/comma-api.git":
+"comma-api@git+https://git@github.com/commaai/comma-api.git":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/commaai/comma-api.git#c34ca06af199185f92064c14fb7690d4d16f38eb"
+  resolved "git+https://git@github.com/commaai/comma-api.git#6ef1710ecfad58fff5a22ee00ca174f8cd9c32ca"
   dependencies:
     config-request "^0.5.1"
     querystringify "^2.1.1"
 
-"comma-x-native@git+ssh://git@github.com/commaai/comma-x-native.git":
+"comma-x-native@git+https://git@github.com/commaai/comma-x-native.git":
   version "0.1.0"
-  resolved "git+ssh://git@github.com/commaai/comma-x-native.git#c978092833dbe6e5e808cdd57098603039526bbb"
+  resolved "git+https://git@github.com/commaai/comma-x-native.git#8f5cf90c60d6a0380a5f7fb290a2cd17d11cf59f"
   dependencies:
     react-native-linear-gradient "^2.3.0"
 
