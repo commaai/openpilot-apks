@@ -1,12 +1,13 @@
 import {
     ACTION_PARAM_CHANGED,
+    ACTION_PARAM_DELETED,
 } from './actions';
 
-const initialPlusSettingsState = {
+const initialParamsState = {
     params: {}
 };
 
-export default (state = initialPlusSettingsState, action) => {
+export default (state = initialParamsState, action) => {
   switch (action.type) {
     case ACTION_PARAM_CHANGED:
         return {
@@ -14,6 +15,14 @@ export default (state = initialPlusSettingsState, action) => {
             params: {
                 ...state.params,
                 [action.payload.param]: action.payload.value
+            }
+        }
+    case ACTION_PARAM_DELETED:
+        delete state.params[action.payload.param];
+        return {
+            ...state,
+            params: {
+                ...state.params
             }
         }
     default:
