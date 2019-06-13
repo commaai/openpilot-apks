@@ -14,24 +14,28 @@ jobs:
       - store_artifacts:
           name: Store black apk
           path: black/out.apk
-      - run:
-          name: Build setup
-          command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd setup && ./build.sh'
-      - store_artifacts:
-          name: Store setup apk
-          path: setup/out.apk
+          destination: ai.comma.plus.black.apk
       - run:
           name: Build frame
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd frame && ./build.sh'
       - store_artifacts:
           name: Store frame apk
           path: frame/out.apk
+          destination: ai.comma.plus.frame.apk
       - run:
           name: Build offroad
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd offroad && ./build.sh'
       - store_artifacts:
           name: Store offroad apk
           path: offroad/ai.comma.plus.offroad.apk
+          destination: ai.comma.plus.offroad.apk
+      - run:
+          name: Build setup
+          command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd setup && ./build.sh'
+      - store_artifacts:
+          name: Store setup apk
+          path: setup/out.apk
+          destination: ai.comma.neos.setup.apk
 
 workflows:
   version: 2
