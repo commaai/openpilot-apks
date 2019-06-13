@@ -518,13 +518,6 @@ class Settings extends Component {
                         <X.Button
                             size='small'
                             color='settingsDefault'
-                            onPress={ () => ChffrPlus.openBluetoothSettings() }>
-                            Open Bluetooth Settings
-                        </X.Button>
-                        <X.Line color='transparent' size='tiny' spacing='mini' />
-                        <X.Button
-                            size='small'
-                            color='settingsDefault'
                             onPress={ () => ChffrPlus.openTetheringSettings() }>
                             Open Tethering Settings
                         </X.Button>
