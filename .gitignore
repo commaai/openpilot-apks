@@ -4,3 +4,4 @@ index.android.bundle.map
 node_modules/
 *.apk
 yarn-error.log
+.*.swp
