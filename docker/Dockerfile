@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y curl unzip git build-essential make pkg-config wget dh-autoreconf
+RUN apt-get update && apt-get install -y curl unzip git build-essential make pkg-config wget dh-autoreconf libcapnp-dev
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -21,7 +21,6 @@ RUN curl -o sdk-tools.zip "https://dl.google.com/android/repository/sdk-tools-li
 RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27" "extras;android;m2repository" "extras;google;m2repository"
 
 # install capnpc-java
-RUN apt-get install -y libcapnp-dev
 RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java && make && cp capnpc-java /usr/local/bin/
 
 # clone public openpilot and build cereal
@@ -31,13 +30,4 @@ RUN cd /tmp/openpilot/cereal && make
 
 # apk time
 WORKDIR /tmp/openpilot/apks
-
-# need tools
-COPY ./tools /tmp/openpilot/apks/tools
-
-# copy files over
-COPY ./black /tmp/openpilot/apks/black
-COPY ./setup /tmp/openpilot/apks/setup
-COPY ./frame /tmp/openpilot/apks/frame
-COPY ./offroad /tmp/openpilot/apks/offroad
 
