@@ -23,11 +23,10 @@ RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-
 # install capnpc-java
 RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java && make && cp capnpc-java /usr/local/bin/
 
-# clone public openpilot and build cereal
-RUN git clone https://github.com/commaai/openpilot.git --depth=1 && mkdir /tmp/openpilot/apks
-RUN /tmp/openpilot/phonelibs/install_capnp.sh
-RUN cd /tmp/openpilot/cereal && make
+# install capnp
+RUN curl -s https://raw.githubusercontent.com/commaai/cereal/master/install_capnp.sh | bash -
 
 # apk time
+RUN mkdir -p /tmp/openpilot/apks
 WORKDIR /tmp/openpilot/apks
 
