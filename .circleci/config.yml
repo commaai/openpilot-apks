@@ -12,11 +12,11 @@ jobs:
           name: Build black
           command: docker run --rm apks /bin/sh -c 'cd black && ./build.sh'
       - run:
-          name: Build frame
-          command: docker run --rm apks /bin/sh -c 'cd frame && ./build.sh'
-      - run:
           name: Build setup
           command: docker run --rm apks /bin/sh -c 'cd setup && ./build.sh'
+      - run:
+          name: Build frame
+          command: docker run --rm apks /bin/sh -c 'cd frame && ./build.sh'
       - run:
           name: Build offroad
           command: docker run --rm apks /bin/sh -c 'cd offroad && ./build.sh'

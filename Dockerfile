@@ -21,14 +21,16 @@ RUN curl -o sdk-tools.zip "https://dl.google.com/android/repository/sdk-tools-li
 RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27" "extras;android;m2repository" "extras;google;m2repository"
 
 # install capnpc-java
-#RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java/ && make && make install
+RUN apt-get install -y libcapnp-dev
+RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java && make && cp capnpc-java /usr/local/bin/
 
-# tools
-COPY ./tools /tmp/tools
+# clone public openpilot
+RUN git clone https://github.com/commaai/openpilot.git --depth=1 && mkdir /tmp/openpilot/apks
+WORKDIR /tmp/openpilot/apks
 
 # copy files over
-COPY ./black /tmp/black
-COPY ./frame /tmp/frame
-COPY ./offroad /tmp/offroad
-COPY ./setup /tmp/setup
+COPY ./black /tmp/openpilot/apks/black
+COPY ./setup /tmp/openpilot/apks/setup
+COPY ./frame /tmp/openpilot/apks/frame
+COPY ./offroad /tmp/openpilot/apks/offroad
 
