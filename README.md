@@ -2,6 +2,8 @@
 
 The source code for the APKs that run inside openpilot.
 
+[![CircleCI](https://circleci.com/gh/commaai/openpilot-apks.svg?style=svg)](https://circleci.com/gh/commaai/openpilot-apks)
+
 ## offroad
 
 offroad is the interactive UI displayed while your car is off. Its main features are device setup, comma account pairing, and settings management.
