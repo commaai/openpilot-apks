@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y curl unzip git build-essential make pkg-config
+RUN apt-get update && apt-get install -y curl unzip git build-essential make pkg-config wget
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -24,8 +24,11 @@ RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-
 RUN apt-get install -y libcapnp-dev
 RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java && make && cp capnpc-java /usr/local/bin/
 
-# clone public openpilot
+# clone public openpilot and build cereal
 RUN git clone https://github.com/commaai/openpilot.git --depth=1 && mkdir /tmp/openpilot/apks
+RUN /tmp/openpilot/phonelibs/install_capnp.sh && cd /tmp/openpilot/cereal && make
+
+# apk time
 WORKDIR /tmp/openpilot/apks
 
 # need tools
