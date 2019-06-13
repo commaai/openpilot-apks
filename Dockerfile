@@ -28,6 +28,9 @@ RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-ja
 RUN git clone https://github.com/commaai/openpilot.git --depth=1 && mkdir /tmp/openpilot/apks
 WORKDIR /tmp/openpilot/apks
 
+# need tools
+COPY ./tools /tmp/openpilot/apks/tools
+
 # copy files over
 COPY ./black /tmp/openpilot/apks/black
 COPY ./setup /tmp/openpilot/apks/setup
