@@ -26,7 +26,7 @@ import java.nio.channels.Channels
 
 import org.capnproto.Serialize;
 import ai.comma.openpilot.cereal.Log as CLog
-import ai.comma.openpilot.cereal.Log.ControlsState.ControlState
+import ai.comma.openpilot.cereal.Log.ControlsState.OpenpilotState
 import android.net.wifi.WifiManager
 import android.net.NetworkInfo
 import android.os.*
@@ -62,7 +62,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var state: STATE = STATE.HOME
     var isPassive: Boolean = false
 
-    var controlState: ControlState? = null
+    var controlState: OpenpilotState? = null
 
     var frame: View? = null
     var sidebarIndicators: LinearLayout? = null
