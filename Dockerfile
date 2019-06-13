@@ -28,7 +28,7 @@ COPY ./tools /tmp/tools
 
 # copy files over
 COPY ./black /tmp/black
-#COPY ./frame /tmp/frame
+COPY ./frame /tmp/frame
 #COPY ./offroad /tmp/offroad
 #COPY ./setup /tmp/setup
 
