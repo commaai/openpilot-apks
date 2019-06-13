@@ -4,18 +4,18 @@ jobs:
     machine:
       docker_layer_caching: true
     steps:
-			- checkout
-			- run:
+      - checkout
+      - run:
           name: Build docker SDK image
           command: docker build -t apks -f Dockerfile .
       - run:
           name: Build black
           command: docker run --rm apks /bin/sh -c 'cd black && ./build.sh'
-				
+        
 
 workflows:
-	versions: 2
+  versions: 2
   main:
-		jobs:
-			- apks
-		
+    jobs:
+      - apks
+    

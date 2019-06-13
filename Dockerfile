@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl unzip git build-essential make pkg-config
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -13,16 +13,12 @@ WORKDIR /tmp
 ENV ANDROID_HOME=/usr/lib/android-sdk
 ENV PATH="$PATH:/usr/lib/android-sdk/tools/bin"
 
-RUN apt-get install -y unzip
-
 # install Android SDK Tools
 RUN curl -o sdk-tools.zip "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" && \
     unzip -o sdk-tools.zip -d "/usr/lib/android-sdk/" && \
     chmod +x /usr/lib/android-sdk/tools/bin/*
 
 RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27" "extras;android;m2repository" "extras;google;m2repository"
-
-RUN apt-get install -y git build-essential make pkg-config
 
 # install capnpc-java
 #RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java/ && make && make install
