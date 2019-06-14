@@ -9,6 +9,8 @@ jobs:
           name: Build docker SDK image
           command: docker build -t apks -f docker/Dockerfile docker
   black:
+    machine:
+      docker_layer_caching: true
     steps:
       - run:
           name: Build black
@@ -18,6 +20,8 @@ jobs:
           path: black/out.apk
           destination: ai.comma.plus.black.apk
   frame:
+    machine:
+      docker_layer_caching: true
     steps:
       - run:
           name: Build frame
@@ -27,6 +31,8 @@ jobs:
           path: frame/out.apk
           destination: ai.comma.plus.frame.apk
   offroad:
+    machine:
+      docker_layer_caching: true
     steps:
       - run:
           name: Build offroad
@@ -36,6 +42,8 @@ jobs:
           path: offroad/ai.comma.plus.offroad.apk
           destination: ai.comma.plus.offroad.apk
   setup:
+    machine:
+      docker_layer_caching: true
     steps:
       - run:
           name: Build setup
