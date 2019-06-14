@@ -12,6 +12,7 @@ jobs:
     machine:
       docker_layer_caching: true
     steps:
+      - checkout
       - run:
           name: Build black
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd black && ./build.sh'
@@ -23,6 +24,7 @@ jobs:
     machine:
       docker_layer_caching: true
     steps:
+      - checkout
       - run:
           name: Build frame
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd frame && ./build.sh'
@@ -34,6 +36,7 @@ jobs:
     machine:
       docker_layer_caching: true
     steps:
+      - checkout
       - run:
           name: Build offroad
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd offroad && ./build.sh'
@@ -45,6 +48,7 @@ jobs:
     machine:
       docker_layer_caching: true
     steps:
+      - checkout
       - run:
           name: Build setup
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd setup && ./build.sh'
