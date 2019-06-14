@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  apks:
+  sdk:
     machine:
       docker_layer_caching: true
     steps:
@@ -8,6 +8,8 @@ jobs:
       - run:
           name: Build docker SDK image
           command: docker build -t apks -f docker/Dockerfile docker
+  black:
+    steps:
       - run:
           name: Build black
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd black && ./build.sh'
@@ -15,6 +17,8 @@ jobs:
           name: Store black apk
           path: black/out.apk
           destination: ai.comma.plus.black.apk
+  frame:
+    steps:
       - run:
           name: Build frame
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd frame && ./build.sh'
@@ -22,6 +26,8 @@ jobs:
           name: Store frame apk
           path: frame/out.apk
           destination: ai.comma.plus.frame.apk
+  offroad:
+    steps:
       - run:
           name: Build offroad
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd offroad && ./build.sh'
@@ -29,6 +35,8 @@ jobs:
           name: Store offroad apk
           path: offroad/ai.comma.plus.offroad.apk
           destination: ai.comma.plus.offroad.apk
+  setup:
+    steps:
       - run:
           name: Build setup
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd setup && ./build.sh'
@@ -41,5 +49,17 @@ workflows:
   version: 2
   main:
     jobs:
-      - apks
+      - sdk
+      - black:
+          requires:
+            - sdk
+      - frame:
+          requires:
+            - sdk
+      - offroad:
+          requires:
+            - sdk
+      - setup:
+          requires:
+            - sdk
     
