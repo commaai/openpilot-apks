@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-plugin-transform-proto-to-assign": "^6.26.0",
     "babel-plugin-transform-remove-console": "^6.8.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react-native-stage-0": "^1.0.1",
+    "babel-preset-stage-2": "^6.24.1",
     "jest-expo": "^22.0.0",
     "lodash": "^4.17.4",
     "react-test-renderer": "16.0.0-beta.5"
@@ -26,16 +30,16 @@
     ]
   },
   "dependencies": {
+    "@commaai/comma-api": "1.0.12",
     "@expo/react-native-touchable-native-feedback-safe": "^1.1.2",
     "@mapbox/geo-viewport": "^0.2.2",
     "@mapbox/polyline": "^0.2.0",
-    "comma-api": "git+https://git@github.com/commaai/comma-api.git",
     "comma-x-native": "git+https://git@github.com/commaai/comma-x-native.git",
+    "core-js": "^2.6.5",
     "moment": "^2.19.1",
     "react": "16.0.0-beta.5",
     "react-native": "^0.49.5",
     "react-native-cookies": "^3.2.0",
-    "react-native-device-info": "^0.12.1",
     "react-native-linear-gradient": "^2.3.0",
     "react-native-network-info": "^3.0.0",
     "react-native-popup-dialog": "^0.10.44",

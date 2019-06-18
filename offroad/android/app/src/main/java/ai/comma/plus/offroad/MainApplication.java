@@ -14,7 +14,6 @@ import io.sentry.RNSentryPackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -36,7 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new HomePackage(),
               new LinearGradientPackage(),
-              new RNDeviceInfo(),
               new RNFetchBlobPackage(),
               new ReactVideoPackage(),
               new CookieManagerPackage(),

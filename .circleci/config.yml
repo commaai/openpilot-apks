@@ -14,6 +14,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Build docker SDK image
+          command: docker build -t apks -f docker/Dockerfile docker
+      - run:
           name: Build black
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd black && ./build.sh'
       - store_artifacts:
@@ -25,6 +28,9 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
+      - run:
+          name: Build docker SDK image
+          command: docker build -t apks -f docker/Dockerfile docker
       - run:
           name: Build frame
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd frame && ./build.sh'
@@ -38,6 +44,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Build docker SDK image
+          command: docker build -t apks -f docker/Dockerfile docker
+      - run:
           name: Build offroad
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd offroad && ./build.sh'
       - store_artifacts:
@@ -49,6 +58,9 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
+      - run:
+          name: Build docker SDK image
+          command: docker build -t apks -f docker/Dockerfile docker
       - run:
           name: Build setup
           command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd setup && ./build.sh'
@@ -74,4 +86,4 @@ workflows:
       - setup:
           requires:
             - sdk
-    
+

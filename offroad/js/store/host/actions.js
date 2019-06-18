@@ -1,6 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { configure as configureRequest } from 'comma-api/src/request';
-import { fetchDevice } from 'comma-api/src/devices';
+import { request as Request, devices as Devices } from '@commaai/comma-api';
 import ChffrPlus from '../../native/ChffrPlus';
 
 export const ACTION_HOST_IS_SSH_ENABLED = 'ACTION_HOST_IS_SSH_ENABLED';
@@ -59,7 +58,7 @@ export function setDeviceIds() {
         const imei = await ChffrPlus.getImei();
         const serial = await ChffrPlus.getSerialNumber();
         const deviceJwt = await ChffrPlus.readParam("AccessToken");
-        await configureRequest(deviceJwt);
+        await Request.configure(deviceJwt);
 
         dispatch({
             type: ACTION_DEVICE_IDS_AVAILABLE,
@@ -85,7 +84,7 @@ export function updateSshEnabled(isSshEnabled) {
 export function refreshDeviceInfo() {
     return async (dispatch, getState) => {
         const dongleId = await ChffrPlus.readParam("DongleId");
-        const device =  await fetchDevice(dongleId);
+        const device =  await Devices.fetchDevice(dongleId);
 
         dispatch({
             type: ACTION_DEVICE_REFRESHED,
