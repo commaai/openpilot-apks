@@ -76,8 +76,14 @@ project.ext.react = [
     entryFile: "index.js"
 ]
 
+project.ext.sentryCli = [
+    logLevel: "debug"
+]
+
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/react-native-sentry/sentry.gradle"
+if(System.getenv('SENTRY_SKIP_UPLOAD') != "1") {
+    apply from: "../../node_modules/react-native-sentry/sentry.gradle"
+}
 
 /**
  * Set this to true to create two separate APKs instead of one:

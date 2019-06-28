@@ -4,6 +4,7 @@ set -e
 APK_OUT=${1:-ai.comma.plus.offroad.apk}
 TOOLS="$PWD/../tools"
 CEREAL="$PWD/../../cereal"
+export SENTRY_SKIP_UPLOAD=${SENTRY_SKIP_UPLOAD:-1}
 
 if [ ! -d $CEREAL ]; then
   git clone https://github.com/commaai/cereal.git $CEREAL
