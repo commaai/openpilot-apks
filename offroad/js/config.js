@@ -24,4 +24,5 @@ export const Params = {
     KEY_LIMIT_SET_SPEED: 'LimitSetSpeed',
     KEY_SPEED_LIMIT_OFFSET: 'SpeedLimitOffset',
     KEY_LIVE_PARAMETERS: 'LiveParameters',
+    KEY_GITHUB_SSH_KEYS: 'GithubSshKeys',
 };

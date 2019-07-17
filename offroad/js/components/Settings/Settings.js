@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Alert } from 'react-native';
+import {
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    TextInput,
+    View,
+} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 
@@ -59,7 +65,12 @@ class Settings extends Component {
                 gitRevision: null,
             },
             speedLimitOffsetInt: '0',
+            githubUsername: '',
+            authKeysUpdateState: null,
         }
+
+        this.writeSshKeys = this.writeSshKeys.bind(this);
+        this.toggleExpandGithubInput = this.toggleExpandGithubInput.bind(this);
     }
 
     async componentWillMount() {
@@ -574,6 +585,21 @@ class Settings extends Component {
                             isExpanded={ expandedCell == 'ssh' }
                             handleExpanded={ () => this.handleExpanded('ssh') }
                             handleChanged={ this.props.setSshEnabled } />
+                        <X.TableCell
+                            iconSource={ Icons.developer }
+                            title='Authorized SSH Keys'
+                            descriptionExtra={ this.renderSshInput() }
+                            isExpanded={ expandedCell === 'ssh_keys' }
+                            handleExpanded={ this.toggleExpandGithubInput }
+                            type='custom'>
+                            <X.Button
+                                size='tiny'
+                                color='settingsDefault'
+                                onPress={ this.toggleExpandGithubInput }
+                                style={ { minWidth: '100%' } }>
+                                { expandedCell === 'ssh_keys' ? 'Cancel' : 'Edit' }
+                            </X.Button>
+                        </X.TableCell>
                     </X.Table>
                     <X.Table color='darkBlue' padding='big'>
                         <X.Button
@@ -586,6 +612,105 @@ class Settings extends Component {
                 </ScrollView>
             </View>
         )
+    }
+
+    renderSshInput() {
+        let { githubUsername, authKeysUpdateState } = this.state;
+        let githubUsernameIsValid = githubUsername.match(/[a-zA-Z0-9-]+/) !== null;
+
+        return (
+            <View>
+                <X.Text color='white' size='tiny'>
+                    WARNING:{'\n'}This grants SSH access to all public keys in your GitHub settings.{'\n'}Never enter a GitHub username other than your own.{'\n'}A comma employee will never ask you to add their GitHub.{'\n'}
+                </X.Text>
+                <View style={ Styles.githubUsernameInputContainer }>
+                    <X.Text
+                        color='white'
+                        weight='semibold'
+                        size='small'
+                        style={ Styles.githubUsernameInputLabel }>
+                        GitHub Username
+                    </X.Text>
+                    <TextInput
+                        style={ Styles.githubUsernameInput }
+                        onChangeText={ (text) => this.setState({ githubUsername: text, authKeysUpdateState: null })}
+                        value={ githubUsername }
+                        ref={ ref => this.githubInput = ref }
+                        underlineColorAndroid='transparent'
+                    />
+                </View>
+                <View>
+                    <X.Button
+                        size='tiny'
+                        color='settingsDefault'
+                        isDisabled={ !githubUsernameIsValid }
+                        onPress={ this.writeSshKeys }
+                        style={ Styles.githubUsernameSaveButton }>
+                        <X.Text color='white' size='small' style={ Styles.githubUsernameInputSave }>Save</X.Text>
+                    </X.Button>
+                    { authKeysUpdateState !== null &&
+                        <View style={ Styles.githubUsernameInputStatus }>
+                            { authKeysUpdateState === 'inflight' &&
+                                <ActivityIndicator
+                                    color='white'
+                                    refreshing={ true }
+                                    size={ 37 }
+                                    style={ Styles.connectingIndicator } />
+                            }
+                            { authKeysUpdateState === 'failed' &&
+                                <X.Text color='white' size='tiny'>Save failed. Ensure that your username is correct and you are connected to the internet.</X.Text>
+                            }
+                        </View>
+                    }
+                    <View style={ Styles.githubSshKeyClearContainer }>
+                        <X.Button
+                            size='tiny'
+                            color='settingsDefault'
+                            onPress={ this.clearSshKeys }
+                            style={ Styles.githubUsernameSaveButton }>
+                            <X.Text color='white' size='small' style={ Styles.githubUsernameInputSave }>Remove all</X.Text>
+                        </X.Button>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+
+    toggleExpandGithubInput() {
+        this.setState({ authKeysUpdateState: null });
+        this.handleExpanded('ssh_keys');
+    }
+
+    clearSshKeys() {
+        ChffrPlus.deleteParam(Params.KEY_GITHUB_SSH_KEYS);
+        Alert.alert('Reboot', `Reboot to finalize removal of GitHub SSH keys.`, [
+            { text: 'Later', onPress: () => {}, style: 'cancel' },
+            { text: 'Reboot Now', onPress: () => ChffrPlus.reboot() },
+        ]);
+    }
+
+    async writeSshKeys() {
+        let { githubUsername } = this.state;
+
+        try {
+            this.setState({ authKeysUpdateState: 'inflight' })
+            const resp = await fetch(`https://github.com/${githubUsername}.keys`);
+            const githubKeys = (await resp.text());
+            if (resp.status !== 200) {
+                throw new Error('Non-200 response code from GitHub');
+            }
+
+            await ChffrPlus.writeParam(Params.KEY_GITHUB_SSH_KEYS, githubKeys);
+
+            Alert.alert('Reboot', `Reboot to make SSH keys from ${githubUsername} available.`, [
+                { text: 'Later', onPress: () => {}, style: 'cancel' },
+                { text: 'Reboot Now', onPress: () => ChffrPlus.reboot() },
+            ]);
+            this.toggleExpandGithubInput();
+        } catch(err) {
+            console.log(err);
+            this.setState({ authKeysUpdateState: 'failed' });
+        }
     }
 
     renderSettingsByRoute() {

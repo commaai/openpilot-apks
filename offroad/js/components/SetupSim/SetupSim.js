@@ -67,7 +67,7 @@ class SetupSim extends Component {
                         size='small'
                         weight='light'
                         style={ Styles.detailText }>
-                        { simState === 'ABSENT' ? 'Insert a SIM card with data to access services like Navigation and Music on the road.'
+                        { simState === 'ABSENT' ? 'Insert a SIM card with data. Need one? Get a comma SIM at shop.comma.ai'
                         : (networkName === null ? 'A SIM card was entered, however your cellular network has not yet been discovered.'
                                 : "You're all set to get EON on the road with full cellular connection. Complete set up to continue.") }
                     </X.Text>
