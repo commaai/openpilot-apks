@@ -15,7 +15,7 @@ export default class SetupContainer extends Component {
         return (
             <X.Gradient
                 color='dark_blue'
-                style={ Styles.root }>
+                style={ [Styles.root, this.props.style || null] }>
                 { this.props.children }
             </X.Gradient>
         );

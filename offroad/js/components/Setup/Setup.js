@@ -134,8 +134,9 @@ const mapDispatchToProps = dispatch => ({
             ]
         }));
     },
-    acceptTerms: () => {
-        ChffrPlus.writeParam(Params.KEY_HAS_ACCEPTED_TERMS, "1");
+    acceptTerms: async () => {
+        const termsVersion = await ChffrPlus.readParam(Params.KEY_LATEST_TERMS_VERSION);
+        ChffrPlus.writeParam(Params.KEY_ACCEPTED_TERMS_VERSION, termsVersion);
     },
     refreshDeviceInfo: () => {
         dispatch(refreshDeviceInfo());

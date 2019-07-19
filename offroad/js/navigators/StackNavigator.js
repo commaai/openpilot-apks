@@ -12,6 +12,7 @@ import PairAfterSetup from '../components/PairAfterSetup';
 import Home from '../components/Home';
 import Settings from '../components/Settings';
 import Setup from '../components/Setup';
+import SetupTermsStandalone from '../components/SetupTermsStandalone';
 import SetupWelcome from '../components/SetupWelcome';
 import Onboarding from '../components/training/Onboarding';
 import GiraffeSwitch from '../components/training/GiraffeSwitch'
@@ -21,6 +22,7 @@ export const StackNavigator = RNStackNavigator({
     Home: { screen: Home },
     Setup: { screen: Setup },
     SetupWelcome: { screen: SetupWelcome },
+    SetupTermsStandalone: { screen: SetupTermsStandalone },
     Onboarding: { screen: Onboarding },
     PairAfterSetup: { screen: PairAfterSetup },
     GiraffeSwitch: { screen: GiraffeSwitch },

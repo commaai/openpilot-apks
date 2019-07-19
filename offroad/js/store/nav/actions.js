@@ -8,17 +8,22 @@ export const resetToLaunch = () => {
     return async dispatch => {
         const paramHasCompletedSetup = await ChffrPlus.readParam(Params.KEY_HAS_COMPLETED_SETUP);
         const paramIsPassive = await ChffrPlus.readParam(Params.KEY_IS_PASSIVE);
+        const latestTermsVersion = await ChffrPlus.readParam(Params.KEY_LATEST_TERMS_VERSION);
+        const acceptedTermsVersion = await ChffrPlus.readParam(Params.KEY_ACCEPTED_TERMS_VERSION);
 
         const isPassive = (paramIsPassive === "1");
         const hasCompletedSetup = (paramHasCompletedSetup === "1");
         const trainingLaunchRoute = await launchRouteForTrainingVersion();
         const hasCompletedTraining = (trainingLaunchRoute === null);
+        const hasAcceptedLatestTerms = (latestTermsVersion === acceptedTermsVersion);
 
         let launchRoute;
-        if (hasCompletedSetup && (hasCompletedTraining || isPassive)) {
+        if (hasCompletedSetup && (hasCompletedTraining || isPassive) && hasAcceptedLatestTerms) {
             launchRoute = 'Home';
-        } else if (hasCompletedSetup && !isPassive) {
+        } else if (hasCompletedSetup && !isPassive && !hasCompletedTraining) {
             launchRoute = trainingLaunchRoute;
+        } else if (hasCompletedSetup && !hasAcceptedLatestTerms) {
+            launchRoute = 'SetupTermsStandalone';
         } else {
             launchRoute = 'SetupWelcome';
         }
