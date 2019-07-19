@@ -7,19 +7,19 @@ Please read these Terms of Use (“Terms”) carefully before using openpilot wh
 Before using and by accessing openpilot, you indicate that you have read, understood, and agree to these Terms. These Terms apply to all users and others who access or use openpilot. If others use openpilot through your user account or vehicle, you are responsible to ensure that they only use openpilot when it is safe to do so, and in compliance with these Terms and with applicable law. If you disagree with any part of the Terms, you should not access or use openpilot.
 
 Communications
-You agree that comma may contact you by email or telephone in connection with openpilot or for other business purposes.  You may opt out of receiving email messages at any time by contacting us at support@comma.ai.
+You agree that comma may contact you by email or telephone in connection with openpilot or for other business purposes. You may opt out of receiving email messages at any time by contacting us at support@comma.ai.
 
-We collect, use, and share information from and about you and your vehicle in connection with openpilot.  You consent to comma accessing the systems associated with openpilot, without additional notice or consent, for the purposes of providing openpilot, data collection, software updates, safety and cybersecurity, suspension or removal of your account, and as disclosed in the Privacy Policy (available here).
+We collect, use, and share information from and about you and your vehicle in connection with openpilot. You consent to comma accessing the systems associated with openpilot, without additional notice or consent, for the purposes of providing openpilot, data collection, software updates, safety and cybersecurity, suspension or removal of your account, and as disclosed in the Privacy Policy (available here).
 
 Safety
 
 openpilot performs the functions of Adaptive Cruise Control (ACC) and Lane Keeping Assist System (LKAS) designed for use in compatible motor vehicles. While using openpilot, it is your responsibility to obey all laws, traffic rules, and traffic regulations governing your vehicle and its operation. Access to and use of openpilot is at your own risk and responsibility, and openpilot should be accessed and/or used only when you can do so safely.
 
-openpilot does not make your vehicle “autonomous” or capable of operation without the active monitoring of a licensed driver.  It is designed to assist a licensed driver. A licensed driver must pay attention to the road, remain aware of navigation at all times, and be prepared to take immediate action.  Failure to do so can cause damage, injury, or death.
+openpilot does not make your vehicle “autonomous” or capable of operation without the active monitoring of a licensed driver. It is designed to assist a licensed driver. A licensed driver must pay attention to the road, remain aware of navigation at all times, and be prepared to take immediate action. Failure to do so can cause damage, injury, or death.
 
 Supported Locations and Models
 
-openpilot is compatible only with particular makes and models of vehicles.  For a complete list of currently supported vehicles, visit https://comma.ai. openpilot will not function properly when installed in an incompatible vehicle.  Any attempt to use openpilot in an unsupported vehicle is a violation of these Terms.
+openpilot is compatible only with particular makes and models of vehicles. For a complete list of currently supported vehicles, visit https://comma.ai. openpilot will not function properly when installed in an incompatible vehicle. Any attempt to use openpilot in an unsupported vehicle is a violation of these Terms.
 openpilot is compatible only within the geographical boundaries of the United States of America.
 
 Indemnification
@@ -32,11 +32,15 @@ In no event shall comma, nor its directors, employees, partners, agents, supplie
 
 No Warranty or Obligations to Maintain or Service
 
-comma provides openpilot without representations, conditions, or warranties of any kind.  openpilot is provided on an “AS IS” and “AS AVAILABLE” basis, including with all faults and errors as may occur.  To the extent permitted by law and unless prohibited by law, comma on behalf of itself and all persons and parties acting by, through, or for comma, explicitly disclaims all warranties or conditions, express, implied, or collateral, including any implied warranties of merchantability, satisfactory quality, and fitness for a particular purpose in respect of openpilot.
-To the extent permitted by law, comma does not warrant the operation, performance, or availability of openpilot under all conditions.  comma is not responsible for any failures caused by server errors, misdirected or redirected tr anyansmissions, failed internet connections, interruptions or failures in the transmission of data, any computer virus, or any acts or omissions of third parties that damage the network or impair wireless service.
-We undertake reasonable measures to preserve and secure information collected through our openpilot.  However, no data collection, transmission or storage system is 100% secure, and there is always a risk that your information may be intercepted without our consent.  In using openpilot, you acknowledge that comma is not responsible for intercepted information, and you hereby release us from any and all claims arising out of or related to the use of intercepted information in any unauthorized manner.
+comma provides openpilot without representations, conditions, or warranties of any kind. openpilot is provided on an “AS IS” and “AS AVAILABLE” basis, including with all faults and errors as may occur. To the extent permitted by law and unless prohibited by law, comma on behalf of itself and all persons and parties acting by, through, or for comma, explicitly disclaims all warranties or conditions, express, implied, or collateral, including any implied warranties of merchantability, satisfactory quality, and fitness for a particular purpose in respect of openpilot.
+
+To the extent permitted by law, comma does not warrant the operation, performance, or availability of openpilot under all conditions. comma is not responsible for any failures caused by server errors, misdirected or redirected transmissions, failed internet connections, interruptions or failures in the transmission of data, any computer virus, or any acts or omissions of third parties that damage the network or impair wireless service.
+
+We undertake reasonable measures to preserve and secure information collected through our openpilot. However, no data collection, transmission or storage system is 100% secure, and there is always a risk that your information may be intercepted without our consent. In using openpilot, you acknowledge that comma is not responsible for intercepted information, and you hereby release us from any and all claims arising out of or related to the use of intercepted information in any unauthorized manner.
+
 By providing openpilot, comma does not transfer or license its intellectual property or grant rights in its brand names, nor does comma make representations with respect to third-party intellectual property rights.
-We are not obligated to provide any maintenance or support for openpilot, technical or otherwise.  If we voluntarily provide any maintenance or support for openpilot, we may stop any such maintenance, support, or services at any time in our sole discretion.
+
+We are not obligated to provide any maintenance or support for openpilot, technical or otherwise. If we voluntarily provide any maintenance or support for openpilot, we may stop any such maintenance, support, or services at any time in our sole discretion.
 
 Modification of Software
 
