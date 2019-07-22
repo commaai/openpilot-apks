@@ -123,8 +123,19 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
     @ReactMethod
     fun getImei(promise: Promise) {
-        val tm = getReactApplicationContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        promise.resolve(tm.deviceId);
+        try {
+            val c = Class.forName("android.os.SystemProperties")
+            val get = c.getMethod("get", String::class.java, String::class.java)
+            var imei = get.invoke(c, "oem.device.imeicache", "") as String
+            if (imei == "") {
+                imei = "000000000000000"
+            }
+
+            promise.resolve(imei)
+        } catch (e: Exception) {
+            CloudLog.exception("BaseUIReactModule.getImei", e)
+            promise.reject("couldn't get imei", e)
+        }
     }
 
     @ReactMethod
