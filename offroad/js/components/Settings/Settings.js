@@ -401,6 +401,7 @@ class Settings extends Component {
                             <X.TableCell
                                 title='Device Paired'
                                 value={ isPaired ? 'Yes' : 'No' } />
+                            <X.Text color='white' size='tiny'>Terms of Service available at {'https://my.comma.ai/terms.html'}</X.Text>
                         </X.Table>
                     </View>
                 </ScrollView>
