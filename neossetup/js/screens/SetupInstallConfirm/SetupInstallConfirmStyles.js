@@ -1,28 +1,28 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-     welcome: {
+     setupInstallConfirm: {
        alignItems: 'center',
        justifyContent: 'center',
        display: 'flex',
      },
-     welcomeBody: {
+     setupInstallConfirmBody: {
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
         paddingBottom: 50,
-        paddingTop: 60,
+        paddingTop: 80,
         width: 420,
      },
-     welcomeHeadline: {
+     setupInstallConfirmHeadline: {
         flex: 0.3,
      },
-     welcomeIntro: {
+     setupInstallConfirmIntro: {
         flex: 0.5,
         textAlign: 'center',
      },
-     welcomeButton: {
+     setupInstallConfirmButton: {
         flex: 0.5,
-        width: 360,
+        width: 100,
      },
 });

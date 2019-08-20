@@ -23,6 +23,10 @@ export let ChffrPlusTheme = {
             semibold: 'OpenSans-Semibold',
             bold: 'OpenSans-Bold',
         },
+        colors: {
+            setupDisabled: '#1D2225',
+            lightGrey200: '#ACB7BD',
+        },
     },
     button: {
         sizes: {
@@ -41,9 +45,13 @@ export let ChffrPlusTheme = {
             },
             setupInverted: {
                 backgroundColor: Colors.transparent,
-                borderColor: Colors.white30,
+                borderColor: '#1D2225',
                 borderRadius: 13,
                 borderWidth: 1,
+            },
+            setupDisabled: {
+                backgroundColor: '#0B0E0E',
+                borderRadius: 13,
             },
             settingsDefault: {
                 backgroundColor: 'rgba(233, 233, 233, 0.08)',
@@ -68,8 +76,8 @@ export let ChffrPlusTheme = {
                 'rgb(15, 93, 47)'
             ],
             dark_black: [
-                'rgb(8, 8, 8)',
-                'rgb(0, 0, 0)'
+                'rgb(22, 24, 26)',
+                'rgb(3, 4, 4)',
             ]
         },
     },

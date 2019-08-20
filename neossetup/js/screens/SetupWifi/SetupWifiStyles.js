@@ -1,50 +1,87 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-    root: {
+    setupWifi: {
         flex: 1,
+        paddingLeft: 40,
+        paddingRight: 40,
     },
-    listContainer: {
-        backgroundColor: 'rgba(0,0,0,0.06)',
-        borderColor: 'rgba(255,255,255,0.09)',
+    setupWifiHeader: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: 80,
+        paddingTop: 10,
+    },
+    setupWifiHeaderButton: {
+        width: 140,
+    },
+    setupWifiNetworks: {
+        backgroundColor: 'rgba(3, 4, 4, 0.16)',
+        borderColor: '#1D2225',
         borderWidth: 1,
         borderRadius: 13,
-        flex: 0.9,
-        padding: 10,
-        paddingLeft: 0,
-        paddingBottom: 5,
+        flex: 0.65,
     },
-    buttons: {
-        flex: 0.3,
+    setupWifiNetwork: {
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#1D2225',
         flexDirection: 'row',
-        marginTop: 15,
-    },
-    moreOptionsButton: {
-        flex: 0.4,
+        height: 65,
+        paddingTop: 10,
+        paddingBottom: 10,
         paddingRight: 10,
-    },
-    nextButton: {
-        flex: 0.6,
-    },
-    networkRow: {
-        flexDirection: 'row',
-        height: 62,
         width: '100%',
     },
-    barImage: {
+    setupWifiNetworkIcon: {
         resizeMode: 'contain',
-        height: 37,
+        height: 30,
         alignSelf: 'center',
     },
-    connectedImage: {
-        alignSelf: 'center',
-        height: 37,
-    },
-    networkRowRight: {
+    setupWifiNetworkDetails: {},
+    setupWifiNetworkStatus: {
+        alignItems: 'center',
         height: 60,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end',
+    },
+    setupWifiNetworkButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        width: 120,
+    },
+    setupWifiNetworkButtonConnected: {
+        alignItems: 'center',
+        backgroundColor: 'rgba(3, 4, 4, 0.16)',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        width: 160,
+    },
+    setupWifiNetworkButtonConnectedIcon: {
+        alignSelf: 'center',
+        marginRight: 15,
+        height: 30,
+        width: 30,
+    },
+    setupWifiButtons: {
+        flex: 0.25,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
+    },
+    setupWifiBackButton: {
+        display: 'flex',
+        height: '100%',
+        width: 160,
+    },
+    setupWifiContinueButton: {
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        width: 320,
     },
     passwordDialog: {
         padding: 20,
@@ -53,5 +90,9 @@ export default StyleSheet.create({
     },
     dialogButton: {
         flex: 0.4,
-    }
+    },
+    setupWifiConnectingIndicator: {
+        height: 26,
+        width: 26,
+    },
 });

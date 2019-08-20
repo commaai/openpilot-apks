@@ -60,14 +60,14 @@ class Pairing extends Component {
             color='white'
             size='medium'
             style={ Styles.scanText }>
-            { this.props.isConnected ? 'Scan with \ncomma connect \non iOS or Android' : 'Network connection required for pairing' }
+            { this.props.isConnected ? 'Scan with \ncomma connect \non iOS or Android' : '' }
           </X.Text>
-        { this.props.isConnected ? this.renderQR() : null }
+          { this.props.isConnected ? this.renderQR() : null }
         </View>
         <View style={ Styles.buttons }>
           <View style={ Styles.continueButton }>
             <X.Button onPress={ this.props.onContinueButton }
-              color={ this.props.isPaired || ! this.props.isConnected ? 'setupPrimary': 'setupInverted' }>
+              color={ this.props.isPaired ? 'setupPrimary': 'setupInverted' }>
               { this.props.isPaired || ! this.props.isConnected ? this.props.continueText : this.props.skipText }
             </X.Button>
           </View>

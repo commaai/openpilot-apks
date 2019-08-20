@@ -11,4 +11,4 @@ ssh vphone "mount -o remount,rw /system && (mkdir -p /system/priv-app/plusneosse
 # ssh vphone "pm install /system/priv-app/PlusFrame/PlusFrame.apk"
 # ssh vphone "tmux send-keys -t comma:0.0 C-c; sleep 5; tmux send-keys -t comma:0.0 C-c; tmux send -t comma:0.0 ./continue.sh ENTER"
 ssh vphone "pm install -r -d /sdcard/ai.comma.plus.neossetup.apk"
-ssh vphone "am start ai.comma.plus.neossetup/.MainActivity"
+ssh vphone "am start -n ai.comma.plus.neossetup/.MainActivity"

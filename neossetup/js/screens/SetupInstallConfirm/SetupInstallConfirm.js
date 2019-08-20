@@ -4,9 +4,9 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import X from '../../themes';
-import Styles from './SetupWelcomeStyles';
+import Styles from './SetupInstallConfirmStyles';
 
-class SetupWelcome extends Component {
+class SetupInstallConfirm extends Component {
     static navigationOptions = {
         header: null,
     };
@@ -15,26 +15,26 @@ class SetupWelcome extends Component {
         return (
             <X.Gradient
                 color='dark_black'
-                style={ Styles.welcome }>
-                <X.Entrance style={ Styles.welcomeBody }>
+                style={ Styles.setupInstallConfirm }>
+                <X.Entrance style={ Styles.setupInstallConfirmBody }>
                     <X.Text
                         size='jumbo'
                         weight='bold'
                         color='white'
-                        style={ Styles.welcomeHeadline }>Getting started with EON</X.Text>
+                        style={ Styles.setupInstallConfirmHeadline }>Starting installation...</X.Text>
                     <X.Text
                         size='medium'
                         color='white'
                         weight='light'
-                        style={ Styles.welcomeIntro }>
-                        Before we get on the road, let{"\'"}s cover some details and connect to the internet.
+                        style={ Styles.setupInstallConfirmIntro }>
+                        Make sure EON is connected to power. EON will reboot and install your software.
                     </X.Text>
-                    <View style={ Styles.welcomeButton }>
+                    <View style={ Styles.setupInstallConfirmButton }>
                         <X.Button
-                            color='setupPrimary'
-                            size='big'
-                            onPress={ this.props.navigateToSetup }>
-                            Continue to Setup
+                            color='setupInverted'
+                            size='small'
+                            onPress={ this.props.handleSetupInstallConfirmBackPressed }>
+                            Cancel
                         </X.Button>
                     </View>
                 </X.Entrance>
@@ -44,17 +44,17 @@ class SetupWelcome extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    navigateToSetup: () => {
+    handleSetupInstallConfirmBackPressed: () => {
         dispatch(NavigationActions.reset({
             index: 0,
             key: null,
             actions: [
                 NavigationActions.navigate({
-                    routeName: 'SetupWifi',
+                    routeName: 'SetupInstall',
                 })
             ]
         }))
     }
 });
 
-export default connect(null, mapDispatchToProps)(SetupWelcome);
+export default connect(null, mapDispatchToProps)(SetupInstallConfirm);
