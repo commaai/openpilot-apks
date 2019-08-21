@@ -78,24 +78,24 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
             try {
                 val url = URL(link[0])
                 val conn = url.openConnection() as URLConnection
-                conn.setRequestProperty("User-Agent", "NEOSSetup-0.1")
+                conn.setRequestProperty("User-Agent", "NEOSSetup-0.2")
 
-                  val contentLength = conn.getContentLength()
-                  val inStream = DataInputStream(conn.getInputStream())
-                  val buffer = ByteArray(contentLength)
-                  inStream.readFully(buffer);
-                  inStream.close();
+                val contentLength = conn.getContentLength()
+                val inStream = DataInputStream(conn.getInputStream())
+                val buffer = ByteArray(contentLength)
+                inStream.readFully(buffer);
+                inStream.close();
 
-                  var tmpPath: String = outputPath + ".tmp"
-                  val foStream = FileOutputStream(tmpPath)
-                  val outStream = DataOutputStream(foStream)
-                  outStream.write(buffer)
-                  outStream.flush()
-                  outStream.close()
+                var tmpPath: String = outputPath + ".tmp"
+                val foStream = FileOutputStream(tmpPath)
+                val outStream = DataOutputStream(foStream)
+                outStream.write(buffer)
+                outStream.flush()
+                outStream.close()
 
-                  File(tmpPath).renameTo(File(outputPath))
-                  result = "succeeded"
-                  return result
+                File(tmpPath).renameTo(File(outputPath))
+                result = "succeeded"
+                return result
             } catch (ex: Exception) {
                 Log.d("neossetup", "Error in doInBackground " + ex.message)
                 result = "failed"
@@ -111,7 +111,7 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             Log.d("neossetup", result)
-            if (result == "succeeeded") {
+            if (result == "succeeded") {
                 // reboot and install
             } else {
                 // handle error
@@ -129,13 +129,6 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     fun sendBroadcast(action: String) {
         val intent = Intent(action)
         currentActivity?.sendBroadcast(intent)
-    }
-
-    @ReactMethod
-    fun isNavAvailable(promise: Promise) {
-        val pm = reactApplicationContext.packageManager
-        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA).map { it.packageName }
-        promise.resolve(packages.contains("com.waze"))
     }
 
     @ReactMethod
@@ -172,19 +165,6 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
             set.invoke(c, "persist.neos.ssh", if (enabled) "1" else "0")
         } catch(e: Exception) {
             CloudLog.exception("NeosSetupReactModule.setSshEnabled", e)
-        }
-    }
-
-    @ReactMethod
-    fun getSshEnabled(promise: Promise) {
-        try {
-            val c = Class.forName("android.os.SystemProperties")
-            val get = c.getMethod("get", String::class.java, String::class.java)
-            val isSshEnabled = get.invoke(c, "persist.neos.ssh", "0") as String
-            promise.resolve(isSshEnabled == "1")
-        } catch (e: Exception) {
-            CloudLog.exception("NeosSetupReactModule.getSshEnabled", e)
-            promise.reject("couldn't get ssh enabled", e)
         }
     }
 
@@ -261,7 +241,6 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         } catch (e: IOException) {
             CloudLog.exception("NeosSetupReactModule.reboot", e)
         }
-
     }
 
     @ReactMethod

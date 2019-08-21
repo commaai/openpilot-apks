@@ -1,27 +1,21 @@
 import {
     ACTION_SIM_STATE_CHANGED,
-    ACTION_NAV_AVAILABILITY_CHANGED,
     ACTION_CONNECTION_STATUS_CHANGED,
-    ACTION_THERMAL_DATA_CHANGED,
     ACTION_WIFI_STATE_CHANGED,
     ACTION_DEVICE_IDS_AVAILABLE,
     ACTION_DEVICE_REFRESHED,
-    ACTION_HOST_IS_SSH_ENABLED,
     ACTION_SOFTWARE_URL_CHANGED,
 } from './actions';
 import SimState from './SimState';
 
 const initialHostState = {
     simState: SimState.UNKNOWN,
-    isNavAvailable: false,
     isConnected: false,
-    thermal: {},
     wifiState: {},
     imei: null,
     serial: null,
     deviceJwt: null,
     device: null,
-    isSshEnabled: false,
     softwareUrl: '',
 };
 
@@ -32,20 +26,10 @@ export default (state = initialHostState, action) => {
                 ...state,
                 simState: action.simState,
             }
-        case ACTION_NAV_AVAILABILITY_CHANGED:
-            return {
-                ...state,
-                isNavAvailable: action.isNavAvailable,
-            }
         case ACTION_CONNECTION_STATUS_CHANGED:
             return {
                 ...state,
                 isConnected: action.isConnected,
-            }
-        case ACTION_THERMAL_DATA_CHANGED:
-            return {
-                ...state,
-                thermal: action.thermalData,
             }
         case ACTION_WIFI_STATE_CHANGED:
             return {
@@ -63,11 +47,6 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 device: action.device,
-            }
-        case ACTION_HOST_IS_SSH_ENABLED:
-            return {
-                ...state,
-                isSshEnabled: action.isSshEnabled,
             }
         case ACTION_SOFTWARE_URL_CHANGED:
             return {
