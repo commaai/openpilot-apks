@@ -24,11 +24,8 @@ import android.util.Log
 
 import android.os.AsyncTask;
 import java.net.URL;
-import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.io.File;
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.io.FileOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -77,40 +74,34 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     class DownloadApp(private var module: ChffrPlusModule?) : AsyncTask<String, String, String>() {
         override fun doInBackground(vararg link: String): String {
             val outputPath = "/data/data/ai.comma.plus.neossetup/installer"
+            var result = "none"
             try {
                 val url = URL(link[0])
-                val conn = url.openConnection() as HttpURLConnection
+                val conn = url.openConnection() as URLConnection
                 conn.setRequestProperty("User-Agent", "NEOSSetup-0.1")
-                conn.doOutput = true
-                conn.connect()
 
-                val responseCode: Int = conn.responseCode
-                val responseMsg: String = conn.responseMessage
-                Log.d("neossetup", "responseCode - " + responseCode)
-                Log.d("neossetup", "responseMessage - " + responseMsg)
+                  val contentLength = conn.getContentLength()
+                  val inStream = DataInputStream(conn.getInputStream())
+                  val buffer = ByteArray(contentLength)
+                  inStream.readFully(buffer);
+                  inStream.close();
 
-                if (responseCode == 200) {
-                    val contentLength = conn.getContentLength()
-                    val inStream = DataInputStream(conn.getInputStream())
-                    val buffer = ByteArray(contentLength)
-                    inStream.readFully(buffer);
-                    inStream.close();
+                  var tmpPath: String = outputPath + ".tmp"
+                  val foStream = FileOutputStream(tmpPath)
+                  val outStream = DataOutputStream(foStream)
+                  outStream.write(buffer)
+                  outStream.flush()
+                  outStream.close()
 
-                    var tmpPath: String = outputPath + ".tmp"
-                    val foStream = FileOutputStream(tmpPath)
-                    val outStream = DataOutputStream(foStream)
-                    outStream.write(buffer)
-                    outStream.flush()
-                    outStream.close()
-
-                    File(tmpPath).renameTo(File(outputPath))
-                    return "succeeded"
-                }
+                  File(tmpPath).renameTo(File(outputPath))
+                  result = "succeeded"
+                  return result
             } catch (ex: Exception) {
                 Log.d("neossetup", "Error in doInBackground " + ex.message)
-                return "failed"
+                result = "failed"
+                return result
             }
-            return ""
+            return result
         }
 
         override fun onPreExecute() {
@@ -119,10 +110,11 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
+            Log.d("neossetup", result)
             if (result == "succeeeded") {
-                Log.d("neossetup", result)
+                // reboot and install
             } else {
-              // log network error
+                // handle error
             }
         }
     }
