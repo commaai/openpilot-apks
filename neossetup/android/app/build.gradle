@@ -116,7 +116,7 @@ android {
         }
         buildConfigField 'String', 'MIXPANEL_PROJECT_TOKEN', '"1f3556f844253e172ea6f18384b0fd4c"'
         buildConfigField 'String', 'LOGENTRIES_PROJECT_TOKEN', '"e53e6e1d-2b4a-46ae-847a-ff8e8e835f38"'
-        buildConfigField 'String', 'RN_DEBUG_HOST', '"192.168.254.127:8081"'
+        buildConfigField 'String', 'RN_DEBUG_HOST', '"192.168.5.19:8081"'
     }
     splits {
         abi {

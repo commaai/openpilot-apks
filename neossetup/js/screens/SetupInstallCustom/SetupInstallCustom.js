@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ChffrPlus from '../../native/ChffrPlus';
+import { updateSoftwareUrl, resetSoftwareUrl } from '../../store/host/actions';
 import { Params } from '../../config';
 import X from '../../themes';
 import Styles from './SetupInstallCustomStyles';
@@ -15,23 +16,17 @@ class SetupInstallCustom extends Component {
     };
 
     static propTypes = {
+        softwareUrl: PropTypes.string,
         handleSetupInstallCustomCompleted: PropTypes.func,
         handleSetupInstallCustomBackPressed: PropTypes.func,
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            softwareUrl: 'https://',
-        };
-    }
-
-    handleSoftwareUrlChanged(softwareUrl) {
-       this.setState({ softwareUrl })
+    componentDidMount() {
+        this.props.handleSoftwareUrlReset();
     }
 
     render() {
-        const { softwareUrl } = this.state;
+        const { softwareUrl } = this.props;
         return (
             <X.Gradient
                 color='dark_black'>
@@ -47,8 +42,8 @@ class SetupInstallCustom extends Component {
                             Custom Software URL:
                         </X.Text>
                         <TextInput
-                            onChangeText={ (softwareUrl) => this.handleSoftwareUrlChanged(softwareUrl) }
-                            value={ this.state.softwareUrl }
+                            onChangeText={ (softwareUrl) => this.props.handleSoftwareUrlChanged(softwareUrl) }
+                            value={ this.props.softwareUrl }
                             ref={ ref => this.softwareUrlInput = ref }
                             style={ Styles.setupInstallCustomInput }
                             underlineColorAndroid='transparent'
@@ -78,7 +73,19 @@ class SetupInstallCustom extends Component {
     }
 }
 
+let mapStateToProps = function(state) {
+    return {
+        softwareUrl: state.host.softwareUrl,
+    }
+}
+
 const mapDispatchToProps = dispatch => ({
+    handleSoftwareUrlReset: () => {
+        dispatch(resetSoftwareUrl());
+    },
+    handleSoftwareUrlChanged: (softwareUrl) => {
+        dispatch(updateSoftwareUrl(softwareUrl));
+    },
     handleSetupInstallCompleted: async () => {
         dispatch(NavigationActions.reset({
             index: 0,
@@ -103,4 +110,4 @@ const mapDispatchToProps = dispatch => ({
     },
 });
 
-export default connect(null, mapDispatchToProps)(SetupInstallCustom);
+export default connect(mapStateToProps, mapDispatchToProps)(SetupInstallCustom);

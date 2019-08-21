@@ -3,6 +3,8 @@ import { View, Text } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 
+import { Params } from '../../config';
+import ChffrPlus from '../../native/ChffrPlus';
 import X from '../../themes';
 import Styles from './SetupInstallConfirmStyles';
 
@@ -10,6 +12,11 @@ class SetupInstallConfirm extends Component {
     static navigationOptions = {
         header: null,
     };
+
+    componentDidMount() {
+        const { softwareUrl } = this.props;
+        this.props.handleSetupInstallConfirmCompleted(softwareUrl);
+    }
 
     render() {
         return (
@@ -43,7 +50,18 @@ class SetupInstallConfirm extends Component {
     }
 }
 
+let mapStateToProps = function(state) {
+    return {
+        softwareUrl: state.host.softwareUrl,
+    }
+}
+
+
 const mapDispatchToProps = dispatch => ({
+    handleSetupInstallConfirmCompleted: (softwareUrl) => {
+        ChffrPlus.startInstaller(softwareUrl);
+        // ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
+    },
     handleSetupInstallConfirmBackPressed: () => {
         dispatch(NavigationActions.reset({
             index: 0,
@@ -57,4 +75,4 @@ const mapDispatchToProps = dispatch => ({
     }
 });
 
-export default connect(null, mapDispatchToProps)(SetupInstallConfirm);
+export default connect(mapStateToProps, mapDispatchToProps)(SetupInstallConfirm);

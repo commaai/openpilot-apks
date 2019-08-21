@@ -7,6 +7,7 @@ import {
     ACTION_DEVICE_IDS_AVAILABLE,
     ACTION_DEVICE_REFRESHED,
     ACTION_HOST_IS_SSH_ENABLED,
+    ACTION_SOFTWARE_URL_CHANGED,
 } from './actions';
 import SimState from './SimState';
 
@@ -21,6 +22,7 @@ const initialHostState = {
     deviceJwt: null,
     device: null,
     isSshEnabled: false,
+    softwareUrl: '',
 };
 
 export default (state = initialHostState, action) => {
@@ -66,6 +68,11 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 isSshEnabled: action.isSshEnabled,
+            }
+        case ACTION_SOFTWARE_URL_CHANGED:
+            return {
+                ...state,
+                softwareUrl: action.softwareUrl,
             }
         default:
             return state;

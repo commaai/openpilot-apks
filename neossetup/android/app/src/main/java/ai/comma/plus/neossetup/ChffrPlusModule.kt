@@ -64,6 +64,11 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun startInstaller(url: String) {
+        Log.d("neossetup installer", url)
+    }
+
+    @ReactMethod
     fun sendBroadcast(action: String) {
         val intent = Intent(action)
         currentActivity?.sendBroadcast(intent)

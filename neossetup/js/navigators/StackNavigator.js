@@ -6,8 +6,6 @@ import {
 } from 'react-navigation';
 import { connect } from 'react-redux';
 
-// import Setup from '../screens/Setup';
-
 import SetupWelcome from '../screens/SetupWelcome';
 import SetupWifi from '../screens/SetupWifi';
 import SetupTerms from '../screens/SetupTerms';

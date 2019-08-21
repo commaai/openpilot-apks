@@ -10,6 +10,7 @@ export const ACTION_THERMAL_DATA_CHANGED = 'ACTION_THERMAL_DATA_CHANGED';
 export const ACTION_WIFI_STATE_CHANGED = 'ACTION_WIFI_STATE_CHANGED';
 export const ACTION_DEVICE_IDS_AVAILABLE = 'ACTION_DEVICE_IDS_AVAILABLE';
 export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
+export const ACTION_SOFTWARE_URL_CHANGED = 'ACTION_SOFTWARE_URL_CHANGED';
 
 export function updateWifiState() {
     return async dispatch => {
@@ -89,6 +90,24 @@ export function refreshDeviceInfo() {
         dispatch({
             type: ACTION_DEVICE_REFRESHED,
             device,
+        })
+    }
+}
+
+export function resetSoftwareUrl() {
+    return (dispatch, getState) => {
+        dispatch({
+            type: ACTION_SOFTWARE_URL_CHANGED,
+            softwareUrl: 'https://',
+        })
+    }
+}
+
+export function updateSoftwareUrl(softwareUrl) {
+    return (dispatch, getState) => {
+        dispatch({
+            type: ACTION_SOFTWARE_URL_CHANGED,
+            softwareUrl,
         })
     }
 }
