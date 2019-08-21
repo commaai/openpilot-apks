@@ -22,6 +22,13 @@ import android.os.Environment
 import android.os.StatFs
 import android.util.Log
 
+import android.os.AsyncTask;
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+
 
 /**
  * Created by batman on 11/2/17.
@@ -63,9 +70,66 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         }
     }
 
+    class DownloadApp(private var module: ChffrPlusModule?) : AsyncTask<String, String, String>() {
+        override fun doInBackground(vararg link: String): String {
+            val outputPath = "/data/data/ai.comma.neos.setup/installer"
+            var result = ""
+            try {
+                val url = URL(link[0])
+                val conn = url.openConnection() as HttpURLConnection
+                conn.setRequestProperty("User-Agent", "NEOSSetup-0.2") //0.1
+
+                conn.readTimeout = 8000
+                conn.connectTimeout = 8000
+                conn.doOutput = true
+                conn.connect()
+
+                val responseCode: Int = conn.responseCode
+                Log.d("neossetup", "responseCode - " + responseCode)
+
+                if (responseCode == 200) {
+                    val inStream: InputStream = conn.inputStream
+                    val isReader = InputStreamReader(inStream)
+                    val bReader = BufferedReader(isReader)
+                    var tempStr: String?
+
+                    try {
+                        while (true) {
+                              tempStr = bReader.readLine()
+                              if (tempStr == null) {
+                                  break
+                              }
+                              result += tempStr
+                          }
+                    } catch (Ex: Exception) {
+                        Log.e("neossetup", "Error in convertToString " + Ex.printStackTrace())
+                    }
+
+                }
+            } catch (ex: Exception) {
+                Log.d("", "Error in doInBackground " + ex.message)
+            }
+            return result
+        }
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            if (result == "") {
+                // log network error
+            } else {
+                Log.d("neossetup", result)
+            }
+        }
+    }
+
     @ReactMethod
-    fun startInstaller(url: String) {
-        Log.d("neossetup installer", url)
+    fun startInstaller(link: String) {
+        Log.d("neossetup installer", link);
+        DownloadApp(this).execute(link)
     }
 
     @ReactMethod
