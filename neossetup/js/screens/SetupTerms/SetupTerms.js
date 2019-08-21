@@ -8,7 +8,6 @@ import ChffrPlus from '../../native/ChffrPlus';
 import { Params } from '../../config';
 import Documents from './Documents';
 import X from '../../themes';
-import SetupStyles from '../Setup';
 import Styles from './SetupTermsStyles';
 
 class SetupTerms extends Component {

@@ -6,8 +6,6 @@ import { View, NetInfo } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import X from '../../themes';
-import Pairing from '../../components/Pairing';
-import SetupStyles from '../Setup';
 import Styles from './SetupPairStyles';
 import { updateConnectionState } from '../../store/host/actions';
 

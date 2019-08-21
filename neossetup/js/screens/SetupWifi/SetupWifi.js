@@ -20,7 +20,6 @@ import Logging from '../../native/Logging';
 import WifiModule from '../../native/Wifi';
 import X from '../../themes';
 import ChffrPlus from '../../native/ChffrPlus';
-import SetupStyles from '../Setup/SetupStyles';
 import Styles from './SetupWifiStyles';
 
 const SECURITY_UNSECURED = 'Unsecured';
