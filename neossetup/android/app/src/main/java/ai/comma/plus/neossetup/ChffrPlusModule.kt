@@ -25,9 +25,13 @@ import android.util.Log
 import android.os.AsyncTask;
 import java.net.URL;
 import java.net.HttpURLConnection;
+import java.io.File;
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.FileOutputStream
+import java.io.DataInputStream
+import java.io.DataOutputStream
 
 
 /**
@@ -72,44 +76,41 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
     class DownloadApp(private var module: ChffrPlusModule?) : AsyncTask<String, String, String>() {
         override fun doInBackground(vararg link: String): String {
-            val outputPath = "/data/data/ai.comma.neos.setup/installer"
-            var result = ""
+            val outputPath = "/data/data/ai.comma.plus.neossetup/installer"
             try {
                 val url = URL(link[0])
                 val conn = url.openConnection() as HttpURLConnection
-                conn.setRequestProperty("User-Agent", "NEOSSetup-0.2") //0.1
-
-                conn.readTimeout = 8000
-                conn.connectTimeout = 8000
+                conn.setRequestProperty("User-Agent", "NEOSSetup-0.1")
                 conn.doOutput = true
                 conn.connect()
 
                 val responseCode: Int = conn.responseCode
+                val responseMsg: String = conn.responseMessage
                 Log.d("neossetup", "responseCode - " + responseCode)
+                Log.d("neossetup", "responseMessage - " + responseMsg)
 
                 if (responseCode == 200) {
-                    val inStream: InputStream = conn.inputStream
-                    val isReader = InputStreamReader(inStream)
-                    val bReader = BufferedReader(isReader)
-                    var tempStr: String?
+                    val contentLength = conn.getContentLength()
+                    val inStream = DataInputStream(conn.getInputStream())
+                    val buffer = ByteArray(contentLength)
+                    inStream.readFully(buffer);
+                    inStream.close();
 
-                    try {
-                        while (true) {
-                              tempStr = bReader.readLine()
-                              if (tempStr == null) {
-                                  break
-                              }
-                              result += tempStr
-                          }
-                    } catch (Ex: Exception) {
-                        Log.e("neossetup", "Error in convertToString " + Ex.printStackTrace())
-                    }
+                    var tmpPath: String = outputPath + ".tmp"
+                    val foStream = FileOutputStream(tmpPath)
+                    val outStream = DataOutputStream(foStream)
+                    outStream.write(buffer)
+                    outStream.flush()
+                    outStream.close()
 
+                    File(tmpPath).renameTo(File(outputPath))
+                    return "succeeded"
                 }
             } catch (ex: Exception) {
-                Log.d("", "Error in doInBackground " + ex.message)
+                Log.d("neossetup", "Error in doInBackground " + ex.message)
+                return "failed"
             }
-            return result
+            return ""
         }
 
         override fun onPreExecute() {
@@ -118,10 +119,10 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result == "") {
-                // log network error
-            } else {
+            if (result == "succeeeded") {
                 Log.d("neossetup", result)
+            } else {
+              // log network error
             }
         }
     }
