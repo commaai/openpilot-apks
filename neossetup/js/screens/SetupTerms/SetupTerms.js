@@ -26,7 +26,14 @@ class SetupTerms extends Component {
         this.state = {
             hasScrolled: false,
             isAtBottom: false,
+            terms: "",
         };
+    }
+
+    async componentDidMount() {
+        const _terms = await fetch('https://chffrdist.blob.core.windows.net/setup/op_terms.json');
+        const terms = await _terms.json();
+        this.setState({ terms: terms.text });
     }
 
     onScroll = ({ nativeEvent }) => {
@@ -47,6 +54,7 @@ class SetupTerms extends Component {
         const {
           hasScrolled,
           isAtBottom,
+          terms,
         } = this.state;
 
         return (
@@ -66,9 +74,11 @@ class SetupTerms extends Component {
                             onScroll={ this.onScroll }
                             style={ Styles.setupTermsScrollView }
                             onLayout={ this.onScrollViewLayout }>
-                            <X.Text weight='semibold' color='white'>Comma.ai, Inc. Terms & Conditions</X.Text>
-                            <X.Text size='small' color='white' style={ Styles.tosText }>{ Documents.TOS }</X.Text>
-                            <X.Text size='small' color='white'>Privacy policy available at https://my.comma.ai/privacy.html</X.Text>
+                            { terms == "" ? (
+                                <X.Text weight='semibold' color='white'>Please wait...</X.Text>
+                            ) : (
+                                <X.Text size='small' color='white'>{ terms }</X.Text>
+                            ) }
                         </ScrollView>
                     </View>
                     <View style={ Styles.setupTermsButtons }>
