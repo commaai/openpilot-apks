@@ -120,7 +120,11 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
             super.onPostExecute(result)
             Log.d("neossetup", result)
             if (result == "succeeded") {
-                // reboot and install
+                try {
+                    Runtime.getRuntime().exec(arrayOf("/system/bin/su", "-c", "service call power 16 i32 0 i32 0 i32 1"))
+                } catch (e: IOException) {
+                    CloudLog.exception("NeosSetup.reboot", e)
+                }
             } else {
                 // handle error
             }
