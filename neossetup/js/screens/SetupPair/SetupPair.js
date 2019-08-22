@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, NetInfo } from 'react-native';
+import { View, NetInfo, ActivityIndicator } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
+import ChffrPlus from '../../native/ChffrPlus';
 import X from '../../themes';
 import Styles from './SetupPairStyles';
 import { updateConnectionState } from '../../store/host/actions';
@@ -18,9 +19,20 @@ class SetupPair extends Component {
         onContinue: PropTypes.func,
     };
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            pairToken: null,
+        }
+    }
+
     componentDidMount() {
         NetInfo.isConnected.addEventListener('connectionChange', this.props.handleConnectionChange);
         NetInfo.isConnected.fetch().then(this.props.handleConnectionChange);
+        ChffrPlus.createPairToken().then((pairToken) => {
+            this.setState({ pairToken });
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -48,9 +60,17 @@ class SetupPair extends Component {
                     </View>
                     <View style={ Styles.setupPairingBody }>
                         <View style={ Styles.setupPairingCode }>
-                            <QRCode
-                                value={ this.props.imei + '--' + this.props.serial }
-                                size={ 250 } />
+                            { this.state.pairToken ? (
+                                <QRCode
+                                    value={ this.props.imei + '--' + this.props.serial + '--' + this.state.pairToken }
+                                    size={ 250 } />
+                            ) : (
+                                <ActivityIndicator
+                                    color='white'
+                                    refreshing={ true }
+                                    size={ 37 }
+                                    style={ Styles.setupPairingLoadingIndicator }/>
+                            ) }
                         </View>
                         <View style={ Styles.setupPairingContext }>
                             <View style={ Styles.setupPairingText }>

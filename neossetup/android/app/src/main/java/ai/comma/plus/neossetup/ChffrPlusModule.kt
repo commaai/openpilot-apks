@@ -20,7 +20,15 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiInfo
 import android.os.Environment
 import android.os.StatFs
+import android.util.Base64
 import android.util.Log
+import io.jsonwebtoken.Jwts
+import java.security.GeneralSecurityException
+import java.security.KeyFactory
+import java.security.PrivateKey
+import java.security.spec.InvalidKeySpecException
+import java.security.spec.PKCS8EncodedKeySpec
+import java.util.regex.Pattern
 
 import android.os.AsyncTask;
 import java.net.URL;
@@ -265,6 +273,60 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         val availableBlocks = stat.availableBlocksLong
 
         promise.resolve((availableBlocks * blockSize).toString())
+    }
+
+    @Throws(GeneralSecurityException::class)
+    private fun readPkcs1PrivateKey(pkcs1Bytes: ByteArray): PrivateKey {
+        // We can't use Java internal APIs to parse ASN.1 structures, so we build a PKCS#8 key Java can understand
+        val pkcs1Length = pkcs1Bytes.size
+        val totalLength = pkcs1Length + 22
+        val pkcs8Header = byteArrayOf(0x30, 0x82.toByte(), (totalLength shr 8 and 0xff).toByte(), (totalLength and 0xff).toByte(), // Sequence + total length
+                0x2, 0x1, 0x0, // Integer (0)
+                0x30, 0xD, 0x6, 0x9, 0x2A, 0x86.toByte(), 0x48, 0x86.toByte(), 0xF7.toByte(), 0xD, 0x1, 0x1, 0x1, 0x5, 0x0, // Sequence: 1.2.840.113549.1.1.1, NULL
+                0x4, 0x82.toByte(), (pkcs1Length shr 8 and 0xff).toByte(), (pkcs1Length and 0xff).toByte() // Octet string + length
+        )
+        val pkcs8bytes = join(pkcs8Header, pkcs1Bytes)
+        return readPkcs8PrivateKey(pkcs8bytes)
+    }
+
+     private fun join(byteArray1: ByteArray, byteArray2: ByteArray): ByteArray {
+        val bytes = ByteArray(byteArray1.size + byteArray2.size)
+        System.arraycopy(byteArray1, 0, bytes, 0, byteArray1.size)
+        System.arraycopy(byteArray2, 0, bytes, byteArray1.size, byteArray2.size)
+        return bytes
+    }
+
+    @Throws(GeneralSecurityException::class)
+    private fun readPkcs8PrivateKey(pkcs8Bytes: ByteArray): PrivateKey {
+        val keyFactory = KeyFactory.getInstance("RSA")
+        val keySpec = PKCS8EncodedKeySpec(pkcs8Bytes)
+        try {
+            return keyFactory.generatePrivate(keySpec)
+        } catch (e: InvalidKeySpecException) {
+            throw IllegalArgumentException("Unexpected key format!", e)
+        }
+    }
+
+    @ReactMethod
+    fun createPairToken(promise: Promise) {
+        val keyText = File("/persist/comma/id_rsa").readText()
+
+        // strip header, footer, and whitespace
+        var keyHex = keyText.replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                .replace("-----END RSA PRIVATE KEY-----", "")
+        keyHex = Pattern.compile("\\s+").matcher(keyHex).replaceAll("")
+        val keyBytes = Base64.decode(keyHex, Base64.DEFAULT)
+
+        val expTime = 3600 + (System.currentTimeMillis() / 1000).toInt()
+        try {
+            val key = readPkcs1PrivateKey(keyBytes)
+            val token = Jwts.builder().claim("pair", true).claim("exp", expTime).signWith(key).compact()
+
+            promise.resolve(token)
+        } catch (e: InvalidKeySpecException) {
+            CloudLog.exception("createPairToken: Invalid private key", e)
+            promise.reject(e)
+        }
     }
 
     fun getWifiStateMap(wifiInfo: WifiInfo? = null, networkInfo: NetworkInfo? = null): ReadableNativeMap {

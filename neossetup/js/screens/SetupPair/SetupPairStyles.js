@@ -18,6 +18,8 @@ export default StyleSheet.create({
         flexDirection: 'row',
     },
     setupPairingCode: {
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#fff',
         borderColor: '#fff',
         borderWidth: 5,
@@ -60,5 +62,9 @@ export default StyleSheet.create({
         display: 'flex',
         height: '100%',
         width: 160,
+    },
+    setupPairingLoadingIndicator: {
+        height: 26,
+        width: 26,
     },
 });
