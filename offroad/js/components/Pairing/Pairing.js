@@ -27,7 +27,7 @@ class Pairing extends Component {
     }
   }
   componentDidMount() {
-    ChffrPlus.createPairToken().then((pairToken) => {
+    ChffrPlus.createJwt({pair: true}).then((pairToken) => {
       this.setState({ pairToken });
     });
     this.checkPaired = setInterval(() => {

@@ -312,8 +312,9 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         }
 
     }
+
     @ReactMethod
-    fun createPairToken(promise: Promise) {
+    fun createJwt(claims: ReadableMap, promise: Promise) {
         val keyText = File("/persist/comma/id_rsa").readText()
 
         // strip header, footer, and whitespace
@@ -322,10 +323,17 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         keyHex = Pattern.compile("\\s+").matcher(keyHex).replaceAll("")
         val keyBytes = Base64.decode(keyHex, Base64.DEFAULT)
 
-        val expTime = 3600 + (System.currentTimeMillis() / 1000).toInt()
+        val now = (System.currentTimeMillis() / 1000).toInt()
+        val expTime = now + 3600
         try {
             val key = readPkcs1PrivateKey(keyBytes)
-            val token = Jwts.builder().claim("pair", true).claim("exp", expTime).signWith(key).compact()
+            val token = Jwts.builder()
+                    .claim("exp", expTime)
+                    .claim("iat", now)
+                    .claim("nbf", now)
+                    .addClaims(claims.toHashMap())
+                    .signWith(key)
+                    .compact()
 
             promise.resolve(token)
         } catch (e: InvalidKeySpecException) {

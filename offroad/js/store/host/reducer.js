@@ -18,7 +18,6 @@ const initialHostState = {
     wifiState: {},
     imei: null,
     serial: null,
-    deviceJwt: null,
     device: null,
     isSshEnabled: false,
 };
@@ -55,7 +54,6 @@ export default (state = initialHostState, action) => {
                 ...state,
                 imei: action.imei,
                 serial: action.serial,
-                deviceJwt: action.deviceJwt,
             }
         case ACTION_DEVICE_REFRESHED:
             return {

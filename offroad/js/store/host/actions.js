@@ -57,14 +57,11 @@ export function setDeviceIds() {
     return async dispatch => {
         const imei = await ChffrPlus.getImei();
         const serial = await ChffrPlus.getSerialNumber();
-        const deviceJwt = await ChffrPlus.readParam("AccessToken");
-        await Request.configure(deviceJwt);
 
         dispatch({
             type: ACTION_DEVICE_IDS_AVAILABLE,
             imei,
             serial,
-            deviceJwt,
         });
     }
 }
@@ -84,6 +81,8 @@ export function updateSshEnabled(isSshEnabled) {
 export function refreshDeviceInfo() {
     return async (dispatch, getState) => {
         const dongleId = await ChffrPlus.readParam("DongleId");
+        const token = await ChffrPlus.createJwt({"identity": dongleId});
+        await Request.configure(token);
         const device =  await Devices.fetchDevice(dongleId);
 
         dispatch({
