@@ -16,7 +16,6 @@ const PARAMS = [
   "HasAcceptedTerms",
   "HasCompletedSetup",
   "IsDriverMonitoringEnabled",
-  "IsFcwEnabled",
   "IsGeofenceEnabled",
   "IsMetric",
   "IsUploadVideoOverCellularEnabled",

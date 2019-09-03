@@ -243,7 +243,6 @@ class Settings extends Component {
             params: {
                 IsDriverMonitoringEnabled: isDriverMonitoringEnabled,
                 RecordFront: recordFront,
-                IsFcwEnabled: isFcwEnabled,
                 IsMetric: isMetric,
                 LongitudinalControl: hasLongitudinalControl,
                 LimitSetSpeed: limitSetSpeed,
@@ -286,15 +285,6 @@ class Settings extends Component {
                             isExpanded={ expandedCell == 'record_front' }
                             handleExpanded={ () => this.handleExpanded('record_front') }
                             handleChanged={ this.props.setRecordFront } />
-                        <X.TableCell
-                            type='switch'
-                            title='Enable Forward Collision Warning'
-                            value={ !!parseInt(isFcwEnabled) }
-                            iconSource={ Icons.warning }
-                            description='Use visual and acoustic warnings when risk of forward collision is detected.'
-                            isExpanded={ expandedCell == 'fcw' }
-                            handleExpanded={ () => this.handleExpanded('fcw') }
-                            handleChanged={ this.props.setFcwEnabled } />
                         <X.TableCell
                             type='switch'
                             title='Use Metric System'
@@ -794,9 +784,6 @@ const mapDispatchToProps = dispatch => ({
     setDriverMonitoringEnabled: (isDriverMonitoringEnabled) => {
         const value = (isDriverMonitoringEnabled | 0).toString();
         dispatch(updateParam(Params.KEY_IS_DRIVER_MONITORING_ENABLED, value));
-    },
-    setFcwEnabled: (isFcwEnabled) => {
-        dispatch(updateParam(Params.KEY_IS_FCW_ENABLED, (isFcwEnabled | 0).toString()));
     },
     setMetric: (useMetricUnits) => {
         dispatch(updateParam(Params.KEY_IS_METRIC, (useMetricUnits | 0).toString()));
