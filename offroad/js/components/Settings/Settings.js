@@ -393,6 +393,16 @@ class Settings extends Component {
                                 value={ isPaired ? 'Yes' : 'No' } />
                             <X.Text color='white' size='tiny'>Terms of Service available at {'https://my.comma.ai/terms.html'}</X.Text>
                         </X.Table>
+                        { isPaired ? null : (
+                          <X.Table color='darkBlue' padding='big'>
+                              <X.Button
+                                  color='settingsDefault'
+                                  size='small'
+                                  onPress={ this.props.openPairing }>
+                                  Pair Device
+                              </X.Button>
+                          </X.Table>
+                        ) }
                     </View>
                 </ScrollView>
             </View>
@@ -753,6 +763,9 @@ const mapDispatchToProps = dispatch => ({
                 NavigationActions.navigate({ routeName: 'Home' })
             ]
         }));
+    },
+    openPairing: () => {
+        dispatch(NavigationActions.navigate({ routeName: 'PairAfterSetup' }))
     },
     reboot: () => {
         Alert.alert('Reboot', 'Are you sure you want to reboot?', [
