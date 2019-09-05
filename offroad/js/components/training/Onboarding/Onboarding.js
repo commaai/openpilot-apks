@@ -139,10 +139,14 @@ class Onboarding extends Component {
                 this.animatePhotoOffset(100);
                 this.animatePhotoCycled(100);
                 return this.setStepPoint(2); break;
+            case 'limitations':
+                this.animatePhotoOffset(100);
+                this.animatePhotoCycled(100);
+                return this.setStepPoint(3); break;
             case 'pedal':
                 this.animatePhotoOffset(100);
                 this.animatePhotoCycledLast(100);
-                return this.setStepPoint(3); break;
+                return this.setStepPoint(4); break;
         }
     }
 
@@ -160,6 +164,11 @@ class Onboarding extends Component {
                 this.animatePhotoCycled(100);
                 this.animatePhotoCycledLast(100);
                 return this.setStepPoint(3); break;
+            case 'limitations':
+                this.animatePhotoOffset(100);
+                this.animatePhotoCycled(100);
+                this.animatePhotoCycledLast(100);
+                return this.setStepPoint(4); break;
             case 'pedal':
                 this.animatePhotoOffset(0);
                 this.animatePhotoCycled(0);
@@ -512,14 +521,12 @@ class Onboarding extends Component {
                         Press cruise to engage and a pedal to disengage.
                     </X.Text>
                     <X.RadioField
-                        size='medium'
                         color='white'
                         isChecked={ stepChecks.includes('cruise') }
                         hasAppend={ true }
                         onPress={ () => this.handleControlsRadioPressed('cruise') }
                         label='Engage openpilot' />
                     <X.RadioField
-                        size='medium'
                         color='white'
                         isDisabled={ !stepChecks.includes('cruise') }
                         isChecked={ stepChecks.includes('monitoring') }
@@ -527,9 +534,15 @@ class Onboarding extends Component {
                         onPress={ () => this.handleControlsRadioPressed('monitoring') }
                         label='Driver Monitoring' />
                     <X.RadioField
-                        size='medium'
                         color='white'
                         isDisabled={ !stepChecks.includes('monitoring') }
+                        isChecked={ stepChecks.includes('limitations') }
+                        hasAppend={ true }
+                        onPress={ () => this.handleControlsRadioPressed('limitations') }
+                        label='Limited Features' />
+                    <X.RadioField
+                        color='white'
+                        isDisabled={ !stepChecks.includes('limitations') }
                         isChecked={ stepChecks.includes('pedal') }
                         hasAppend={ true }
                         onPress={ () => this.handleControlsRadioPressed('pedal') }
@@ -618,6 +631,47 @@ class Onboarding extends Component {
         )
     }
 
+    renderControlsStepPointLimitations() {
+        return (
+            <X.Entrance
+                transition='fadeInLeft'
+                duration={ 1000 }
+                style={ Styles.onboardingStepPointSmall }>
+                <X.Entrance>
+                    <X.Button
+                        size='small' color='ghost' textWeight='light'
+                        style={ Styles.onboardingStepPointCrumb }
+                        onPress={ () => this.handleControlsRadioPressed('index') }>
+                        openpilot controls
+                    </X.Button>
+                    <X.Text size='medium' color='white' weight='bold'>
+                        Limited Features
+                    </X.Text>
+                    <X.Text
+                        size='small' color='white' weight='light'
+                        style={ Styles.onboardingStepContextSmaller }>
+                        Keep in mind that certain situations are not handled by
+                        openpilot. Scenarios such as traffic lights, stop signs,
+                        quick vehicle cutins and pedestrians are unrecognized
+                        and openpilot may accelerate.
+                    </X.Text>
+                    <X.Button color='ghost'
+                        style={ Styles.onboardingStepPointInstruction }
+                        onPress={ () => this.handleWrongGatePressed() }>
+                        <X.Text
+                            size='small' color='white' weight='semibold'
+                            style={ Styles.onboardingStepPointInstructionText }>
+                            Select light to continue
+                        </X.Text>
+                        <X.Image
+                            source={ require('../../../img/icon_chevron_right.png') }
+                            style={ Styles.onboardingStepPointInstructionIcon } />
+                    </X.Button>
+                </X.Entrance>
+            </X.Entrance>
+        )
+    }
+
     renderControlsStepPointDisengage() {
         return (
             <X.Entrance
@@ -669,6 +723,8 @@ class Onboarding extends Component {
             case 2:
                 return this.renderControlsStepPointMonitoring(); break;
             case 3:
+                return this.renderControlsStepPointLimitations(); break;
+            case 4:
                 return this.renderControlsStepPointDisengage(); break;
         }
     }
@@ -907,9 +963,30 @@ class Onboarding extends Component {
                                 </Animated.Image>
                             ) : null }
                             { stepPoint == 3 ? (
+                                <Animated.Image
+                                    source={ require('../../../img/photo_traffic_light_01.jpg') }
+                                    style={ [Styles.onboardingPhotoCycled, {
+                                        opacity: photoCycled.interpolate({
+                                            inputRange: [0, 100],
+                                            outputRange: [0, 1],
+                                        }),
+                                    }] }>
+                                    <Animated.View style={ [Styles.onboardingLightTouchGate, {
+                                      opacity: gateHighlighted.interpolate({
+                                          inputRange: [0, 100],
+                                          outputRange: [0, 1],
+                                      }),
+                                    }]}>
+                                        <X.Button
+                                            style={ Styles.onboardingPedalTouchGateButton }
+                                            onPress={ () => { this.handleControlsVisualPressed('limitations') } } />
+                                    </Animated.View>
+                                </Animated.Image>
+                            ) : null }
+                            { stepPoint == 4 ? (
                                 <View style={ Styles.onboardingVisuals }>
                                     <Animated.Image
-                                        source={ require('../../../img/photo_monitoring_01.jpg') }
+                                        source={ require('../../../img/photo_traffic_light_01.jpg') }
                                         style={ [Styles.onboardingPhotoCycled] } />
                                     <Animated.Image
                                         source={ require('../../../img/photo_pedals_01.jpg') }

@@ -94,6 +94,13 @@ export default StyleSheet.create({
         bottom: 94,
         transform: [{ rotate: '-6.25deg'}],
     },
+    onboardingLightTouchGate: {
+        height: 270,
+        width: 100,
+        position: 'absolute',
+        right: 120,
+        bottom: 40,
+    },
     onboardingBrakePedalTouchGate: {
         height: 70,
         width: 100,
