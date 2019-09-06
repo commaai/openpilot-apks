@@ -18,7 +18,6 @@ export const Params = {
     KEY_LATEST_TRAINING_VERSION: 'TrainingVersion',
     KEY_COMPLETED_TRAINING_VERSION: 'CompletedTrainingVersion',
     KEY_LATEST_TERMS_VERSION: 'TermsVersion',
-    KEY_IS_DRIVER_MONITORING_ENABLED: 'IsDriverMonitoringEnabled',
     KEY_IS_GEOFENCE_ENABLED: 'IsGeofenceEnabled',
     KEY_HAS_LONGITUDINAL_CONTROL: 'LongitudinalControl',
     KEY_LIMIT_SET_SPEED: 'LimitSetSpeed',

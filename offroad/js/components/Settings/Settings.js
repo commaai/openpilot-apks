@@ -37,7 +37,6 @@ const Icons = {
     user: require('../../img/icon_user.png'),
     developer: require('../../img/icon_shell.png'),
     warning: require('../../img/icon_warning.png'),
-    monitoring: require('../../img/icon_monitoring.png'),
     metric: require('../../img/icon_metric.png'),
     network: require('../../img/icon_network.png'),
     eon: require('../../img/icon_eon.png'),
@@ -241,7 +240,6 @@ class Settings extends Component {
     renderPrimarySettings() {
         const {
             params: {
-                IsDriverMonitoringEnabled: isDriverMonitoringEnabled,
                 RecordFront: recordFront,
                 IsMetric: isMetric,
                 LongitudinalControl: hasLongitudinalControl,
@@ -267,15 +265,6 @@ class Settings extends Component {
                         { this.renderSettingsMenu() }
                     </X.Table>
                     <X.Table color='darkBlue'>
-                        <X.TableCell
-                            type='switch'
-                            title='Enable Driver Monitoring'
-                            value={ !!parseInt(isDriverMonitoringEnabled) }
-                            iconSource={ Icons.monitoring }
-                            description='Driver Monitoring detects driver awareness with 3D facial reconstruction and pose estimation. It is used to warn the driver when they appear distracted while openpilot is engaged. This feature is still in beta, so Driver Monitoring is unavailable when the facial tracking is too inaccurate (e.g. at night). The availability is indicated by the face icon at the bottom-left corner of your EON.'
-                            isExpanded={ expandedCell == 'driver_monitoring' }
-                            handleExpanded={ () => this.handleExpanded('driver_monitoring') }
-                            handleChanged={ this.props.setDriverMonitoringEnabled } />
                         <X.TableCell
                             type='switch'
                             title='Record and Upload Driver Camera'
@@ -793,10 +782,6 @@ const mapDispatchToProps = dispatch => ({
                 NavigationActions.navigate({ routeName: 'Onboarding' })
             ]
         }))
-    },
-    setDriverMonitoringEnabled: (isDriverMonitoringEnabled) => {
-        const value = (isDriverMonitoringEnabled | 0).toString();
-        dispatch(updateParam(Params.KEY_IS_DRIVER_MONITORING_ENABLED, value));
     },
     setMetric: (useMetricUnits) => {
         dispatch(updateParam(Params.KEY_IS_METRIC, (useMetricUnits | 0).toString()));
