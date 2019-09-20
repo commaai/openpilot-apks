@@ -8,26 +8,27 @@ import { View } from 'react-native';
 import { withMappedNavigationAndConfigProps } from 'react-navigation-props-mapper';
 import { connect } from 'react-redux';
 
-import PairAfterSetup from '../components/PairAfterSetup';
+import Loader from '../components/Loader';
 import Home from '../components/Home';
 import Settings from '../components/Settings';
-import Setup from '../components/Setup';
-import SetupTermsStandalone from '../components/SetupTermsStandalone';
-import SetupWelcome from '../components/SetupWelcome';
+import SettingsWifi from '../components/SettingsWifi';
+import SetupTerms from '../components/SetupTerms';
+import SetupWifi from '../components/SetupWifi';
+import SetupQr from '../components/SetupQr';
 import Onboarding from '../components/training/Onboarding';
 import GiraffeSwitch from '../components/training/GiraffeSwitch'
 import UpdatePrompt from '../components/UpdatePrompt';
 
 export const StackNavigator = RNStackNavigator({
+    Loader: { screen: Loader },
     Home: { screen: Home },
-    Setup: { screen: Setup },
-    SetupWelcome: { screen: SetupWelcome },
-    SetupTermsStandalone: { screen: SetupTermsStandalone },
+    SetupTerms: { screen: SetupTerms },
+    SetupWifi: { screen: SetupWifi },
+    SetupQr: { screen: SetupQr },
     Onboarding: { screen: Onboarding },
-    PairAfterSetup: { screen: PairAfterSetup },
     GiraffeSwitch: { screen: GiraffeSwitch },
     Settings: { screen: Settings },
-    SettingsStandalone: { screen: Settings },
+    SettingsWifi: { screen: SettingsWifi },
     UpdatePrompt: { screen: UpdatePrompt },
 });
 

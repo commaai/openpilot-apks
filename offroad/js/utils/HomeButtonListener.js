@@ -4,6 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import ChffrPlus from '../native/ChffrPlus';
 import { checkHasCompletedTraining, checkIsPassive } from './version';
 import { Params } from '../config';
+import { resetToLaunch } from '../store/nav/actions';
 
 let listener;
 
@@ -13,39 +14,12 @@ function checkHasCompletedSetup() {
 
 function onHomePress(dispatch) {
     return () => {
-        Promise.all([checkHasCompletedSetup(), checkHasCompletedTraining(), checkIsPassive()])
-            .then(([hasCompletedSetup, hasCompletedTraining, isPassive]) =>
-                navigateToHomeScreen(dispatch, hasCompletedSetup, hasCompletedTraining, isPassive)
-        );
+      navigateToHomeScreen(dispatch);
     }
 }
 
-function navigateToHomeScreen(dispatch, hasCompletedSetup, hasCompletedTraining, isPassive) {
-    if (hasCompletedSetup && (hasCompletedTraining || isPassive)) {
-        dispatch(NavigationActions.reset({
-            index: 0,
-            key: null,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Home' })
-            ]
-        }));
-    } else if (hasCompletedSetup && !isPassive) {
-        dispatch(NavigationActions.reset({
-            index: 0,
-            key: null,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Onboarding' })
-            ]
-        }));
-    } else {
-        dispatch(NavigationActions.reset({
-            index: 0,
-            key: null,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Setup' })
-            ]
-        }));
-    }
+function navigateToHomeScreen(dispatch) {
+    dispatch(resetToLaunch());
 }
 
 function register(dispatch) {

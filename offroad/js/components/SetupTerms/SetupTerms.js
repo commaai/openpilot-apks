@@ -1,49 +1,63 @@
 import React, { Component } from 'react';
-import ScrollThrough from '../ScrollThrough';
-
+import { View } from 'react-native';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { ScrollView, View, Text } from 'react-native';
+import ChffrPlus from '../../native/ChffrPlus';
+import { Params } from '../../config';
+import { resetToLaunch } from '../../store/nav/actions';
 import Documents from './Documents';
-
+import ScrollThrough from '../ScrollThrough';
 import X from '../../themes';
-import SetupStyles from '../Setup';
 import Styles from './SetupTermsStyles';
 
-export default class SetupTerms extends Component {
+class SetupTerms extends Component {
+    static navigationOptions = {
+        header: null,
+    };
+
     static propTypes = {
         onAccept: PropTypes.func,
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            hasScrolled: false,
-        };
-    }
-
-    onScroll = ({ nativeEvent }) => {
-        if (!this.state.hasScrolled) {
-            this.setState({ hasScrolled: true });
-        }
-    }
-
     render() {
-        const { hasScrolled } = this.state;
-
+        const { onAccept } = this.props;
         return (
-            <ScrollThrough
-                onPrimaryButtonClick={ this.props.onAccept }
-                primaryButtonText={ hasScrolled ? 'I agree to the terms' : 'Read to Continue' }
-                secondaryButtonText={ 'Decline' }
-                onScroll={ this.onScroll }
-                primaryButtonEnabled={ hasScrolled }>
-                <X.Text weight='semibold' color='white'>Comma.ai, Inc. Terms & Conditions</X.Text>
-                <X.Text size='small' color='white' style={ Styles.tosText }>{ Documents.TOS }</X.Text>
-                <X.Text size='small' color='white'>Privacy policy available at https://my.comma.ai/privacy.html</X.Text>
-            </ScrollThrough>
+            <X.Gradient
+                color='flat_blue'>
+                <X.Entrance style={ Styles.setupTerms }>
+                    <View style={ Styles.setupTermsHeader }>
+                        <X.Text
+                            color='white'
+                            size='big'
+                            weight='bold'>
+                            Review Terms
+                        </X.Text>
+                    </View>
+                    <ScrollThrough
+                        onPrimaryButtonClick={ onAccept }
+                        primaryButtonText='Accept Terms and Conditions'
+                        primaryButtonTextDisabled='Read to Continue'
+                        secondaryButtonText='Decline'
+                        scrollViewStyles={ Styles.setupTermsScrollView }>
+                        <X.Text weight='semibold' color='white'>Comma.ai, Inc. Terms & Conditions</X.Text>
+                        <X.Text size='small' color='white' style={ Styles.tosText }>{ Documents.TOS }</X.Text>
+                        <X.Text size='small' color='white'>Privacy policy available at https://my.comma.ai/privacy.html</X.Text>
+                    </ScrollThrough>
+                </X.Entrance>
+            </X.Gradient>
         );
-
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return ({
+        onAccept: async function() {
+            const termsVersion = await ChffrPlus.readParam(Params.KEY_LATEST_TERMS_VERSION);
+            ChffrPlus.writeParam(Params.KEY_ACCEPTED_TERMS_VERSION, termsVersion);
+            dispatch(resetToLaunch());
+        }
+    });
+}
+
+export default connect(null, mapDispatchToProps)(SetupTerms);

@@ -13,6 +13,7 @@ import ChffrPlus from '../../native/ChffrPlus';
 import { formatSize } from '../../utils/bytes';
 import { mpsToKph, mpsToMph, kphToMps, mphToMps } from '../../utils/conversions';
 import { Params } from '../../config';
+import { resetToLaunch } from '../../store/nav/actions';
 
 import {
     updateSshEnabled,
@@ -383,14 +384,14 @@ class Settings extends Component {
                             <X.Text color='white' size='tiny'>Terms of Service available at {'https://my.comma.ai/terms.html'}</X.Text>
                         </X.Table>
                         { isPaired ? null : (
-                          <X.Table color='darkBlue' padding='big'>
-                              <X.Button
-                                  color='settingsDefault'
-                                  size='small'
-                                  onPress={ this.props.openPairing }>
-                                  Pair Device
-                              </X.Button>
-                          </X.Table>
+                            <X.Table color='darkBlue' padding='big'>
+                                <X.Button
+                                    color='settingsDefault'
+                                    size='small'
+                                    onPress={ this.props.openPairing }>
+                                    Pair Device
+                                </X.Button>
+                            </X.Table>
                         ) }
                     </View>
                 </ScrollView>
@@ -512,7 +513,7 @@ class Settings extends Component {
                         <X.Button
                             size='small'
                             color='settingsDefault'
-                            onPress={ () => ChffrPlus.openWifiSettings() }>
+                            onPress={ this.props.openWifiSettings }>
                             Open WiFi Settings
                         </X.Button>
                         <X.Line color='transparent' size='tiny' spacing='mini' />
@@ -745,16 +746,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     navigateHome: async () => {
-        dispatch(NavigationActions.reset({
-            index: 0,
-            key: null,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Home' })
-            ]
-        }));
+        dispatch(resetToLaunch());
     },
     openPairing: () => {
-        dispatch(NavigationActions.navigate({ routeName: 'PairAfterSetup' }))
+        dispatch(NavigationActions.navigate({ routeName: 'SetupQr' }));
+    },
+    openWifiSettings: () => {
+        dispatch(NavigationActions.navigate({ routeName: 'SettingsWifi' }));
     },
     reboot: () => {
         Alert.alert('Reboot', 'Are you sure you want to reboot?', [

@@ -23,6 +23,12 @@ export let ChffrPlusTheme = {
             semibold: 'OpenSans-Semibold',
             bold: 'OpenSans-Bold',
         },
+        colors: {
+            setupDisabled: '#1D2225',
+            lightGrey200: '#ACB7BD',
+            whiteFieldLabel: '#49545B',
+            lightGrey700: '#758791',
+        },
     },
     button: {
         sizes: {
@@ -45,6 +51,15 @@ export let ChffrPlusTheme = {
                 borderRadius: 13,
                 borderWidth: 1,
             },
+            setupInvertedLight: {
+                borderColor: '#ACB7BD',
+                borderRadius: 13,
+                borderWidth: 1,
+            },
+            setupDisabled: {
+                backgroundColor: '#0B0E0E',
+                borderRadius: 13,
+            },
             settingsDefault: {
                 backgroundColor: 'rgba(233, 233, 233, 0.08)',
                 borderColor: 'transparent',
@@ -61,12 +76,34 @@ export let ChffrPlusTheme = {
             mediumLabel: 18,
         },
     },
+    checkboxField: {
+        sizes: {
+            tiny: 20,
+            tinyLabel: 14,
+        },
+        colors: {
+            dark: {
+                input: '#EEF0F1',
+                inputBorder: '#80909A',
+                inputChecked: '#175886',
+                label: '#758791',
+            },
+        },
+    },
     gradient: {
         colors: {
             engaged_green: [
                 'rgb(24, 125, 68)',
                 'rgb(15, 93, 47)'
-            ]
+            ],
+            dark_black: [
+                'rgb(22, 24, 26)',
+                'rgb(3, 4, 4)',
+            ],
+            flat_blue: [
+                'rgb(7, 35, 57)',
+                'rgb(7, 35, 57)',
+            ],
         },
     },
     line: {

@@ -1,34 +1,19 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-    root: {
+    setupTerms: {
         flex: 1,
+        paddingLeft: 10,
+        paddingRight: 10,
     },
-    tosText: {
-        opacity: 0.75,
-    },
-    scrollContainer: {
-        position: 'relative',
-        flex: 1,
-    },
-    buttons: {
-        flex: 0.3,
+    setupTermsHeader: {
+        alignItems: 'center',
         flexDirection: 'row',
-        marginTop: 15,
+        height: 60,
     },
-    declineButton: {
-        flex: 0.25,
-        marginRight: 20,
-    },
-    acceptButton: {
-        flex: 0.75,
-    },
-    scrollBorder: {
-        borderTopColor: 'rgba(255,255,255,0.08)',
-        borderTopWidth: 2,
-        width: '100%',
-        height: 1,
-        position: 'absolute',
-        bottom: 0,
+    setupTermsScrollView: {
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        borderRadius: 8,
+        padding: 20,
     },
 });

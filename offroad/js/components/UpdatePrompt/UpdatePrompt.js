@@ -9,7 +9,6 @@ import {
     ACTION_UPDATE_CHECKED,
 } from '../../store/updater/actions';
 
-import SetupContainer from '../SetupContainer';
 import ScrollThrough from '../ScrollThrough';
 
 class UpdatePrompt extends Component {
@@ -25,7 +24,9 @@ class UpdatePrompt extends Component {
 
     render() {
         return (
-            <SetupContainer>
+            <X.Gradient
+                color='dark_blue'
+                styles={ { padding: 26, paddingTop: 10 } }>
                 <ScrollThrough
                     onPrimaryButtonClick={ this.onUpdatePressed }
                     onSecondaryButtonClick={ this.props.onDismiss }
@@ -39,7 +40,7 @@ class UpdatePrompt extends Component {
                         { this.props.releaseNotes }
                     </X.Text>
                 </ScrollThrough>
-            </SetupContainer>
+            </X.Gradient>
         )
     }
 }

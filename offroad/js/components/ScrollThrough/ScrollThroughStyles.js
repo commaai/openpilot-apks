@@ -12,9 +12,11 @@ export default StyleSheet.create({
         flex: 1,
     },
     buttons: {
+        alignItems: 'center',
         flex: 0.3,
         flexDirection: 'row',
-        marginTop: 15,
+        marginBottom: 15,
+        marginTop: 20,
     },
     declineButton: {
         flex: 0.25,
@@ -24,11 +26,11 @@ export default StyleSheet.create({
         flex: 0.75,
     },
     scrollBorder: {
-        borderTopColor: 'rgba(255,255,255,0.08)',
-        borderTopWidth: 2,
-        width: '100%',
-        height: 1,
-        position: 'absolute',
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        borderRadius: 2,
         bottom: 0,
+        height: 3,
+        position: 'absolute',
+        width: '100%',
     },
 });

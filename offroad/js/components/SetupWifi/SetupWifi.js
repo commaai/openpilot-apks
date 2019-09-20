@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
     ActivityIndicator,
     DeviceEventEmitter,
@@ -10,19 +11,19 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Keyboard,
 } from 'react-native';
 import PopupDialog, { DialogButton } from 'react-native-popup-dialog';
 import { NetworkInfo } from 'react-native-network-info';
+
 import Logging from '../../native/Logging';
-
 import WifiModule from '../../native/Wifi';
-
+import { resetToLaunch } from '../../store/nav/actions';
 import X from '../../themes';
 import ChffrPlus from '../../native/ChffrPlus';
-
-import SetupStyles from '../Setup/SetupStyles';
 import Styles from './SetupWifiStyles';
 
+const SECURITY_UNSECURED = 'Unsecured';
 const BarImagesByLevel = {
     0: require('../../img/indicator_wifi_25.png'),
     1: require('../../img/indicator_wifi_50.png'),
@@ -30,9 +31,11 @@ const BarImagesByLevel = {
     3: require('../../img/indicator_wifi_100.png'),
 };
 
-const SECURITY_UNSECURED = 'Unsecured';
-
 class SetupWifi extends Component {
+    static navigationOptions = {
+        header: null,
+    };
+
     static propTypes = {
         onContinue: PropTypes.func,
     };
@@ -43,9 +46,13 @@ class SetupWifi extends Component {
         this.state = {
             isLoading: true,
             networks: [],
+            attemptedNetworkSsid: null,
             connectedNetworkSsid: null,
             connectingNetwork: null,
+            hasAuthProblem: false,
             password: '',
+            showPassword: false,
+            errorMessage: '',
         };
 
         this.updateAvailableNetworks = this.updateAvailableNetworks.bind(this);
@@ -53,37 +60,50 @@ class SetupWifi extends Component {
 
     componentWillMount() {
         this.refreshNetworks();
-
         DeviceEventEmitter.addListener('onWifiStateChange', this.onWifiStateChange);
     }
 
+    componentDidMount() {
+        this.checkWifiEnabled = setInterval(() => {
+            if (this.state.isLoading && this.state.networks.length < 1) {
+                this.setState({
+                    isLoading: false,
+                    errorMessage: 'There was a problem scanning WiFi networks. \nMake sure WiFi is enabled in \"More Options\" above.',
+                })
+            }
+        }, 15000);
+    }
+
     componentWillUnmount() {
+        clearInterval(this.checkWifiEnabled);
         DeviceEventEmitter.removeListener('onWifiStateChange', this.onWifiStateChange);
     }
 
     onWifiStateChange = ({ isConnected, connectedSsid, hasAuthProblem }) => {
-        let { connectedNetworkSsid, connectingNetwork } = this.state;
-
-        let isActiveConnectAttemptFulfilled = connectingNetwork && connectingNetwork.ssid === connectedSsid;
-        let ssidDidChange = connectedSsid !== '<unknown ssid>' && connectedSsid !== this.state.connectedNetworkSsid
-        if (isActiveConnectAttemptFulfilled || ssidDidChange) {
-            connectingNetwork = null;
-        }
+        let _attemptedNetworkSsid = null;
+        let _connectedNetworkSsid = null;
+        let _hasAuthProblem = false;
 
         if (isConnected && !hasAuthProblem) {
-            connectedNetworkSsid = connectedSsid;
+            _connectedNetworkSsid = connectedSsid;
+        } else if (hasAuthProblem) {
+            _attemptedNetworkSsid = connectedSsid;
+            _hasAuthProblem = true;
         } else {
-            connectedNetworkSsid = null;
+            _attemptedNetworkSsid = connectedSsid;
         }
 
         this.setState({
-            connectedNetworkSsid,
-            connectingNetwork,
+            attemptedNetworkSsid: _attemptedNetworkSsid,
+            connectedNetworkSsid: _connectedNetworkSsid,
+            hasAuthProblem: _hasAuthProblem,
         }, () => this.updateAvailableNetworks());
     }
 
     updateAvailableNetworks = (networks) => {
-        if (networks === undefined) networks = this.state.networks;
+        if (networks === undefined) {
+            networks = this.state.networks;
+        };
 
         const { connectedNetworkSsid } = this.state;
         networks = networks.sort((lhs, rhs) => {
@@ -112,7 +132,7 @@ class SetupWifi extends Component {
     connectToNetwork = (network, password) => {
         try {
             WifiModule.connect(network.ssid, password || null);
-            this.setState({ connectingNetwork: network});
+            this.setState({ connectingNetwork: network });
         } catch(err) {
             this.setState({ connectingNetwork: null });
             if (err.code === 'E_WIFI_ERR') {
@@ -135,11 +155,15 @@ class SetupWifi extends Component {
                 // Already connected
                 this.setState({ connectedNetworkSsid: ssid }, this.updateAvailableNetworks);
             } else {
-                this.setState({ connectingNetwork: network}, () => {
+                this.setState({
+                    connectingNetwork: network,
+                    password: '',
+                }, () => {
                     if (network.security === SECURITY_UNSECURED) {
                         this.connectToNetwork(network);
                     } else {
                         this.popupDialog.show();
+                        this.passwordInput.focus();
                     }
                 });
             }
@@ -152,133 +176,262 @@ class SetupWifi extends Component {
 
         this.popupDialog.dismiss();
         this.connectToNetwork(connectingNetwork, password);
+        Keyboard.dismiss();
     }
 
     onDismissPasswordPrompt = () => {
+        Keyboard.dismiss();
         this.popupDialog.dismiss();
         this.setState({ connectingNetwork: null });
     }
 
     renderNetwork = ({ item }) => {
-        const { connectedNetworkSsid, connectingNetwork } = this.state;
-
+        const { attemptedNetworkSsid, connectedNetworkSsid, connectingNetwork, hasAuthProblem } = this.state;
+        const hasAttempted = item.ssid == attemptedNetworkSsid && hasAuthProblem;
         const isConnected = item.ssid === connectedNetworkSsid;
         const isConnecting = connectingNetwork && item.ssid === connectingNetwork.ssid;
 
         return (
             <TouchableOpacity
                 key={ item.ssid }
+                activeOpacity={ 0.8 }
                 onPress={ () => this.onTapToConnect(item) }>
-                <View style={ Styles.networkRow } key={ item.ssid }>
+                <View style={ Styles.setupWifiNetwork } key={ item.ssid }>
                     <Image
                         source={ BarImagesByLevel[item.level] }
-                        style={ Styles.barImage }
+                        style={ Styles.setupWifiNetworkIcon }
                         resizeMode='contain' />
-                    <View style={ Styles.networkDetails }>
-                        <X.Text size='medium' color='white'>{ item.ssid }</X.Text>
-                        <X.Text size='small' color='white'>{ isConnected ? 'Connected' : item.security }</X.Text>
+                    <View style={ Styles.setupWifiNetworkDetails }>
+                        <X.Text
+                            color='white'
+                            size='small'
+                            weight='semibold'>
+                            { item.ssid }
+                        </X.Text>
+                        <X.Text
+                            size='tiny'
+                            color='lightGrey200'
+                            weight='light'>
+                            { isConnected ? 'Connected'
+                                : isConnecting ? 'Authenticating...'
+                                : hasAttempted ? 'Authentication problem'
+                                : item.security }
+                        </X.Text>
                     </View>
-                    <View style={ Styles.networkRowRight }>
-                        { isConnected ?
-                            <Image
-                                source={ require('../../img/circled-checkmark.png') }
-                                style={ Styles.connectedImage }
-                                resizeMode='contain' />
-                        : null }
-                        { isConnecting ?
-                            <ActivityIndicator
-                                color='white'
-                                refreshing={ true }
-                                size={ 37 }
-                                style={ Styles.connectingIndicator }/>
-                        : null }
+                    <View style={ Styles.setupWifiNetworkStatus }>
+                        { isConnected ? (
+                            <X.Button
+                                color='setupInverted'
+                                size='small'
+                                style={ Styles.setupWifiNetworkButtonConnected }>
+                                <Image
+                                    source={ require('../../img/circled-checkmark.png') }
+                                    style={ Styles.setupWifiNetworkButtonConnectedIcon }
+                                    resizeMode='contain' />
+                                <X.Text
+                                    color='white'
+                                    size='small'
+                                    weight='semibold'>
+                                    Connected
+                                </X.Text>
+                            </X.Button>
+                        ): null }
+                        { isConnecting ? (
+                            <X.Button
+                                color='setupInverted'
+                                size='small'
+                                onPress={ () => this.onTapToConnect(item) }
+                                style={ Styles.setupWifiNetworkButton }>
+                                <ActivityIndicator
+                                    color='white'
+                                    refreshing={ true }
+                                    size={ 37 }
+                                    style={ Styles.setupWifiConnectingIndicator }/>
+                            </X.Button>
+                        ): null }
+                        { !isConnected && !isConnecting ? (
+                            <X.Button
+                                color='setupInverted'
+                                size='small'
+                                onPress={ () => this.onTapToConnect(item) }
+                                style={ Styles.setupWifiNetworkButton }>
+                                Connect
+                            </X.Button>
+                        ) : null }
                     </View>
                 </View>
             </TouchableOpacity>
         );
     }
 
-    keyExtractor = item => item.ssid
+    handleShowPasswordToggled = () => {
+        this.setState({ showPassword: !this.state.showPassword });
+    }
+
+    keyExtractor = item => item.ssid;
 
     render() {
-        const { connectedNetworkSsid, showPasswordPrompt } = this.state;
-
+        const { networks, connectingNetwork, connectedNetworkSsid, showPassword, isLoading } = this.state;
+        const hasBackButton = this.props.handleBackPressed !== null;
         return (
-            <View style={ Styles.root }>
-                <PopupDialog
-                    onDismissed={ this.onPasswordPromptDismiss }
-                    ref={ (ref) => this.popupDialog = ref }
-                    width={ 0.75 }
-                    height={ 0.5 }
-                    dialogStyle={ Styles.passwordDialog }
-                    haveOverlay={ false }
-                    dismissOnTouchOutside={ true }
-                    actions={ [
-                        <View key="dialog_buttons" style={ { flexDirection: 'row' } }>
-                            <DialogButton
-                                key="cancel"
-                                text="Cancel"
-                                align="center"
-                                buttonStyle={ Styles.dialogButton }
-                                onPress={ this.onDismissPasswordPrompt }/>
-                            <DialogButton
-                                key="connect"
-                                text="Connect"
-                                align="center"
-                                buttonStyle={ Styles.dialogButton }
-                                onPress={ this.onPasswordPromptConnectPressed }/>
-                        </View>
-                    ] }>
-                    <X.Text>
-                        Password
-                    </X.Text>
-                    <TextInput
-                        onChangeText={ (password) => this.setState({ password })}
-                        value={ this.state.password }
-                        secureTextEntry={ true }
-                        ref={ ref => this.passwordInput = ref }
-                    />
-                </PopupDialog>
-                <View style={ Styles.listContainer }>
-                    <FlatList
-                        data={ this.state.networks }
-                        renderItem={ this.renderNetwork }
-                        style={ Styles.list }
-                        keyExtractor={ this.keyExtractor }
-                        extraData={ this.state }
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={ this.state.isLoading }
-                                onRefresh={ this.refreshNetworks }
+            <X.Gradient
+                color='flat_blue'>
+                <X.Entrance style={ Styles.setupWifi }>
+                    <PopupDialog
+                        onDismissed={ this.onDismissPasswordPrompt }
+                        ref={ (ref) => this.popupDialog = ref }
+                        height={ 0.5 }
+                        dialogStyle={ Styles.setupWifiPasswordDialog }
+                        haveOverlay={ true }
+                        dismissOnTouchOutside={ false }
+                        actions={ [
+                            <View
+                                key="dialog_buttons"
+                                style={ Styles.setupWifiPasswordDialogButtons }>
+                                <View style={ Styles.setupWifiPasswordDialogCheckbox }>
+                                    <X.CheckboxField
+                                        size='tiny'
+                                        color='dark'
+                                        isChecked={ showPassword }
+                                        onPress={ this.handleShowPasswordToggled }
+                                        label='Show password' />
+                                </View>
+                                <X.Button
+                                    key='cancel'
+                                    size='small'
+                                    color='setupInvertedLight'
+                                    onPress={ this.onDismissPasswordPrompt }
+                                    style={ Styles.setupWifiPasswordDialogButton }>
+                                    <X.Text
+                                        color='lightGrey700'
+                                        size='small'
+                                        weight='semibold'>
+                                        Cancel
+                                    </X.Text>
+                                </X.Button>
+                                <X.Button
+                                    key='connect'
+                                    size='small'
+                                    color='setupPrimary'
+                                    onPress={ () => this.onPasswordPromptConnectPressed() }
+                                    style={ Styles.setupWifiPasswordDialogButton }>
+                                    <X.Text
+                                        color='white'
+                                        size='small'
+                                        weight='semibold'>
+                                        Connect
+                                    </X.Text>
+                                </X.Button>
+                            </View>
+                        ] }>
+                        <X.Text
+                            size='small'
+                            weight='semibold'>
+                            The network "{ connectingNetwork ? connectingNetwork.ssid : '' }" requires a password.
+                        </X.Text>
+                        <View style={ Styles.setupWifiPasswordInputRow }>
+                            <View style={ Styles.setupWifiPasswordInputLabel }>
+                                <X.Text
+                                    size='small'
+                                    color='whiteFieldLabel'
+                                    style={ Styles.setupWifiPasswordInputLabelText }>
+                                    Password:
+                                </X.Text>
+                            </View>
+                            <TextInput
+                                onChangeText={ (password) => this.setState({ password }) }
+                                value={ this.state.password }
+                                secureTextEntry={ !showPassword }
+                                ref={ ref => this.passwordInput = ref }
+                                disableFullscreenUI={ true }
+                                style={ Styles.setupWifiPasswordInputField }
+                                underlineColorAndroid='transparent'
+                                keyboardType={ showPassword ? 'email-address' : null }
                             />
-                        }
-                     />
-                </View>
-                <View style={ Styles.buttons }>
-                    <View style={ Styles.moreOptionsButton }>
+                        </View>
+                    </PopupDialog>
+                    <View style={ Styles.setupWifiHeader }>
+                        <X.Text
+                            color='white'
+                            size='big'
+                            weight='bold'>
+                            Connect to WiFi
+                        </X.Text>
                         <X.Button
+                            size='small'
                             color='setupInverted'
-                            onPress={ this.props.onMoreOptionsPress }>
+                            onPress={ this.props.handleSetupWifiMoreOptionsPressed }
+                            style={ Styles.setupWifiHeaderButton }>
                             More Options
                         </X.Button>
                     </View>
-                    <View style={ Styles.nextButton }>
+                    <View style={ Styles.setupWifiNetworks }>
+                        <FlatList
+                            data={ networks }
+                            renderItem={ this.renderNetwork }
+                            style={ Styles.setupWifiNetworksList }
+                            keyExtractor={ this.keyExtractor }
+                            extraData={ this.state }
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={ isLoading }
+                                    onRefresh={ this.refreshNetworks } />
+                            }
+                            ListEmptyComponent={
+                                <View style={ Styles.setupWifiNetworksEmpty }>
+                                    <X.Text
+                                        color='white'
+                                        size='small'>
+                                        { isLoading && networks.length == 0 ? 'Scanning WiFi Networks...'
+                                            : !isLoading && networks.length == 0 ?
+                                            this.state.errorMessage : '' }
+                                    </X.Text>
+                                </View>
+                            }>
+                        </FlatList>
+                    </View>
+                    <View style={ hasBackButton ? Styles.setupWifiButtonsWithBack : Styles.setupWifiButtons }>
+                        { hasBackButton ? (
+                            <X.Button
+                                color='setupInverted'
+                                onPress={ this.props.handleBackPressed }
+                                style={ Styles.setupWifiBackButton }>
+                                <X.Text
+                                    color='white'
+                                    weight='semibold'>
+                                    Go Back
+                                </X.Text>
+                            </X.Button>
+                        ) : null }
                         <X.Button
                             color={ connectedNetworkSsid ? 'setupPrimary' : 'setupInverted' }
-                            onPress={ this.props.onContinue }>
-                            { connectedNetworkSsid === null ? 'Skip for now' : 'Continue' }
+                            onPress={ connectedNetworkSsid ? this.props.handleSetupWifiCompleted : null }
+                            style={ Styles.setupWifiContinueButton }>
+                            <X.Text
+                                color='white'
+                                weight='semibold'>
+                                { !connectedNetworkSsid ? 'Skip For Now' : 'Continue' }
+                            </X.Text>
                         </X.Button>
                     </View>
-                </View>
-            </View>
+                </X.Entrance>
+            </X.Gradient>
         );
     }
 }
 
+
+function mapStateToProps(state) {
+    return {}
+}
+
 const mapDispatchToProps = dispatch => ({
-    onMoreOptionsPress: () => {
+    handleSetupWifiMoreOptionsPressed: () => {
         ChffrPlus.openWifiSettings();
+    },
+    handleSetupWifiCompleted: () => {
+        dispatch(resetToLaunch());
     },
 });
 
-export default connect(null, mapDispatchToProps)(SetupWifi);
+export default connect(mapStateToProps, mapDispatchToProps)(SetupWifi);

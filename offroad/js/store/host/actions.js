@@ -10,6 +10,7 @@ export const ACTION_THERMAL_DATA_CHANGED = 'ACTION_THERMAL_DATA_CHANGED';
 export const ACTION_WIFI_STATE_CHANGED = 'ACTION_WIFI_STATE_CHANGED';
 export const ACTION_DEVICE_IDS_AVAILABLE = 'ACTION_DEVICE_IDS_AVAILABLE';
 export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
+export const ACTION_DEVICE_IS_PAIRED_CHANGED = 'ACTION_DEVICE_IS_PAIRED_CHANGED';
 
 export function updateWifiState() {
     return async dispatch => {
@@ -62,6 +63,15 @@ export function setDeviceIds() {
             type: ACTION_DEVICE_IDS_AVAILABLE,
             imei,
             serial,
+        });
+    }
+}
+
+export function updateDeviceIsPaired(deviceIsPaired) {
+    return async (dispatch, getState) => {
+        dispatch({
+            type: ACTION_DEVICE_IS_PAIRED_CHANGED,
+            deviceIsPaired,
         });
     }
 }
