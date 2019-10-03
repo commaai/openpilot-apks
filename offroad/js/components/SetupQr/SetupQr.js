@@ -136,14 +136,14 @@ class SetupPair extends Component {
                                 { deviceIsPaired ? (
                                     <X.Button
                                         color='setupPrimary'
-                                        onPress={ this.props.handleSetupPairCompleted }
+                                        onPress={ this.props.handleSetupComplete }
                                         style={ Styles.setupPairingButtonsContinue }>
                                         Continue
                                     </X.Button>
                                 ) : (
                                     <X.Button
                                         color='setupInverted'
-                                        onPress={ this.props.handleSetupPairSkipped }
+                                        onPress={ this.props.handleSetupComplete }
                                         style={ Styles.setupPairingButtonsContinue }>
                                         Skip for Now
                                     </X.Button>
@@ -177,10 +177,7 @@ const mapDispatchToProps = dispatch => ({
     handleConnectionChange: (isConnected) => {
         dispatch(updateConnectionState(isConnected));
     },
-    handleSetupPairSkipped: async () => {
-        await ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
-    },
-    handleSetupPairCompleted: async () => {
+    handleSetupComplete: async () => {
         await ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
         dispatch(resetToLaunch());
     },
