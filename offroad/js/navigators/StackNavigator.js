@@ -4,7 +4,7 @@ import {
     StackNavigator as RNStackNavigator,
     addNavigationHelpers,
 } from 'react-navigation';
-import { View } from 'react-native';
+import { View, Animated, Easing } from 'react-native';
 import { withMappedNavigationAndConfigProps } from 'react-navigation-props-mapper';
 import { connect } from 'react-redux';
 
@@ -30,6 +30,14 @@ export const StackNavigator = RNStackNavigator({
     Settings: { screen: Settings },
     SettingsWifi: { screen: SettingsWifi },
     UpdatePrompt: { screen: UpdatePrompt },
+}, {
+    transitionConfig : () => ({
+        transitionSpec: {
+            duration: 0,
+            timing: Animated.timing,
+            easing: Easing.step0,
+        },
+    }),
 });
 
 
