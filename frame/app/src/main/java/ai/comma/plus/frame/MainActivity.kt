@@ -407,6 +407,10 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         }
     }
 
+    override fun onBackPressed() {
+
+    }
+
     override fun uiLayoutOnEngagedMocked() {
         frame?.setBackgroundColor(colorGreen!!)
     }
