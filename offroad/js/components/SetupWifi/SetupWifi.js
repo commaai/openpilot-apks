@@ -18,7 +18,9 @@ import { NetworkInfo } from 'react-native-network-info';
 
 import Logging from '../../native/Logging';
 import WifiModule from '../../native/Wifi';
+import { updateConnectionState } from '../../store/host/actions';
 import { resetToLaunch } from '../../store/nav/actions';
+import { Params } from '../../config';
 import X from '../../themes';
 import ChffrPlus from '../../native/ChffrPlus';
 import Styles from './SetupWifiStyles';
@@ -405,7 +407,7 @@ class SetupWifi extends Component {
                         ) : null }
                         <X.Button
                             color={ connectedNetworkSsid ? 'setupPrimary' : 'setupInverted' }
-                            onPress={ this.props.handleSetupWifiCompleted }
+                            onPress={ connectedNetworkSsid ? this.props.handleSetupWifiCompleted : this.props.handleSetupWifiSkip }
                             style={ Styles.setupWifiContinueButton }>
                             <X.Text
                                 color='white'
@@ -420,7 +422,6 @@ class SetupWifi extends Component {
     }
 }
 
-
 function mapStateToProps(state) {
     return {}
 }
@@ -430,6 +431,11 @@ const mapDispatchToProps = dispatch => ({
         ChffrPlus.openWifiSettings();
     },
     handleSetupWifiCompleted: () => {
+        dispatch(updateConnectionState(true));
+        dispatch(resetToLaunch());
+    },
+    handleSetupWifiSkip: async () => {
+        await ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
         dispatch(resetToLaunch());
     },
 });
