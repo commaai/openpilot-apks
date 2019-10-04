@@ -274,7 +274,7 @@ class SetupWifi extends Component {
 
     render() {
         const { networks, connectingNetwork, connectedNetworkSsid, showPassword, isLoading } = this.state;
-        const hasBackButton = this.props.handleBackPressed !== null;
+        const hasBackButton = typeof this.props.handleBackPressed === 'function';
         return (
             <X.Gradient
                 color='flat_blue'>
