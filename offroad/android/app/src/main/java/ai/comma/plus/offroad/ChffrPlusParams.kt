@@ -47,7 +47,6 @@ class ChffrPlusParams {
                 val paramPath = pathForParam(paramName)
                 return File(paramPath).readText()
             } catch(e: Exception) {
-                CloudLog.exception("ChffrPlusParams.readParam", e)
                 return null
             }
         }
