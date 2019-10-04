@@ -673,11 +673,7 @@ class Settings extends Component {
     }
 
     clearSshKeys() {
-        ChffrPlus.deleteParam(Params.KEY_GITHUB_SSH_KEYS);
-        Alert.alert('Reboot', `Reboot to finalize removal of GitHub SSH keys.`, [
-            { text: 'Later', onPress: () => {}, style: 'cancel' },
-            { text: 'Reboot Now', onPress: () => ChffrPlus.reboot() },
-        ]);
+        ChffrPlus.resetSshKeys();
     }
 
     async writeSshKeys() {

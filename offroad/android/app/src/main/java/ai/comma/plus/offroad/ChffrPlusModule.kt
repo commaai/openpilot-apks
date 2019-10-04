@@ -248,13 +248,21 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     @ReactMethod
     fun reboot() {
         try {
-            // IPowerManager.reboot(confirm=false, reason=0, wait=true)
             Runtime.getRuntime().exec(arrayOf("/system/bin/su", "-c", "service call power 16 i32 0 i32 0 i32 1"))
         } catch (e: IOException) {
             CloudLog.exception("BaseUIReactModule.reboot", e)
         }
-
     }
+
+    @ReactMethod
+    fun resetSshKeys() {
+        try {
+            Runtime.getRuntime().exec(arrayOf("/system/bin/su", "-c", "cp /data/data/com.termux/files/home/.ssh/authorized_keys /data/params/d/GithubSshKeys"))
+        } catch (e: IOException) {
+            CloudLog.exception("BaseUIReactModule.resetSshKeys", e)
+        }
+    }
+
 
     @ReactMethod
     fun shutdown() {
