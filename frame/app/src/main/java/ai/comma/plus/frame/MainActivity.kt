@@ -251,7 +251,9 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                         if (state == STATE.HOME) {
                             startInnerActivity(OFFROAD_APP)
                         }
-                        if (ChffrPlusParams.readParam("UpdateAvailable") != "1") {
+                        if (ChffrPlusParams.readParam("UpdateAvailable") == "1") {
+                            showActivityView()
+                        } else {
                             activityOverlayManager!!.show(ActivityOverlayManager.OVERLAY_THERMAL_WARNING)
                             hideActivityView()
                         }
