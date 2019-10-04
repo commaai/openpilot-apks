@@ -1,17 +1,12 @@
 import { DeviceEventEmitter } from 'react-native';
-import { ACTION_THERMAL_DATA_CHANGED } from '../store/host/actions';
+import { NavigationActions } from 'react-navigation';
+import { thermalDataChanged } from '../store/host/actions';
 
 let listener;
 
 function onThermalDataChanged(dispatch) {
     return thermalData => {
-        if (thermalData) {
-            thermalData.unuploadedBytes = parseInt(thermalData.unuploadedBytes);
-        }
-        dispatch({
-            type: ACTION_THERMAL_DATA_CHANGED,
-            thermalData,
-        });
+        dispatch(thermalDataChanged(thermalData));
     }
 }
 

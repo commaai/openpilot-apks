@@ -7,7 +7,6 @@ import environment from './environment/reducer';
 import host from './host/reducer';
 import nav from './nav/reducer';
 import params from './params/reducer';
-import updater from './updater/reducer';
 import uploads from './uploads/reducer';
 
 const persistConfig = (key) => ({
@@ -28,6 +27,5 @@ export default combineReducers({
     log,
     nav,
     params,
-    updater: persistReducer(persistConfig('updater'), updater),
     uploads,
 });

@@ -1,6 +1,8 @@
+import { NavigationActions } from 'react-navigation';
 import { AsyncStorage } from 'react-native';
 import { request as Request, devices as Devices } from '@commaai/comma-api';
 import ChffrPlus from '../../native/ChffrPlus';
+import { Params } from '../../config';
 
 export const ACTION_HOST_IS_SSH_ENABLED = 'ACTION_HOST_IS_SSH_ENABLED';
 export const ACTION_SIM_STATE_CHANGED = 'ACTION_SIM_STATE_CHANGED';
@@ -12,6 +14,24 @@ export const ACTION_DEVICE_IDS_AVAILABLE = 'ACTION_DEVICE_IDS_AVAILABLE';
 export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
 export const ACTION_DEVICE_IS_PAIRED_CHANGED = 'ACTION_DEVICE_IS_PAIRED_CHANGED';
 
+export function thermalDataChanged(thermalData) {
+    return async (dispatch, getState) => {
+        const oldThermal = getState().host.thermal;
+        if (oldThermal.started === true && thermalData.started === false) {
+            const isUpdateAvailableStr = await ChffrPlus.readParam(Params.KEY_IS_UPDATE_AVAILABLE);
+            const isUpdateAvailable = ((isUpdateAvailableStr && isUpdateAvailableStr.trim() === "1") || false);
+            const releaseNotes = await ChffrPlus.readParam(Params.KEY_RELEASE_NOTES);
+            if (isUpdateAvailable) {
+                dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt', params: { releaseNotes: releaseNotes }}));
+            }
+        }
+
+        dispatch({
+            type: ACTION_THERMAL_DATA_CHANGED,
+            thermalData,
+        });
+    }
+}
 export function updateWifiState() {
     return async dispatch => {
         const wifiState = await ChffrPlus.getWifiState();

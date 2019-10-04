@@ -16,7 +16,6 @@ import RootReducer from './js/store';
 import StackNavigator from './js/navigators/StackNavigator';
 
 import UploadProgressTimer from './js/timers/UploadProgressTimer';
-import UpdateChecker from './js/timers/UpdateChecker';
 import HomeButtonListener from './js/utils/HomeButtonListener';
 import SimStateListener from './js/utils/SimStateListener';
 import DestinationListener from './js/utils/DestinationListener';
@@ -77,7 +76,6 @@ export default class App extends Component {
         this.store.dispatch(updateSshEnabled());
         AppStateListener.register(this.store.dispatch);
         UploadProgressTimer.start(this.store.dispatch);
-        UpdateChecker.start(this.store.dispatch);
         HomeButtonListener.register(this.store.dispatch);
         SimStateListener.register(this.store.dispatch);
         SettingsButtonListener.register(this.store.dispatch);
@@ -98,7 +96,6 @@ export default class App extends Component {
         UploadProgressTimer.stop();
         HomeButtonListener.unregister();
         SimStateListener.unregister();
-        UpdateChecker.stop();
         SettingsButtonListener.unregister();
         ThermalListener.unregister();
         WifiStateListener.unregister();

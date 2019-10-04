@@ -187,7 +187,7 @@ class Settings extends Component {
             {
                 icon: Icons.eon,
                 title: 'Device',
-                context: `${ parseInt(freeSpace * 100) + '%' } Free`,
+                context: `${ parseInt(freeSpace) + '%' } Free`,
                 route: SettingsRoutes.DEVICE,
             },
             {
@@ -457,7 +457,7 @@ class Settings extends Component {
                             value={ serialNumber } />
                         <X.TableCell
                             title='Free Storage'
-                            value={ parseInt(freeSpace * 100) + '%' }
+                            value={ parseInt(freeSpace) + '%' }
                              />
                         <X.TableCell
                             title='Upload Speed'
@@ -735,7 +735,6 @@ const mapStateToProps = state => ({
     simState: state.host.simState,
     wifiState: state.host.wifiState,
     isPaired: state.host.device && state.host.device.is_paired,
-    isUpdateAvailable: state.updater.isUpdateAvailable,
 
     // Uploader
     txSpeedKbps: parseInt(state.uploads.txSpeedKbps),

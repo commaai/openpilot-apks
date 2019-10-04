@@ -12,8 +12,6 @@ export const Params = {
     KEY_ACCEPTED_TERMS_VERSION: 'HasAcceptedTerms',
     KEY_DO_UNINSTALL: 'DoUninstall',
     KEY_HAS_COMPLETED_SETUP: 'HasCompletedSetup',
-    KEY_SHOULD_DO_UPDATE: 'ShouldDoUpdate',
-    KEY_IS_UPDATE_AVAILABLE: 'IsUpdateAvailable',
     KEY_IS_PASSIVE: 'Passive',
     KEY_LATEST_TRAINING_VERSION: 'TrainingVersion',
     KEY_COMPLETED_TRAINING_VERSION: 'CompletedTrainingVersion',
@@ -24,4 +22,6 @@ export const Params = {
     KEY_SPEED_LIMIT_OFFSET: 'SpeedLimitOffset',
     KEY_LIVE_PARAMETERS: 'LiveParameters',
     KEY_GITHUB_SSH_KEYS: 'GithubSshKeys',
+    KEY_RELEASE_NOTES: 'ReleaseNotes',
+    KEY_IS_UPDATE_AVAILABLE: 'UpdateAvailable',
 };

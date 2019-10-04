@@ -15,39 +15,21 @@ import java.nio.ByteBuffer
  */
 
 data class ThermalSample(
-        val cpu0: Short,
-        val cpu1: Short,
-        val cpu2: Short,
-        val cpu3: Short,
-        val mem: Short,
-        val gpu: Short,
-        val bat: Int,
-        val freeSpace: Float
+        val freeSpace: Float,
+        val started: Boolean
 ) {
     fun toWritableMap(): WritableMap {
         val map = WritableNativeMap()
-        map.putInt("cpu0", cpu0.toInt())
-        map.putInt("cpu1", cpu1.toInt())
-        map.putInt("cpu2", cpu2.toInt())
-        map.putInt("cpu3", cpu3.toInt())
-        map.putInt("mem", mem.toInt())
-        map.putInt("gpu", gpu.toInt())
-        map.putInt("bat", bat)
-        map.putDouble("freeSpace", freeSpace.toDouble())
+        map.putInt("freeSpace", (freeSpace*100).toInt())
+        map.putBoolean("started", started)
         return map
     }
 
     companion object {
         fun readFromThermalEvent(reader: Log.ThermalData.Reader): ThermalSample {
             return ThermalSample(
-                    reader.cpu0,
-                    reader.cpu1,
-                    reader.cpu2,
-                    reader.cpu3,
-                    reader.mem,
-                    reader.gpu,
-                    reader.bat,
-                    reader.freeSpace
+                    reader.freeSpace,
+                    reader.started
             )
         }
     }
