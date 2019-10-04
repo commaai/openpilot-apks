@@ -405,7 +405,7 @@ class SetupWifi extends Component {
                         ) : null }
                         <X.Button
                             color={ connectedNetworkSsid ? 'setupPrimary' : 'setupInverted' }
-                            onPress={ connectedNetworkSsid ? this.props.handleSetupWifiCompleted : null }
+                            onPress={ this.props.handleSetupWifiCompleted }
                             style={ Styles.setupWifiContinueButton }>
                             <X.Text
                                 color='white'
