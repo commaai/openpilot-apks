@@ -17,6 +17,7 @@ import {
     fetchAccount,
     fetchDeviceStats,
     updateConnectionState,
+    updateUpdateIsAvailable,
 } from '../../store/host/actions';
 import { refreshParams } from '../../store/params/actions';
 
@@ -42,6 +43,7 @@ class Home extends Component {
     componentWillMount() {
         // this.props.fetchAccount();
         this.props.fetchDeviceStats();
+        this.props.updateUpdateParams();
     }
 
     async componentDidMount() {
@@ -524,6 +526,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     updateConnectionState: (isConnected) => {
         dispatch(updateConnectionState(isConnected));
+    },
+    updateUpdateParams: () => {
+        dispatch(updateUpdateIsAvailable());
     },
     fetchAccount: () => {
         dispatch(fetchAccount());
