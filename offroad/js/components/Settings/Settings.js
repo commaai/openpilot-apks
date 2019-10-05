@@ -248,6 +248,7 @@ class Settings extends Component {
                 LimitSetSpeed: limitSetSpeed,
                 SpeedLimitOffset: speedLimitOffset,
                 OpenpilotEnabledToggle: openpilotEnabled,
+                Passive: isPassive,
             }
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
@@ -268,15 +269,17 @@ class Settings extends Component {
                         { this.renderSettingsMenu() }
                     </X.Table>
                     <X.Table color='darkBlue'>
-                        <X.TableCell
-                            type='switch'
-                            title='Enable openpilot'
-                            value={ !!parseInt(openpilotEnabled) }
-                            iconSource={ Icons.openpilot }
-                            description='Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature.'
-                            isExpanded={ expandedCell == 'openpilot_enabled' }
-                            handleExpanded={ () => this.handleExpanded('openpilot_enabled') }
-                            handleChanged={ this.props.setOpenpilotEnabled } />
+                        { !parseInt(isPassive) ? (
+                            <X.TableCell
+                                type='switch'
+                                title='Enable openpilot'
+                                value={ !!parseInt(openpilotEnabled) }
+                                iconSource={ Icons.openpilot }
+                                description='Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature.'
+                                isExpanded={ expandedCell == 'openpilot_enabled' }
+                                handleExpanded={ () => this.handleExpanded('openpilot_enabled') }
+                                handleChanged={ this.props.setOpenpilotEnabled } />
+                        ) : null }
                         <X.TableCell
                             type='switch'
                             title='Record and Upload Driver Camera'
