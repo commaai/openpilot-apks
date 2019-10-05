@@ -15,6 +15,7 @@ export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
 export const ACTION_DEVICE_IS_PAIRED_CHANGED = 'ACTION_DEVICE_IS_PAIRED_CHANGED';
 export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
 export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
+export const ACTION_UPDATE_IS_AVAILABLE_CHANGED = 'ACTION_UPDATE_IS_AVAILABLE_CHANGED';
 
 export function thermalDataChanged(thermalData) {
     return async (dispatch, getState) => {
@@ -94,6 +95,19 @@ export function updateDeviceIsPaired(deviceIsPaired) {
         dispatch({
             type: ACTION_DEVICE_IS_PAIRED_CHANGED,
             deviceIsPaired,
+        });
+    }
+}
+
+export function updateUpdateIsAvailable(deviceIsPaired) {
+    return async (dispatch, getState) => {
+        const isUpdateAvailableStr = await ChffrPlus.readParam(Params.KEY_IS_UPDATE_AVAILABLE);
+        const updateIsAvailable = ((isUpdateAvailableStr && isUpdateAvailableStr.trim() === "1") || false);
+        const updateReleaseNotes = await ChffrPlus.readParam(Params.KEY_RELEASE_NOTES);
+        dispatch({
+            type: ACTION_UPDATE_IS_AVAILABLE_CHANGED,
+            updateIsAvailable,
+            updateReleaseNotes,
         });
     }
 }

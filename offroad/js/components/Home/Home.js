@@ -85,10 +85,6 @@ class Home extends Component {
         }
     }
 
-    handleUpdateButtonPressed = () => {
-        console.log('update available pressed');
-    }
-
     handleAlertButtonPressed = () => {
         this.setState({ alertsVisible: true });
     }
@@ -127,6 +123,8 @@ class Home extends Component {
             isConnected,
             deviceStats,
             account,
+            updateIsAvailable,
+            updateReleaseNotes,
         } = this.props;
 
         const softwareName = !!parseInt(params.Passive) ? 'chffrplus' : 'openpilot';
@@ -171,12 +169,33 @@ class Home extends Component {
                         </View>
                         <View style={ Styles.homeHeaderDetails }>
                             <View style={ Styles.homeHeaderDetailsVersion }>
+                                { !updateIsAvailable ? (
+                                    <X.Image
+                                        style={ Styles.homeHeaderDetailsVersionIcon }
+                                        isFlex={ false }
+                                        source={ require('../../img/icon_checkmark.png') } />
+                                ) : null }
                                 <X.Text
                                     color='white'
                                     size='tiny'>
                                     { softwareString }
                                 </X.Text>
                             </View>
+                            { updateIsAvailable ? (
+                                <View style={ Styles.homeHeaderDetailsAction }>
+                                    <X.Button
+                                        size='smaller'
+                                        color='lightGrey'
+                                        onPress={ () => this.props.handleUpdateButtonPressed(updateReleaseNotes) }>
+                                        <X.Text
+                                            color='darkBlue'
+                                            size='tiny'
+                                            weight='semibold'>
+                                            Update Available
+                                        </X.Text>
+                                    </X.Button>
+                                </View>
+                            ) : null }
                             { alerts.length > 0 && !alertsVisible ? (
                                 <View style={ Styles.homeHeaderDetailsAction }>
                                     <X.Button
@@ -249,129 +268,121 @@ class Home extends Component {
                         </View>
                     ) : (
                       <View style={ homeBodyStyles }>
-                          { hasDeviceStats ? (
-                              <View style={ [Styles.homeBodyStats, !isPaired && Styles.homeBodyStatsUnpaired ] }>
-                                  <View style={ Styles.homeBodyStatsHeader }>
+                          <View style={ [Styles.homeBodyStats, !isPaired && Styles.homeBodyStatsUnpaired ] }>
+                              <View style={ Styles.homeBodyStatsHeader }>
+                                  <X.Text
+                                      color='white'
+                                      size='tiny'
+                                      weight='semibold'>
+                                      PAST WEEK
+                                  </X.Text>
+                              </View>
+                              <View style={ Styles.homeBodyStatsRow }>
+                                  <View style={ Styles.homeBodyStat }>
                                       <X.Text
                                           color='white'
+                                          size='big'
+                                          weight='semibold'
+                                          style={ Styles.homeBodyStatNumber }>
+                                          { hasDeviceStats ? deviceStats.week.routes : '0' }
+                                      </X.Text>
+                                      <X.Text
+                                          color='lightGrey700'
                                           size='tiny'
-                                          weight='semibold'>
-                                          PAST WEEK
+                                          style={ Styles.homeBodyStatLabel }>
+                                          DRIVES
                                       </X.Text>
                                   </View>
-                                  <View style={ Styles.homeBodyStatsRow }>
-                                      <View style={ Styles.homeBodyStat }>
-                                          <X.Text
-                                              color='white'
-                                              size='big'
-                                              weight='semibold'
-                                              style={ Styles.homeBodyStatNumber }>
-                                              { deviceStats.week.routes }
-                                          </X.Text>
-                                          <X.Text
-                                              color='lightGrey700'
-                                              size='tiny'
-                                              style={ Styles.homeBodyStatLabel }>
-                                              DRIVES
-                                          </X.Text>
-                                      </View>
-                                      <View style={ Styles.homeBodyStat }>
-                                          <X.Text
-                                              color='white'
-                                              size='big'
-                                              weight='semibold'
-                                              style={ Styles.homeBodyStatNumber }>
-                                              { Math.floor(deviceStats.week.distance) }
-                                          </X.Text>
-                                          <X.Text
-                                              color='lightGrey700'
-                                              size='tiny'
-                                              style={ Styles.homeBodyStatLabel }>
-                                              MILES
-                                          </X.Text>
-                                      </View>
-                                      <View style={ Styles.homeBodyStat }>
-                                          <X.Text
-                                              color='white'
-                                              size='big'
-                                              weight='semibold'
-                                              style={ Styles.homeBodyStatNumber }>
-                                              { Math.floor(deviceStats.week.minutes / 60) }
-                                          </X.Text>
-                                          <X.Text
-                                              color='lightGrey700'
-                                              size='tiny'
-                                              style={ Styles.homeBodyStatLabel }>
-                                              HOURS
-                                          </X.Text>
-                                      </View>
-                                  </View>
-                                  <X.Line
-                                      color='light'
-                                      spacing='none' />
-                                  <View style={ Styles.homeBodyStatsHeader }>
+                                  <View style={ Styles.homeBodyStat }>
                                       <X.Text
                                           color='white'
+                                          size='big'
+                                          weight='semibold'
+                                          style={ Styles.homeBodyStatNumber }>
+                                          { hasDeviceStats ? Math.floor(deviceStats.week.distance) : '0' }
+                                      </X.Text>
+                                      <X.Text
+                                          color='lightGrey700'
                                           size='tiny'
-                                          weight='semibold'>
-                                          ALL TIME
+                                          style={ Styles.homeBodyStatLabel }>
+                                          MILES
                                       </X.Text>
                                   </View>
-                                  <View style={ Styles.homeBodyStatsRow }>
-                                      <View style={ Styles.homeBodyStat }>
-                                          <X.Text
-                                              color='white'
-                                              size='medium'
-                                              weight='semibold'
-                                              style={ Styles.homeBodyStatNumber }>
-                                              { deviceStats.all.routes }
-                                          </X.Text>
-                                          <X.Text
-                                              color='lightGrey700'
-                                              size='tiny'
-                                              style={ Styles.homeBodyStatLabel }>
-                                              DRIVES
-                                          </X.Text>
-                                      </View>
-                                      <View style={ Styles.homeBodyStat }>
-                                          <X.Text
-                                              color='white'
-                                              size='medium'
-                                              weight='semibold'
-                                              style={ Styles.homeBodyStatNumber }>
-                                              { Math.floor(deviceStats.all.distance) }
-                                          </X.Text>
-                                          <X.Text
-                                              color='lightGrey700'
-                                              size='tiny'
-                                              style={ Styles.homeBodyStatLabel }>
-                                              MILES
-                                          </X.Text>
-                                      </View>
-                                      <View style={ Styles.homeBodyStat }>
-                                          <X.Text
-                                              color='white'
-                                              size='medium'
-                                              weight='semibold'
-                                              style={ Styles.homeBodyStatNumber }>
-                                              { Math.floor(deviceStats.all.minutes / 60) }
-                                          </X.Text>
-                                          <X.Text
-                                              color='lightGrey700'
-                                              size='tiny'
-                                              style={ Styles.homeBodyStatLabel }>
-                                              HOURS
-                                          </X.Text>
-                                      </View>
+                                  <View style={ Styles.homeBodyStat }>
+                                      <X.Text
+                                          color='white'
+                                          size='big'
+                                          weight='semibold'
+                                          style={ Styles.homeBodyStatNumber }>
+                                          { hasDeviceStats ? Math.floor(deviceStats.week.minutes / 60) : '0' }
+                                      </X.Text>
+                                      <X.Text
+                                          color='lightGrey700'
+                                          size='tiny'
+                                          style={ Styles.homeBodyStatLabel }>
+                                          HOURS
+                                      </X.Text>
                                   </View>
                               </View>
-                          ): (
-                            <View style={ Styles.homeBodyStats, Styles.homeBodyStatsError }>
-                                <X.Text color='white' size='small'>
-                                    Error fetching device stats
-                                </X.Text>
-                            </View>
-                          ) }
+                              <X.Line
+                                  color='light'
+                                  spacing='none' />
+                              <View style={ Styles.homeBodyStatsHeader }>
+                                  <X.Text
+                                      color='white'
+                                      size='tiny'
+                                      weight='semibold'>
+                                      ALL TIME
+                                  </X.Text>
+                              </View>
+                              <View style={ Styles.homeBodyStatsRow }>
+                                  <View style={ Styles.homeBodyStat }>
+                                      <X.Text
+                                          color='white'
+                                          size='medium'
+                                          weight='semibold'
+                                          style={ Styles.homeBodyStatNumber }>
+                                          { hasDeviceStats ? deviceStats.all.routes : '0' }
+                                      </X.Text>
+                                      <X.Text
+                                          color='lightGrey700'
+                                          size='tiny'
+                                          style={ Styles.homeBodyStatLabel }>
+                                          DRIVES
+                                      </X.Text>
+                                  </View>
+                                  <View style={ Styles.homeBodyStat }>
+                                      <X.Text
+                                          color='white'
+                                          size='medium'
+                                          weight='semibold'
+                                          style={ Styles.homeBodyStatNumber }>
+                                          { hasDeviceStats ? Math.floor(deviceStats.all.distance) : '0' }
+                                      </X.Text>
+                                      <X.Text
+                                          color='lightGrey700'
+                                          size='tiny'
+                                          style={ Styles.homeBodyStatLabel }>
+                                          MILES
+                                      </X.Text>
+                                  </View>
+                                  <View style={ Styles.homeBodyStat }>
+                                      <X.Text
+                                          color='white'
+                                          size='medium'
+                                          weight='semibold'
+                                          style={ Styles.homeBodyStatNumber }>
+                                          { hasDeviceStats ? Math.floor(deviceStats.all.minutes / 60) : '0' }
+                                      </X.Text>
+                                      <X.Text
+                                          color='lightGrey700'
+                                          size='tiny'
+                                          style={ Styles.homeBodyStatLabel }>
+                                          HOURS
+                                      </X.Text>
+                                  </View>
+                              </View>
+                          </View>
                           { isPaired && (!hasPrime || !isAmerica) ? (
                               <View style={ Styles.homeBodyAccount }>
                                   <View style={ Styles.homeBodyAccountPoints }>
@@ -502,6 +513,8 @@ const mapStateToProps = (state) => {
         isConnected: state.host.isConnected,
         deviceStats: state.host.deviceStats,
         account: state.host.account,
+        updateIsAvailable: state.host.updateIsAvailable,
+        updateReleaseNotes: state.host.updateReleaseNotes,
     };
 };
 
@@ -520,6 +533,12 @@ const mapDispatchToProps = (dispatch) => ({
     },
     refreshParams: () => {
         dispatch(refreshParams());
+    },
+    handleUpdateButtonPressed: (releaseNotes) => {
+        dispatch(NavigationActions.navigate({
+            routeName: 'UpdatePrompt',
+            params: { releaseNotes }
+        }));
     },
 });
 

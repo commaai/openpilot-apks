@@ -11,7 +11,7 @@ export default StyleSheet.create({
         height: 80,
     },
     homeHeaderSmall: {
-        height: 40,
+        height: 60,
     },
     homeHeaderIntro: {},
     homeHeaderIntroDate: {

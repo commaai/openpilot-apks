@@ -10,6 +10,7 @@ import {
     ACTION_DEVICE_IS_PAIRED_CHANGED,
     ACTION_ACCOUNT_CHANGED,
     ACTION_DEVICE_STATS_CHANGED,
+    ACTION_UPDATE_IS_AVAILABLE_CHANGED,
 } from './actions';
 import SimState from './SimState';
 
@@ -26,6 +27,8 @@ const initialHostState = {
     deviceIsPaired: false,
     hasPrime: false,
     deviceStats: {},
+    updateIsAvailable: false,
+    updateReleaseNotes: "",
 };
 
 export default (state = initialHostState, action) => {
@@ -85,6 +88,12 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 deviceStats: action.deviceStats,
+            }
+        case ACTION_UPDATE_IS_AVAILABLE_CHANGED:
+            return {
+                ...state,
+                updateIsAvailable: action.updateIsAvailable,
+                updateReleaseNotes: action.updateReleaseNotes,
             }
         default:
             return state;
