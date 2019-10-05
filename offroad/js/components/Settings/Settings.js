@@ -46,6 +46,7 @@ const Icons = {
     plus: require('../../img/icon_plus.png'),
     minus: require('../../img/icon_minus.png'),
     mapSpeed: require('../../img/icon_map.png'),
+    openpilot: require('../../img/icon_openpilot.png'),
 }
 
 class Settings extends Component {
@@ -246,6 +247,7 @@ class Settings extends Component {
                 LongitudinalControl: hasLongitudinalControl,
                 LimitSetSpeed: limitSetSpeed,
                 SpeedLimitOffset: speedLimitOffset,
+                OpenpilotEnabledToggle: openpilotEnabled,
             }
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
@@ -266,6 +268,15 @@ class Settings extends Component {
                         { this.renderSettingsMenu() }
                     </X.Table>
                     <X.Table color='darkBlue'>
+                        <X.TableCell
+                            type='switch'
+                            title='Enable openpilot'
+                            value={ !!parseInt(openpilotEnabled) }
+                            iconSource={ Icons.openpilot }
+                            description='Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature.'
+                            isExpanded={ expandedCell == 'openpilot_enabled' }
+                            handleExpanded={ () => this.handleExpanded('openpilot_enabled') }
+                            handleChanged={ this.props.setOpenpilotEnabled } />
                         <X.TableCell
                             type='switch'
                             title='Record and Upload Driver Camera'
@@ -340,21 +351,6 @@ class Settings extends Component {
                             Review Training Guide
                         </X.Button>
                     </X.Table>
-                    <X.Table color='darkBlue'>
-                        <X.Button
-                            size='small'
-                            color='settingsDefault'
-                            onPress={ () => this.props.reboot() }>
-                            Reboot
-                        </X.Button>
-                        <X.Line color='transparent' size='tiny' spacing='mini' />
-                        <X.Button
-                            size='small'
-                            color='settingsDefault'
-                            onPress={ () => this.props.shutdown() }>
-                            Power Off
-                        </X.Button>
-                    </X.Table>
                 </ScrollView>
             </View>
         )
@@ -381,7 +377,19 @@ class Settings extends Component {
                             <X.TableCell
                                 title='Device Paired'
                                 value={ isPaired ? 'Yes' : 'No' } />
-                            <X.Text color='white' size='tiny'>Terms of Service available at {'https://my.comma.ai/terms.html'}</X.Text>
+                            { isPaired ? (
+                                <X.Text
+                                    color='white'
+                                    size='tiny'>
+                                    You may unpair your device in the comma connect app settings.
+                                </X.Text>
+                            ) : null }
+                            <X.Line color='light' />
+                            <X.Text
+                                color='white'
+                                size='tiny'>
+                                Terms of Service available at {'https://my.comma.ai/terms.html'}
+                            </X.Text>
                         </X.Table>
                         { isPaired ? null : (
                             <X.Table color='darkBlue' padding='big'>
@@ -464,12 +472,19 @@ class Settings extends Component {
                             value={ txSpeedKbps + ' kbps' }
                              />
                     </X.Table>
-                    <X.Table color='darkBlue' padding='big'>
+                    <X.Table color='darkBlue'>
                         <X.Button
-                            color='settingsDefault'
                             size='small'
-                            onPress={ () => ChffrPlus.openDateTimeSettings() }>
-                            Open Date and Time Settings
+                            color='settingsDefault'
+                            onPress={ () => this.props.reboot() }>
+                            Reboot
+                        </X.Button>
+                        <X.Line color='transparent' size='tiny' spacing='mini' />
+                        <X.Button
+                            size='small'
+                            color='settingsDefault'
+                            onPress={ () => this.props.shutdown() }>
+                            Power Off
                         </X.Button>
                     </X.Table>
                 </ScrollView>
@@ -775,6 +790,9 @@ const mapDispatchToProps = dispatch => ({
                 NavigationActions.navigate({ routeName: 'Onboarding' })
             ]
         }))
+    },
+    setOpenpilotEnabled: (openpilotEnabled) => {
+        dispatch(updateParam(Params.KEY_OPENPILOT_ENABLED, (openpilotEnabled | 0).toString()));
     },
     setMetric: (useMetricUnits) => {
         dispatch(updateParam(Params.KEY_IS_METRIC, (useMetricUnits | 0).toString()));

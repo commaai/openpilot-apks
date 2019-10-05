@@ -28,13 +28,29 @@ export let ChffrPlusTheme = {
             lightGrey200: '#ACB7BD',
             whiteFieldLabel: '#49545B',
             lightGrey700: '#758791',
+            darkBlue: '#041623',
         },
     },
     button: {
         sizes: {
             atom: 20,
+            smaller: 22,
         },
         colors: {
+            lightGrey: {
+                justifyContent: 'center',
+                backgroundColor: Colors.lightGrey500,
+                borderRadius: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+            },
+            redAlert: {
+                justifyContent: 'center',
+                backgroundColor: '#C92231',
+                borderRadius: 5,
+                paddingLeft: 10,
+                paddingRight: 10
+            },
             setupDefault: {
                 backgroundColor: Colors.lightGrey500,
                 borderColor: Colors.lightGrey400,

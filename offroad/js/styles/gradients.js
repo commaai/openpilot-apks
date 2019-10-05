@@ -1,2 +1,2 @@
-export const HOME_BUTTON_GRADIENT = ['#0c2c43', '#092234'];
+export const HOME_BUTTON_GRADIENT = ['#283E4F', '#1B2D3D'];
 export const BUTTON_CONTINUE_GRADIENT = ['#258FDA', '#175886'];

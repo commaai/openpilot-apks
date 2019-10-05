@@ -8,6 +8,8 @@ import {
     ACTION_DEVICE_REFRESHED,
     ACTION_HOST_IS_SSH_ENABLED,
     ACTION_DEVICE_IS_PAIRED_CHANGED,
+    ACTION_ACCOUNT_CHANGED,
+    ACTION_DEVICE_STATS_CHANGED,
 } from './actions';
 import SimState from './SimState';
 
@@ -22,6 +24,8 @@ const initialHostState = {
     device: null,
     isSshEnabled: false,
     deviceIsPaired: false,
+    hasPrime: false,
+    deviceStats: {},
 };
 
 export default (state = initialHostState, action) => {
@@ -71,6 +75,16 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 deviceIsPaired: action.deviceIsPaired,
+            }
+        case ACTION_ACCOUNT_CHANGED:
+            return {
+                ...state,
+                account: action.account,
+            }
+        case ACTION_DEVICE_STATS_CHANGED:
+            return {
+                ...state,
+                deviceStats: action.deviceStats,
             }
         default:
             return state;

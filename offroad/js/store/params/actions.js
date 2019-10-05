@@ -26,6 +26,11 @@ const PARAMS = [
   "SpeedLimitOffset",
   "TrainingVersion",
   "Version",
+  "OpenpilotEnabledToggle",
+  "Offroad_ChargeDisabled",
+  "Offroad_TemperatureTooHigh",
+  "Offroad_ConnectivityNeededPrompt",
+  "Offroad_ConnectivityNeeded",
 ];
 
 export function refreshParams() {

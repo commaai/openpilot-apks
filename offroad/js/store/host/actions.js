@@ -13,6 +13,8 @@ export const ACTION_WIFI_STATE_CHANGED = 'ACTION_WIFI_STATE_CHANGED';
 export const ACTION_DEVICE_IDS_AVAILABLE = 'ACTION_DEVICE_IDS_AVAILABLE';
 export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
 export const ACTION_DEVICE_IS_PAIRED_CHANGED = 'ACTION_DEVICE_IS_PAIRED_CHANGED';
+export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
+export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
 
 export function thermalDataChanged(thermalData) {
     return async (dispatch, getState) => {
@@ -93,6 +95,37 @@ export function updateDeviceIsPaired(deviceIsPaired) {
             type: ACTION_DEVICE_IS_PAIRED_CHANGED,
             deviceIsPaired,
         });
+    }
+}
+
+export function fetchAccount() {
+    return async (dispatch, getState) => {
+        try {
+            const dongleId = await ChffrPlus.readParam("DongleId");
+            const account = await Device.fetchDeviceOwner(dongleId);
+            console.log(account);
+            dispatch({
+                type: ACTION_ACCOUNT_CHANGED,
+                account,
+            });
+        } catch(error) {
+            console.log('error fetching account profile', error);
+        }
+    }
+}
+
+export function fetchDeviceStats() {
+    return async (dispatch, getState) => {
+        try {
+            const dongleId = await ChffrPlus.readParam("DongleId");
+            const deviceStats = await Devices.fetchDeviceStats(dongleId);
+            dispatch({
+                type: ACTION_DEVICE_STATS_CHANGED,
+                deviceStats,
+            });
+        } catch(error) {
+            console.log('error fetching device stats', error);
+        }
     }
 }
 
