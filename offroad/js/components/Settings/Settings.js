@@ -21,6 +21,7 @@ import {
 import {
     deleteParam,
     updateParam,
+    refreshParams,
 } from '../../store/params/actions';
 
 import X from '../../themes';
@@ -75,6 +76,7 @@ class Settings extends Component {
     }
 
     async componentWillMount() {
+        await this.props.refreshParams();
         const {
             isMetric,
             params: {
@@ -820,6 +822,9 @@ const mapDispatchToProps = dispatch => ({
     },
     deleteParam: (param) => {
         dispatch(deleteParam(param));
+    },
+    refreshParams: () => {
+        dispatch(refreshParams());
     },
 });
 

@@ -35,6 +35,7 @@ export function thermalDataChanged(thermalData) {
         });
     }
 }
+
 export function updateWifiState() {
     return async dispatch => {
         const wifiState = await ChffrPlus.getWifiState();

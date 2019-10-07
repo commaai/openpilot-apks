@@ -40,24 +40,25 @@ class Home extends Component {
         };
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         // this.props.fetchAccount();
-        this.props.fetchDeviceStats();
+        await this.props.refreshParams();
+        await this.props.fetchDeviceStats();
         this.props.updateUpdateParams();
     }
 
     async componentDidMount() {
-        this.refreshOffroadParams();
+        await this.refreshOffroadParams();
         NetInfo.isConnected.addEventListener('connectionChange', this._handleConnectionChange);
         await NetInfo.isConnected.fetch().then(this._handleConnectionChange);
-        // this.checkOffroadParams = setInterval(() => {
-        //     this.refreshOffroadParams();
-        // }, 5000);
+        this.checkOffroadParams = setInterval(() => {
+            this.refreshOffroadParams();
+        }, 5000);
     }
 
     componentWillUnmount() {
         NetInfo.isConnected.removeEventListener('connectionChange', this._handleConnectionChange);
-        // clearInterval(this.checkOffroadParams);
+        clearInterval(this.checkOffroadParams);
     }
 
     _handleConnectionChange = (isConnected) => {
@@ -67,24 +68,30 @@ class Home extends Component {
 
     refreshOffroadParams = async () => {
         console.log('refreshing offroad params...');
-        this.props.refreshParams();
+        await this.props.refreshParams();
         const { params } = this.props;
-        const { alerts } = this.state;
-        let _alerts = [...this.state.alerts];
         Object.keys(params).map((param) => {
+            const { alerts } = this.state;
+            let _alerts = [...this.state.alerts];
             if (param.includes('Offroad_')) {
-                if (params[param] !== null) {
-                    const _alert = JSON.parse(params[param]);
-                    if (alerts.filter((a) => { return a.text == _alert.text; }).length == 0) {
-                        _alerts.push(_alert);
+                const _alert = JSON.parse(params[param]);
+                if (_alert.severity > -1) {
+                    if (alerts.filter((a) => { return a.name == param; }).length == 0) {
+                        _alerts.push({ name: param, ..._alert });
+                        this.setState({
+                            alerts: _alerts,
+                            alertsVisible: _alerts.length > alerts.length,
+                        });
+                    }
+                } else {
+                    _alerts = alerts.filter(a => a.name !== param);
+                    this.setState({ alerts: _alerts });
+                    if (_alerts.length == 0) {
+                        this.setState({ alertsVisible: false });
                     }
                 }
             }
         })
-        this.setState({ alerts: _alerts });
-        if (_alerts.length > alerts.length) {
-            this.setState({ alertsVisible: true });
-        }
     }
 
     handleAlertButtonPressed = () => {
@@ -129,9 +136,10 @@ class Home extends Component {
             updateReleaseNotes,
         } = this.props;
 
-        const softwareName = !!parseInt(params.Passive) ? 'chffrplus' : 'openpilot';
+        const softwareName = !!parseInt(params.Passive) ? 'dashcam' : 'openpilot';
         const softwareString = `${ softwareName } v${ params.Version }`;
         const isAmerica = this.checkIsInAmerica();
+        const hasDeviceStats = typeof(deviceStats.all) !== 'undefined';
 
         const homeHeaderStyles = [
             Styles.homeHeader,
@@ -142,8 +150,6 @@ class Home extends Component {
             Styles.homeBody,
             (alertsVisible || !isConnected) && Styles.homeBodyDark,
         ];
-
-        const hasDeviceStats = typeof(deviceStats.all) !== 'undefined';
 
         return (
             <X.Gradient color='flat_blue'>
@@ -218,7 +224,7 @@ class Home extends Component {
                     { alertsVisible ? (
                         <View style={ homeBodyStyles }>
                             <ScrollView style={ Styles.homeBodyAlerts }>
-                                { alerts.map((alert, i) => {
+                                { alerts.sort((a, b) => (a.severity > b.severity) ? -1 : 1).map((alert, i) => {
                                     const alertStyle = [
                                         Styles.homeBodyAlert,
                                         alert.severity == 1 && Styles.homeBodyAlertRed,
@@ -533,11 +539,11 @@ const mapDispatchToProps = (dispatch) => ({
     fetchAccount: () => {
         dispatch(fetchAccount());
     },
-    fetchDeviceStats: () => {
-        dispatch(fetchDeviceStats());
+    fetchDeviceStats: async () => {
+        await dispatch(fetchDeviceStats());
     },
-    refreshParams: () => {
-        dispatch(refreshParams());
+    refreshParams: async () => {
+        await dispatch(refreshParams());
     },
     handleUpdateButtonPressed: (releaseNotes) => {
         dispatch(NavigationActions.navigate({

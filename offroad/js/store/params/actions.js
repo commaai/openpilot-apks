@@ -37,7 +37,13 @@ export function refreshParams() {
   return async function(dispatch) {
     await Promise.all(PARAMS.map(function(param) {
       return ChffrPlus.readParam(param).then(function(value) {
-        dispatch({ type: ACTION_PARAM_CHANGED, payload: { param, value }});
+        if (param.includes('Offroad_') && typeof(value) !== 'string') {
+          const _value = '{ "severity": -1 }';
+          ChffrPlus.writeParam(param, _value);
+          dispatch({ type: ACTION_PARAM_CHANGED, payload: { param, value: _value }});
+        } else {
+          dispatch({ type: ACTION_PARAM_CHANGED, payload: { param, value }});
+        }
       });
     }));
   }
