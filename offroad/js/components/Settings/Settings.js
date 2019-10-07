@@ -277,7 +277,7 @@ class Settings extends Component {
                                 title='Enable openpilot'
                                 value={ !!parseInt(openpilotEnabled) }
                                 iconSource={ Icons.openpilot }
-                                description='Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature.'
+                                description='Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this toggle requires you to reboot the device while your car is powered off.'
                                 isExpanded={ expandedCell == 'openpilot_enabled' }
                                 handleExpanded={ () => this.handleExpanded('openpilot_enabled') }
                                 handleChanged={ this.props.setOpenpilotEnabled } />
@@ -797,7 +797,13 @@ const mapDispatchToProps = dispatch => ({
         }))
     },
     setOpenpilotEnabled: (openpilotEnabled) => {
-        dispatch(updateParam(Params.KEY_OPENPILOT_ENABLED, (openpilotEnabled | 0).toString()));
+        Alert.alert('Reboot', 'This feature requires a reboot while your car is powered off.', [
+            { text: 'Later', onPress: () => {}, style: 'cancel' },
+            { text: 'Reboot', onPress: () => {
+                dispatch(updateParam(Params.KEY_OPENPILOT_ENABLED, (openpilotEnabled | 0).toString()));
+                setTimeout(() => { ChffrPlus.reboot(); }, 100);
+            } },
+        ]);
     },
     setMetric: (useMetricUnits) => {
         dispatch(updateParam(Params.KEY_IS_METRIC, (useMetricUnits | 0).toString()));
