@@ -117,8 +117,7 @@ export function fetchAccount() {
     return async (dispatch, getState) => {
         try {
             const dongleId = await ChffrPlus.readParam("DongleId");
-            const account = await Device.fetchDeviceOwner(dongleId);
-            console.log(account);
+            const account = await Devices.fetchDeviceOwner(dongleId);
             dispatch({
                 type: ACTION_ACCOUNT_CHANGED,
                 account,

@@ -26,6 +26,7 @@ const initialHostState = {
     isSshEnabled: false,
     deviceIsPaired: false,
     hasPrime: false,
+    account: {},
     deviceStats: {},
     updateIsAvailable: false,
     updateReleaseNotes: "",

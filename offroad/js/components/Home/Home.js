@@ -25,6 +25,7 @@ import { refreshParams } from '../../store/params/actions';
 import { HOME_BUTTON_GRADIENT } from '../../styles/gradients';
 import X from '../../themes';
 import Styles from './HomeStyles';
+import { formatCommas } from '../../utils/number';
 
 class Home extends Component {
     static navigationOptions = {
@@ -41,10 +42,10 @@ class Home extends Component {
     }
 
     async componentWillMount() {
-        // this.props.fetchAccount();
+        await this.props.fetchAccount();
         await this.props.refreshParams();
         await this.props.fetchDeviceStats();
-        this.props.updateUpdateParams();
+        await this.props.updateUpdateParams();
     }
 
     async componentDidMount() {
@@ -131,7 +132,8 @@ class Home extends Component {
             params,
             isConnected,
             deviceStats,
-            account,
+            username,
+            commaPoints,
             updateIsAvailable,
             updateReleaseNotes,
         } = this.props;
@@ -292,7 +294,7 @@ class Home extends Component {
                                           size='big'
                                           weight='semibold'
                                           style={ Styles.homeBodyStatNumber }>
-                                          { hasDeviceStats ? deviceStats.week.routes : '0' }
+                                          { hasDeviceStats ? formatCommas(deviceStats.week.routes) : '0' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -307,7 +309,7 @@ class Home extends Component {
                                           size='big'
                                           weight='semibold'
                                           style={ Styles.homeBodyStatNumber }>
-                                          { hasDeviceStats ? Math.floor(deviceStats.week.distance) : '0' }
+                                          { hasDeviceStats ? formatCommas(Math.floor(deviceStats.week.distance)) : '0' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -322,7 +324,7 @@ class Home extends Component {
                                           size='big'
                                           weight='semibold'
                                           style={ Styles.homeBodyStatNumber }>
-                                          { hasDeviceStats ? Math.floor(deviceStats.week.minutes / 60) : '0' }
+                                          { hasDeviceStats ? formatCommas(Math.floor(deviceStats.week.minutes / 60)) : '0' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -350,7 +352,7 @@ class Home extends Component {
                                           size='medium'
                                           weight='semibold'
                                           style={ Styles.homeBodyStatNumber }>
-                                          { hasDeviceStats ? deviceStats.all.routes : '0' }
+                                          { hasDeviceStats ? formatCommas(deviceStats.all.routes) : '0' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -365,7 +367,7 @@ class Home extends Component {
                                           size='medium'
                                           weight='semibold'
                                           style={ Styles.homeBodyStatNumber }>
-                                          { hasDeviceStats ? Math.floor(deviceStats.all.distance) : '0' }
+                                          { hasDeviceStats ? formatCommas(Math.floor(deviceStats.all.distance)) : '0' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -380,7 +382,7 @@ class Home extends Component {
                                           size='medium'
                                           weight='semibold'
                                           style={ Styles.homeBodyStatNumber }>
-                                          { hasDeviceStats ? Math.floor(deviceStats.all.minutes / 60) : '0' }
+                                          { hasDeviceStats ? formatCommas(Math.floor(deviceStats.all.minutes / 60)) : '0' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -399,7 +401,9 @@ class Home extends Component {
                                           size='big'
                                           weight='semibold'
                                           style={ Styles.homeBodyAccountPointsNumber }>
-                                          --
+                                          { typeof(commaPoints) !== 'undefined' ? (
+                                            formatCommas(commaPoints)
+                                          ) : '--' }
                                       </X.Text>
                                       <X.Text
                                           color='lightGrey700'
@@ -409,6 +413,15 @@ class Home extends Component {
                                       </X.Text>
                                   </View>
                                   <View style={ Styles.homeBodyAccountDetails }>
+                                      { typeof(username) !== 'undefined' ? (
+                                          <X.Text
+                                              color='white'
+                                              size='small'
+                                              weight='semibold'
+                                              style={ Styles.homeBodyAccountDetailsName }>
+                                              @{ username }
+                                          </X.Text>
+                                      ) : null }
                                   </View>
                               </View>
                           ) : isPaired ? (
@@ -510,6 +523,8 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        username: state.host.account && state.host.account.username,
+        commaPoints: state.host.account && state.host.account.points,
         hasPrime: state.host.device && state.host.device.sim_id !== null,
         isPaired: state.host.device && state.host.device.is_paired,
         isNavAvailable: state.host.isNavAvailable,
@@ -533,11 +548,11 @@ const mapDispatchToProps = (dispatch) => ({
     updateConnectionState: (isConnected) => {
         dispatch(updateConnectionState(isConnected));
     },
-    updateUpdateParams: () => {
-        dispatch(updateUpdateIsAvailable());
+    updateUpdateParams: async () => {
+        await dispatch(updateUpdateIsAvailable());
     },
-    fetchAccount: () => {
-        dispatch(fetchAccount());
+    fetchAccount: async () => {
+        await dispatch(fetchAccount());
     },
     fetchDeviceStats: async () => {
         await dispatch(fetchDeviceStats());
