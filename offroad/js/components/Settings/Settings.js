@@ -708,11 +708,6 @@ class Settings extends Component {
             }
 
             await ChffrPlus.writeParam(Params.KEY_GITHUB_SSH_KEYS, githubKeys);
-
-            Alert.alert('Reboot', `Reboot to make SSH keys from ${githubUsername} available.`, [
-                { text: 'Later', onPress: () => {}, style: 'cancel' },
-                { text: 'Reboot Now', onPress: () => ChffrPlus.reboot() },
-            ]);
             this.toggleExpandGithubInput();
         } catch(err) {
             console.log(err);
