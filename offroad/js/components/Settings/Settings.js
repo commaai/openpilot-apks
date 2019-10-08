@@ -632,7 +632,16 @@ class Settings extends Component {
         return (
             <View>
                 <X.Text color='white' size='tiny'>
-                    WARNING:{'\n'}This grants SSH access to all public keys in your GitHub settings.{'\n'}Never enter a GitHub username other than your own.{'\n'}A comma employee will never ask you to add their GitHub.{'\n'}
+                    WARNING:
+                    {'\n'}
+                    This grants SSH access to all public keys in your GitHub settings.
+                    {'\n'}
+                    Never enter a GitHub username other than your own.
+                    {'\n'}
+                    The built-in SSH key will be disabled if you proceed.
+                    {'\n'}
+                    A comma employee will never ask you to add their GitHub.
+                    {'\n'}
                 </X.Text>
                 <View style={ Styles.githubUsernameInputContainer }>
                     <X.Text
