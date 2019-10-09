@@ -13,3 +13,6 @@ android/app/src/main/assets/
 
 # Metro
 metro.config.js
+
+# macOS
+.DS_Store

@@ -4,6 +4,12 @@ import { Params } from '../../config';
 export const ACTION_PARAM_CHANGED = 'ACTION_PARAM_CHANGED';
 export const ACTION_PARAM_DELETED = 'ACTION_PARAM_DELETED';
 
+export const ALERT_PARAMS = [
+  Params.KEY_OFFROAD_CHARGE_DISABLED,
+  Params.KEY_OFFROAD_TEMPERATURE_TOO_HIGH,
+  Params.KEY_OFFROAD_CONNECTIVITY_NEEDED_PROMPT,
+  Params.KEY_OFFROAD_CONNECTIVITY_NEEDED
+];
 const PARAMS = [
   "AccessToken",
   "CalibrationParams",
@@ -27,21 +33,17 @@ const PARAMS = [
   "TrainingVersion",
   "Version",
   "OpenpilotEnabledToggle",
-  "Offroad_ChargeDisabled",
-  "Offroad_TemperatureTooHigh",
-  "Offroad_ConnectivityNeededPrompt",
-  "Offroad_ConnectivityNeeded",
-];
+].concat(ALERT_PARAMS);
 
-export function refreshParams() {
-  return async function(dispatch) {
-    await Promise.all(PARAMS.map(function(param) {
+export function refreshParams(params) {
+  if (!Array.isArray(params)) {
+    params = PARAMS;
+  }
+
+  return async function(dispatch, getState) {
+    await Promise.all(params.map(function(param) {
       return ChffrPlus.readParam(param).then(function(value) {
-        if (param.includes('Offroad_') && typeof(value) !== 'string') {
-          const _value = '{ "severity": -1 }';
-          ChffrPlus.writeParam(param, _value);
-          dispatch({ type: ACTION_PARAM_CHANGED, payload: { param, value: _value }});
-        } else {
+        if (value !== getState().params.params[param]) {
           dispatch({ type: ACTION_PARAM_CHANGED, payload: { param, value }});
         }
       });

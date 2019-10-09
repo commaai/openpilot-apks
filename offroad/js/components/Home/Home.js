@@ -19,7 +19,7 @@ import {
     updateConnectionState,
     updateUpdateIsAvailable,
 } from '../../store/host/actions';
-import { refreshParams } from '../../store/params/actions';
+import { refreshParams, ALERT_PARAMS } from '../../store/params/actions';
 
 // UI
 import { HOME_BUTTON_GRADIENT } from '../../styles/gradients';
@@ -43,7 +43,7 @@ class Home extends Component {
 
     async componentWillMount() {
         await this.props.fetchAccount();
-        await this.props.refreshParams();
+        await this.props.refreshAlertParams();
         await this.props.fetchDeviceStats();
         await this.props.updateUpdateParams();
     }
@@ -68,31 +68,31 @@ class Home extends Component {
     };
 
     refreshOffroadParams = async () => {
-        console.log('refreshing offroad params...');
-        await this.props.refreshParams();
+        await this.props.refreshAlertParams();
         const { params } = this.props;
-        Object.keys(params).map((param) => {
-            const { alerts } = this.state;
-            let _alerts = [...this.state.alerts];
-            if (param.includes('Offroad_')) {
-                const _alert = JSON.parse(params[param]);
-                if (_alert.severity > -1) {
-                    if (alerts.filter((a) => { return a.name == param; }).length == 0) {
-                        _alerts.push({ name: param, ..._alert });
-                        this.setState({
-                            alerts: _alerts,
-                            alertsVisible: _alerts.length > alerts.length,
-                        });
-                    }
-                } else {
-                    _alerts = alerts.filter(a => a.name !== param);
-                    this.setState({ alerts: _alerts });
-                    if (_alerts.length == 0) {
-                        this.setState({ alertsVisible: false });
-                    }
-                }
+        let oldAlerts = this.state.alerts;
+
+        let alerts = [];
+        for (let i = 0; i < ALERT_PARAMS.length; i++) {
+          const name = ALERT_PARAMS[i];
+          let value = params[name];
+          if (typeof value === 'string') {
+            const alert = JSON.parse(value);
+            if (alert.severity > -1) {
+              alerts.push({ name, ...alert });
             }
-        })
+          }
+        }
+
+        let oldAlertNames = oldAlerts.map(function(alert) { return alert.name });
+        let newAlertNames = alerts.map(function(alert) { return alert.name });
+        let alertDiffers = function(alertName, idx) {
+          return alertName !== newAlertNames[idx]
+        };
+        if (oldAlertNames.length !== newAlertNames.length
+            || oldAlertNames.some(alertDiffers)) {
+          this.setState({ alerts, alertsVisible: alerts.length > 0 });
+        }
     }
 
     handleAlertButtonPressed = () => {
@@ -557,8 +557,8 @@ const mapDispatchToProps = (dispatch) => ({
     fetchDeviceStats: async () => {
         await dispatch(fetchDeviceStats());
     },
-    refreshParams: async () => {
-        await dispatch(refreshParams());
+    refreshAlertParams: async () => {
+        await dispatch(refreshParams(ALERT_PARAMS));
     },
     handleUpdateButtonPressed: (releaseNotes) => {
         dispatch(NavigationActions.navigate({
