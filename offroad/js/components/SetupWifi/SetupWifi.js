@@ -407,7 +407,7 @@ class SetupWifi extends Component {
                         ) : null }
                         <X.Button
                             color={ connectedNetworkSsid ? 'setupPrimary' : 'setupInverted' }
-                            onPress={ connectedNetworkSsid ? this.props.handleSetupWifiCompleted : this.props.handleSetupWifiSkip }
+                            onPress={ connectedNetworkSsid ? () => this.props.handleSetupWifiCompleted(hasBackButton) : () => this.props.handleSetupWifiSkip(hasBackButton) }
                             style={ Styles.setupWifiContinueButton }>
                             <X.Text
                                 color='white'
@@ -430,13 +430,19 @@ const mapDispatchToProps = dispatch => ({
     handleSetupWifiMoreOptionsPressed: () => {
         ChffrPlus.openWifiSettings();
     },
-    handleSetupWifiCompleted: () => {
+    handleSetupWifiCompleted: (hasBackButton) => {
         dispatch(updateConnectionState(true));
         dispatch(resetToLaunch());
+        if (hasBackButton) {
+            ChffrPlus.sendBroadcast("ai.comma.plus.offroad.NAVIGATED_FROM_SETTINGS");
+        }
     },
-    handleSetupWifiSkip: async () => {
+    handleSetupWifiSkip: async (hasBackButton) => {
         await ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
         dispatch(resetToLaunch());
+        if (hasBackButton) {
+            ChffrPlus.sendBroadcast("ai.comma.plus.offroad.NAVIGATED_FROM_SETTINGS");
+        }
     },
 });
 
