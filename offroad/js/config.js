@@ -29,4 +29,5 @@ export const Params = {
     KEY_OFFROAD_TEMPERATURE_TOO_HIGH: 'Offroad_TemperatureTooHigh',
     KEY_OFFROAD_CONNECTIVITY_NEEDED_PROMPT: 'Offroad_ConnectivityNeededPrompt',
     KEY_OFFROAD_CONNECTIVITY_NEEDED: 'Offroad_ConnectivityNeeded',
+    KEY_OFFROAD_PANDA_FIRMWARE_MISMATCH: 'Offroad_PandaFirmwareMismatch',
 };
