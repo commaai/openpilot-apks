@@ -35,6 +35,8 @@ const PARAMS = [
   "TrainingVersion",
   "Version",
   "OpenpilotEnabledToggle",
+  "PandaFirmware",
+  "PandaDongleId",
 ].concat(ALERT_PARAMS);
 
 export function refreshParams(params) {
