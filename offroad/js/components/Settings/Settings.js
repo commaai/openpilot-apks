@@ -594,7 +594,7 @@ class Settings extends Component {
                             valueTextSize='tiny' />
                         <X.TableCell
                             title='Panda Dongle ID'
-                            value={ pandaDongleId!= null ? pandaDongleId : 'N/A' }
+                            value={ (pandaDongleId != null && pandaDongleId != "unprovisioned") ? pandaDongleId : 'N/A' }
                             valueTextSize='tiny' />
                     </X.Table>
                     <X.Table color='darkBlue'>
