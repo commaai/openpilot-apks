@@ -111,6 +111,7 @@ class Settings extends Component {
     handleNavigatedFromMenu(route) {
         this.setState({ route: route })
         this.refs.settingsScrollView.scrollTo({ x: 0, y: 0, animated: false })
+        this.props.refreshParams();
     }
 
     handlePressedResetCalibration = async () => {
