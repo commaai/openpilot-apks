@@ -19,22 +19,6 @@ function cloudLog(event, props = null) {
     }
 }
 
-function mixpanel(event, props = null) {
-    if(__DEV__) {
-        console.log(`mixpanel ${event} ${JSON.stringify(props)}`);
-    }
-
-    try {
-        if (props != null) {
-            LoggingModule.mixpanelTrackWithProperties(event, props);
-        } else {
-            LoggingModule.mixpanelTrack(event);
-        }
-    } catch(err) {
-        console.warn(err);
-    }
-}
-
 const bind = LoggingModule && LoggingModule.bind;
 
-export default { cloudLog, bind, mixpanel };
+export default { cloudLog, bind };

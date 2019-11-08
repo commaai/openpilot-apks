@@ -11,20 +11,21 @@ import com.facebook.react.shell.MainReactPackage
 class HomePackage : MainReactPackage() {
     override fun getNativeModules(context: ReactApplicationContext?): MutableList<ModuleSpec> {
         val modules = super.getNativeModules(context)
+
         val ourModules = mutableListOf(
-                ModuleSpec(ChffrPlusModule::class.java, {
+                ModuleSpec.nativeModuleSpec(ChffrPlusModule::class.java, {
                     ChffrPlusModule(context!!)
                 }),
-                ModuleSpec(OfflineGeocoderModule::class.java, {
+                ModuleSpec.nativeModuleSpec(OfflineGeocoderModule::class.java, {
                     OfflineGeocoderModule(context!!)
                 }),
-                ModuleSpec(LoggingModule::class.java, {
-                    LoggingModule(context!!, BuildConfig.MIXPANEL_PROJECT_TOKEN, BuildConfig.LOGENTRIES_PROJECT_TOKEN)
+                ModuleSpec.nativeModuleSpec(LoggingModule::class.java, {
+                    LoggingModule(context!!, BuildConfig.LOGENTRIES_PROJECT_TOKEN)
                 }),
-                ModuleSpec(WifiModule::class.java, {
+                ModuleSpec.nativeModuleSpec(WifiModule::class.java, {
                     WifiModule(context!!)
                 }),
-                ModuleSpec(CellularModule::class.java, {
+                ModuleSpec.nativeModuleSpec(CellularModule::class.java, {
                     CellularModule(context!!)
                 })
         )

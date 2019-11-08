@@ -1,18 +1,14 @@
 package ai.comma.plus.offroad
 
 import com.facebook.react.bridge.*
-import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONException
 import org.json.JSONObject
 
 /**
  * Created by batman on 9/12/17.
  */
-class LoggingModule(reactContext: ReactApplicationContext, mixpanelToken: String, logentriesToken: String) : ReactContextBaseJavaModule(reactContext) {
-    var mixpanel: MixpanelAPI? = null
-
+class LoggingModule(reactContext: ReactApplicationContext, logentriesToken: String) : ReactContextBaseJavaModule(reactContext) {
     init {
-        mixpanel = MixpanelAPI.getInstance(reactApplicationContext, mixpanelToken)
         CloudLog.init(reactApplicationContext, logentriesToken)
     }
 
@@ -41,15 +37,5 @@ class LoggingModule(reactContext: ReactApplicationContext, mixpanelToken: String
         val eventArgs = JSONObject(properties.toHashMap())
 
         CloudLog.event(log, eventArgs)
-    }
-
-    @ReactMethod
-    fun mixpanelTrack(event: String) {
-        mixpanel?.track(event)
-    }
-
-    @ReactMethod
-    fun mixpanelTrackWithProperties(event: String, properties: ReadableMap) {
-        mixpanel?.track(event, JSONObject(properties.toHashMap()))
     }
 }

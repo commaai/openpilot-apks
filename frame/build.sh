@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-APK_OUT=${1:-out.apk}
+APK_OUT=${1:-ai.comma.plus.frame.apk}
 TOOLS="$PWD/../tools"
 CEREAL="$PWD/../../cereal"
 
@@ -15,7 +15,15 @@ popd
 
 
 ./gradlew clean
-./gradlew assembleRelease
 
-java -jar $TOOLS/signapk/signapk.jar $TOOLS/signapk/platform.x509.pem $TOOLS/signapk/platform.pk8 app/build/outputs/apk/release/app-release-unsigned.apk "$APK_OUT" 
+
+if [ -z "$DEBUG" ]; then
+  ./gradlew assembleRelease
+  UNSIGNED_APK=app/build/outputs/apk/release/app-release-unsigned.apk
+else
+  ./gradlew assembleDebug
+  UNSIGNED_APK=app/build/outputs/apk/debug/app-debug.apk
+fi
+
+java -jar $TOOLS/signapk/signapk.jar $TOOLS/signapk/platform.x509.pem $TOOLS/signapk/platform.pk8 "$UNSIGNED_APK" "$APK_OUT"
 

@@ -5,7 +5,6 @@ import {
     addNavigationHelpers,
 } from 'react-navigation';
 import { View, Animated, Easing } from 'react-native';
-import { withMappedNavigationAndConfigProps } from 'react-navigation-props-mapper';
 import { connect } from 'react-redux';
 
 import Loader from '../components/Loader';

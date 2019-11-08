@@ -11,9 +11,6 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-sdk
-        android:minSdkVersion="22"
-        android:targetSdkVersion="22" />
 
     <application
       android:name="ai.comma.plus.offroad.MainApplication"
@@ -34,10 +31,6 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="e65f75f2b5a78c367888919433ac1c7ac4f08e4d"
-            />
     </application>
 
 </manifest>

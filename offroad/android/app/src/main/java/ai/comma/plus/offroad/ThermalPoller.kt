@@ -1,12 +1,13 @@
 package ai.comma.plus.offroad
 
+import ai.comma.messaging.Context
+import ai.comma.messaging.SubSocket
 import ai.comma.openpilot.cereal.Log
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import org.capnproto.MessageReader
 import org.capnproto.Serialize
-import org.zeromq.ZMQ
 import java.io.IOException
 import java.nio.ByteBuffer
 
@@ -40,9 +41,9 @@ interface ThermalPollerDelegate {
 }
 
 class ThermalPoller(val delegate: ThermalPollerDelegate) {
-    val zmqCtx: ZMQ.Context
+    val msgqCtx: Context
     val thermalThreadHandle: Thread
-    var thermalSock: ZMQ.Socket? = null
+    var thermalSock: SubSocket? = null
     var running: Boolean = false
     var lastThermal: ThermalSample? = null
 
@@ -50,18 +51,18 @@ class ThermalPoller(val delegate: ThermalPollerDelegate) {
         thermalThreadHandle = Thread(Runnable {
             thermalThread()
         })
-        zmqCtx = ZMQ.context(1)
+        msgqCtx = Context()
     }
 
     fun thermalThread() {
         while (true) {
             if (!running) break
 
-            val msg = thermalSock!!.recv()
+            val msg = thermalSock!!.receive()
             if (msg == null || msg.size < 4) {
                 continue
             }
-            val msgbuf = ByteBuffer.wrap(msg)
+            val msgbuf = ByteBuffer.wrap(msg.data)
             var reader: MessageReader
             try {
                 reader = Serialize.read(msgbuf)
@@ -85,18 +86,18 @@ class ThermalPoller(val delegate: ThermalPollerDelegate) {
                 android.util.Log.e("offroad", "bad thermal", e)
             }
         }
+
+        thermalSock!!.close()
     }
 
     fun start() {
         running = true
-        thermalSock = zmqCtx.socket(ZMQ.SUB)
-        thermalSock!!.connect("tcp://127.0.0.1:8005")
-        thermalSock!!.subscribe("")
+        thermalSock = msgqCtx.subSocket("thermal")
+        thermalSock!!.setTimeout(5000)
         thermalThreadHandle.start()
     }
 
     fun stop() {
         running = false
-        thermalSock!!.disconnect("tcp://127.0.0.1:8005")
     }
 }

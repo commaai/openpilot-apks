@@ -4,15 +4,11 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.react.ReactApplication;
 import com.horcrux.svg.SvgPackage;
 import com.pusherman.networkinfo.RNNetworkInfoPackage;
 
-import io.fabric.sdk.android.Fabric;
 import io.sentry.RNSentryPackage;
-import com.psykar.cookiemanager.CookieManagerPackage;
-import com.brentvatne.react.ReactVideoPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.facebook.react.ReactNativeHost;
@@ -34,13 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new HomePackage(),
-              new LinearGradientPackage(),
-              new RNFetchBlobPackage(),
-              new ReactVideoPackage(),
-              new CookieManagerPackage(),
-              new RNSentryPackage(MainApplication.this),
-              new RNNetworkInfoPackage(),
-              new SvgPackage()
+          new LinearGradientPackage(),
+          new RNFetchBlobPackage(),
+          new RNSentryPackage(),
+          new RNNetworkInfoPackage(),
+          new SvgPackage()
       );
     }
 
@@ -65,7 +59,6 @@ public class MainApplication extends Application implements ReactApplication {
 
     super.onCreate();
 
-    Fabric.with(this, new Crashlytics());
     SoLoader.init(this, /* native exopackage */ false);
   }
 }

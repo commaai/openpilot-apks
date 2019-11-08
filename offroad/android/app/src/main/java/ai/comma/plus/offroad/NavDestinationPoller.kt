@@ -1,12 +1,13 @@
 package ai.comma.plus.offroad
 
+import ai.comma.messaging.Context
+import ai.comma.messaging.SubSocket
 import ai.comma.openpilot.cereal.Log
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import org.capnproto.MessageReader
 import org.capnproto.Serialize
-import org.zeromq.ZMQ
 import java.io.IOException
 import java.nio.ByteBuffer
 
@@ -62,9 +63,9 @@ interface NavDestinationPollerDelegate {
 }
 
 class NavDestinationPoller(val delegate: NavDestinationPollerDelegate) {
-    val zmqCtx: ZMQ.Context
+    val msgqCtx: Context
     val navStatusThreadHandle: Thread
-    var navStatusSock: ZMQ.Socket? = null
+    var navStatusSock: SubSocket? = null
     var running: Boolean = false
     var lastDestination: Destination? = null
 
@@ -72,18 +73,18 @@ class NavDestinationPoller(val delegate: NavDestinationPollerDelegate) {
         navStatusThreadHandle = Thread(Runnable {
             statusThread()
         })
-        zmqCtx = ZMQ.context(1)
+        msgqCtx = Context()
     }
 
     fun statusThread() {
         while (true) {
             if (!running) break
 
-            val msg = navStatusSock!!.recv()
+            val msg = navStatusSock!!.receive()
             if (msg == null || msg.size < 4) {
                 continue
             }
-            val msgbuf = ByteBuffer.wrap(msg)
+            val msgbuf = ByteBuffer.wrap(msg.data)
             var reader: MessageReader
             try {
                 reader = Serialize.read(msgbuf)
@@ -111,14 +112,12 @@ class NavDestinationPoller(val delegate: NavDestinationPollerDelegate) {
 
     fun start() {
         running = true
-        navStatusSock = zmqCtx.socket(ZMQ.SUB)
-        navStatusSock!!.connect("tcp://127.0.0.1:8038")
-        navStatusSock!!.subscribe("")
+        navStatusSock = msgqCtx.subSocket("navStatus")
         navStatusThreadHandle.start()
     }
 
     fun stop() {
         running = false
-        navStatusSock!!.disconnect("tcp://127.0.0.1:8038")
+        navStatusSock!!.close()
     }
 }

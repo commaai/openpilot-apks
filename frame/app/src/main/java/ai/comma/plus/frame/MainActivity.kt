@@ -1,5 +1,6 @@
 package ai.comma.plus.frame
 
+import ai.comma.messaging.Poller
 import android.app.Activity
 import android.view.View
 import android.view.animation.Animation
@@ -17,7 +18,6 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.util.Log
 
-import org.zeromq.ZMQ
 import org.capnproto.MessageReader
 import java.io.IOException
 import java.io.ByteArrayOutputStream
@@ -25,6 +25,7 @@ import java.nio.ByteBuffer
 import java.nio.channels.Channels
 
 import org.capnproto.Serialize;
+import ai.comma.messaging.Context as MQContext
 import ai.comma.openpilot.cereal.Log as CLog
 import ai.comma.openpilot.cereal.Log.ControlsState.OpenpilotState
 import android.net.wifi.WifiManager
@@ -37,8 +38,9 @@ import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import android.view.MotionEvent
 import com.android.internal.telephony.TelephonyIntents
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.event.UserBuilder
 
 
 class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigationReceiverDelegate, UiLayoutReceiverDelegate, ActivityOverlayManagerDelegate {
@@ -91,13 +93,11 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var homeButton: ImageView? = null
     var useMetric: Boolean = false
 
-    var zmqCtx: org.zeromq.ZMQ.Context? = null
-    var frameSock: org.zeromq.ZMQ.Socket? = null
-    var statusSock: org.zeromq.ZMQ.Socket? = null
-    var ubloxGnssSock: org.zeromq.ZMQ.Socket? = null
-    var ubloxGnssPoller: org.zeromq.ZMQ.Poller? = null
-    var controlStateSock: org.zeromq.ZMQ.Socket? = null
-    var uiLayoutSock: org.zeromq.ZMQ.Socket? = null
+    var msgqCtx: ai.comma.messaging.Context? = null
+    var frameSock: ai.comma.messaging.PubSocket? = null
+    var thermalSock: ai.comma.messaging.SubSocket? = null
+    var ubloxGnssPoller: ai.comma.messaging.Poller? = null
+    var uiLayoutSock: ai.comma.messaging.PubSocket? = null
 
     var newDestinationReceiver: NewDestinationReceiver? = null
     var offroadNavReceiver: OffroadNavigationReceiver? = null
@@ -214,8 +214,8 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     fun statusThread() {
         Log.w("frame", "statusThread")
         while (true) {
-            val msg = statusSock!!.recv()
-            val msgbuf = ByteBuffer.wrap(msg)
+            val msg = thermalSock!!.receive()
+            val msgbuf = ByteBuffer.wrap(msg.data)
             var reader: MessageReader
             try {
                 reader = Serialize.read(msgbuf)
@@ -276,9 +276,9 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     fun ubloxGnssThread() {
         Log.w("frame", "ubloxGnssThread")
         while (true) {
-            val recv = ubloxGnssPoller!!.poll(5000)
-            if (recv == 0) {
-                // no message from socket in last 5s
+            val poll = ubloxGnssPoller!!.poll(5000)
+            if (poll.size == 0) {
+                // no message from subSocket in last 5s
                 satelliteCount = -1
                 runOnUiThread {
                     updatePandaConnectionStatus()
@@ -286,7 +286,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                 continue
             }
 
-            val msg = ubloxGnssSock!!.recv()
+            val msg = poll[0].receive().data
             val msgbuf = ByteBuffer.wrap(msg)
             var reader: MessageReader
             try {
@@ -301,7 +301,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
             if (log.ubloxGnss.isMeasurementReport) {
                 satelliteCount = log.ubloxGnss.measurementReport.numMeas.toInt()
-
                 runOnUiThread {
                     updatePandaConnectionStatus()
                 }
@@ -310,7 +309,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     }
 
     fun updatePandaConnectionStatus() {
-        Log.i("frame", satelliteCount.toString())
         if (pandaConnectionMonitor?.isConnected == false) {
             sidebarMetricPanda?.text = "NO PANDA"
             sidebarMetricPandaEdge?.setColorFilter(colorRed!!);
@@ -369,32 +367,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         sidebarMetricTempBorder!!.getBackground().setAlpha(255);
       }
     }
-
-    /* fun controlsThread() {
-        Log.w("frame", "controlsThread")
-        var recv = 0
-
-        while (true) {
-            val msg = controlStateSock!!.recv()
-            recv += 1
-
-            if (!lastStarted || recv % 100 != 0) {
-                continue
-            }
-
-            val msgbuf = ByteBuffer.wrap(msg)
-            var reader: MessageReader
-            try {
-                reader = Serialize.read(msgbuf)
-            } catch (e: IOException) {
-                Log.e("frame", "read")
-                continue
-            }
-
-            val log = reader.getRoot(CLog.Event.factory)
-            assert(log.isControlsState)
-        }
-    } */
 
     fun enterHomeState() {
         var startApp = OFFROAD_APP
@@ -518,7 +490,8 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         if (!BuildConfig.DEBUG) {
-            Fabric.with(this, Crashlytics());
+            Sentry.init("https://bf3de6848ae04ab48a79b8cac70a87f2@sentry.io/226563", AndroidSentryClientFactory(this));
+            Sentry.getContext().user = UserBuilder().setId(ChffrPlusParams.readParam("DongleId")).build()
         }
         setContentView(R.layout.activity_main);
 
@@ -526,23 +499,15 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         CloudLog.init(applicationContext)
 
         isPassive = ChffrPlusParams.readParam("Passive") == "1"
-        zmqCtx = ZMQ.context(1)
+        msgqCtx = ai.comma.messaging.Context()
 
-        frameSock = zmqCtx!!.socket(ZMQ.PUB)
-        frameSock!!.bind(FRAME_SOCKET_ADDR)
+        frameSock = msgqCtx!!.pubSocket("plusFrame")
 
-        uiLayoutSock = zmqCtx!!.socket(ZMQ.PUB)
-        uiLayoutSock!!.bind(UILAYOUT_SOCKET_ADDR)
+        uiLayoutSock = msgqCtx!!.pubSocket("uiLayoutState")
 
-        statusSock = zmqCtx!!.socket(ZMQ.SUB)
-        statusSock!!.connect("tcp://127.0.0.1:8005")
-        statusSock!!.subscribe("")
+        thermalSock = msgqCtx!!.subSocket("thermal")
 
-        ubloxGnssSock = zmqCtx!!.socket(ZMQ.SUB)
-        ubloxGnssSock!!.connect("tcp://127.0.0.1:8033")
-        ubloxGnssSock!!.subscribe("")
-        ubloxGnssPoller = zmqCtx!!.poller(1)
-        ubloxGnssPoller!!.register(ubloxGnssSock, zmq.ZMQ.ZMQ_POLLIN)
+        ubloxGnssPoller = Poller(arrayOf(msgqCtx!!.subSocket("ubloxGnss")))
 
         // Layouts
         frame = findViewById(R.id.frame) as RelativeLayout
@@ -704,10 +669,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         unregisterReceiver(newDestinationReceiver)
         unregisterReceiver(networkMonitor)
         unregisterReceiver(batteryMonitor)
-        frameSock?.unbind(FRAME_SOCKET_ADDR)
-        frameSock?.close()
-        uiLayoutSock?.unbind(UILAYOUT_SOCKET_ADDR)
-        uiLayoutSock?.close()
 
         pandaConnectionMonitor?.destroy()
 

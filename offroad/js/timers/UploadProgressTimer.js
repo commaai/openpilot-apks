@@ -4,7 +4,7 @@ import Logging from '../native/Logging';
 
 const INTERVAL_MILLIS = 10000;
 
-const timer = null;
+let timer = null;
 
 const update = async (dispatch) => {
     try {

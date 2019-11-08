@@ -68,7 +68,7 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         ctx.registerReceiver(networkMonitor, filter)
 
         navDestinationPoller = NavDestinationPoller(this)
-        navDestinationPoller!!.start()
+//        navDestinationPoller!!.start()
 
         thermalPoller = ThermalPoller(this)
         thermalPoller!!.start()
@@ -82,7 +82,7 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         ctx.unregisterReceiver(networkMonitor)
         ctx.unregisterReceiver(settingsClickReceiver)
 
-        navDestinationPoller!!.stop()
+//        navDestinationPoller!!.stop()
         thermalPoller!!.stop()
     }
 

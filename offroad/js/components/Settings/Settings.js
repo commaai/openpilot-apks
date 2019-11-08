@@ -10,6 +10,7 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import ChffrPlus from '../../native/ChffrPlus';
+import UploadProgressTimer from '../../timers/UploadProgressTimer';
 import { formatSize } from '../../utils/bytes';
 import { mpsToKph, mpsToMph, kphToMps, mphToMps } from '../../utils/conversions';
 import { Params } from '../../config';
@@ -76,6 +77,7 @@ class Settings extends Component {
     }
 
     async componentWillMount() {
+        UploadProgressTimer.start(this.props.dispatch);
         await this.props.refreshParams();
         const {
             isMetric,
@@ -89,6 +91,10 @@ class Settings extends Component {
         } else {
             this.setState({ speedLimitOffsetInt: parseInt(mpsToMph(speedLimitOffset)) })
         }
+    }
+
+    componentWillUnmount() {
+        UploadProgressTimer.stop();
     }
 
     handleExpanded(key) {
@@ -775,6 +781,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    dispatch,
     navigateHome: async () => {
         dispatch(resetToLaunch());
     },

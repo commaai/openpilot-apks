@@ -1,5 +1,6 @@
 import { NavigationActions } from 'react-navigation';
 import { AsyncStorage } from 'react-native';
+import * as Sentry from '@sentry/react-native';
 import { request as Request, devices as Devices } from '@commaai/comma-api';
 import ChffrPlus from '../../native/ChffrPlus';
 import { Params } from '../../config';
@@ -158,10 +159,14 @@ export function updateSshEnabled(isSshEnabled) {
 export function refreshDeviceInfo() {
     return async (dispatch, getState) => {
         const dongleId = await ChffrPlus.readParam("DongleId");
+        Sentry.setUser({
+          dongleId,
+        });
+
         const token = await ChffrPlus.createJwt({"identity": dongleId});
         await Request.configure(token);
-        const device =  await Devices.fetchDevice(dongleId);
 
+        const device =  await Devices.fetchDevice(dongleId);
         dispatch({
             type: ACTION_DEVICE_REFRESHED,
             device,

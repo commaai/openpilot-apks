@@ -836,7 +836,6 @@ class Onboarding extends Component {
             },
         };
 
-
         return (
             <View style={ Styles.onboardingContainer }>
                 <Animated.Image
@@ -849,99 +848,105 @@ class Onboarding extends Component {
                             })
                         }],
                     }] }>
-                    <Animated.Image
-                        source={ require('../../../img/illustration_training_lane_01.png') }
-                        style={ [Styles.onboardingVisualLane, {
-                            opacity: photoOffset.interpolate({
-                                inputRange: [0, 100],
-                                outputRange: [0, 1],
-                            })
-                        }] } />
+                </Animated.Image>
+                <Animated.Image
+                    source={ require('../../../img/illustration_training_lane_01.png') }
+                    style={ [Styles.onboardingVisualLane, {
+                        opacity: photoOffset.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: [0, 1],
+                        })
+                    }] } />
+
+                <View style={[{ flexDirection: 'row',
+        justifyContent: 'center', position: 'absolute' }, Styles.onboardingVisualLane]}>
                     <Animated.Image
                         source={ require('../../../img/illustration_training_lane_01.png') }
                         tintColor='lime'
                         pointerEvents='none'
-                        style={ [Styles.onboardingVisualLane, {
+                        style={ [Styles.absoluteFill, {
                             opacity: gateHighlighted.interpolate({
                                 inputRange: [0, 100],
                                 outputRange: [0, 1],
                             })
-                        }] }>
-                        { stepPoint == 1 ? (
+                        }] } />
+                    { stepPoint == 1 ? (
+                        <View style={ Styles.onboardingVisualLaneTouchGate }>
                             <X.Button
                                 onPress={ () => { this.handleSensorVisualPressed('camera') } }
-                                style={ [Styles.onboardingVisualLaneTouchGate] } />
-                        ) : null }
-                    </Animated.Image>
-
-                    { (step === 'OB_SENSORS' && stepPoint > 1) ? (
-                        <View style={ Styles.onboardingVisuals }>
-                            <Animated.Image
-                                source={ require('../../../img/photo_baybridge_b_01.jpg') }
-                                style={ [Styles.onboardingPhotoCycled, {
-                                    opacity: photoCycled.interpolate({
-                                        inputRange: [0, 100],
-                                        outputRange: [0, 1],
-                                    })
-                                }] } />
-                            <Animated.Image
-                                source={ require('../../../img/illustration_training_lane_02.png') }
-                                style={ [Styles.onboardingVisualLaneZoomed, {
-                                    opacity: photoCycled.interpolate({
-                                        inputRange: [0, 100],
-                                        outputRange: [0, 1],
-                                    })
-                                }] }>
-                            </Animated.Image>
-                            <Animated.Image
-                                source={ require('../../../img/illustration_training_lead_01.png') }
-                                style={ [Styles.onboardingVisualLead,
-                                    Animations.leadIndicatorDescended ] } />
-                            <Animated.Image
-                                source={ require('../../../img/illustration_training_lead_02.png') }
-                                style={ [Styles.onboardingVisualLead,
-                                    Styles.onboardingVisualLeadZoomed,
-                                    Animations.leadIndicatorDescended, {
-                                    opacity: photoCycled.interpolate({
-                                        inputRange: [0, 100],
-                                        outputRange: [0, 1]
-                                    }),
-                                }] } />
-                            <Animated.View
-                                style={ [Styles.onboardingVisualLeadTouchGate,
-                                    Animations.leadIndicatorDescended, {
-                                      opacity: gateHighlighted.interpolate({
-                                          inputRange: [0, 100],
-                                          outputRange: [0, 1],
-                                      }),
-                                    }] }>
-                                <X.Button
-                                    style={ Styles.onboardingVisualLeadTouchGateButton }
-                                    onPress={ () => { this.handleSensorVisualPressed('radar') } } />
-                            </Animated.View>
+                                style={ Styles.onboardingVisualLaneTouchGateButton } />
                         </View>
                     ) : null }
+                </View>
 
-                    { step === 'OB_CONTROLS' ? (
-                        <View style={ Styles.onboardingVisuals }>
-                            <Animated.Image
-                                source={ require('../../../img/photo_wheel_buttons_01.jpg') }
-                                style={ [Styles.onboardingPhotoCruise] }>
-                                { stepPoint == 1 ? (
-                                    <Animated.View
-                                      style={ [{
-                                        opacity: gateHighlighted.interpolate({
-                                            inputRange: [0, 100],
-                                            outputRange: [0, 1],
-                                        }),
-                                      }] }>
-                                        <X.Button
-                                            style={ Styles.onboardingVisualCruiseTouchGate }
-                                            onPress={ () => { this.handleControlsVisualPressed('cruise') } } />
-                                    </Animated.View>
-                                ) : null }
-                            </Animated.Image>
-                            { stepPoint == 2 ? (
+                { (step === 'OB_SENSORS' && stepPoint > 1) ? (
+                    <View style={ Styles.onboardingVisuals }>
+                        <Animated.Image
+                            source={ require('../../../img/photo_baybridge_b_01.jpg') }
+                            style={ [Styles.onboardingPhotoCycled, {
+                                opacity: photoCycled.interpolate({
+                                    inputRange: [0, 100],
+                                    outputRange: [0, 1],
+                                })
+                            }] } />
+                        <Animated.Image
+                            source={ require('../../../img/illustration_training_lane_02.png') }
+                            style={ [Styles.onboardingVisualLaneZoomed, {
+                                opacity: photoCycled.interpolate({
+                                    inputRange: [0, 100],
+                                    outputRange: [0, 1],
+                                })
+                            }] }>
+                        </Animated.Image>
+                        <Animated.Image
+                            source={ require('../../../img/illustration_training_lead_01.png') }
+                            style={ [Styles.onboardingVisualLead,
+                                Animations.leadIndicatorDescended ] } />
+                        <Animated.Image
+                            source={ require('../../../img/illustration_training_lead_02.png') }
+                            style={ [Styles.onboardingVisualLead,
+                                Styles.onboardingVisualLeadZoomed,
+                                Animations.leadIndicatorDescended, {
+                                opacity: photoCycled.interpolate({
+                                    inputRange: [0, 100],
+                                    outputRange: [0, 1]
+                                }),
+                            }] } />
+                        <Animated.View
+                            style={ [Styles.onboardingVisualLeadTouchGate,
+                                Animations.leadIndicatorDescended, {
+                                  opacity: gateHighlighted.interpolate({
+                                      inputRange: [0, 100],
+                                      outputRange: [0, 1],
+                                  }),
+                                }] }>
+                            <X.Button
+                                style={ Styles.onboardingVisualLeadTouchGateButton }
+                                onPress={ () => { this.handleSensorVisualPressed('radar') } } />
+                        </Animated.View>
+                    </View>
+                ) : null }
+
+                { step === 'OB_CONTROLS' ? (
+                    <View style={ Styles.onboardingVisuals }>
+                        <Animated.Image
+                            source={ require('../../../img/photo_wheel_buttons_01.jpg') }
+                            style={ [Styles.onboardingPhotoCruise] } />
+                        { stepPoint == 1 ? (
+                            <Animated.View
+                              style={ [Styles.onboardingVisualCruiseTouchContainer, {
+                                opacity: gateHighlighted.interpolate({
+                                    inputRange: [0, 100],
+                                    outputRange: [0, 1],
+                                }),
+                              }] }>
+                                <X.Button
+                                    style={ Styles.onboardingVisualCruiseTouchGateButton }
+                                    onPress={ () => { this.handleControlsVisualPressed('cruise') } } />
+                            </Animated.View>
+                        ) : null }
+                        { stepPoint == 2 ? (
+                            <React.Fragment>
                                 <Animated.Image
                                     source={ require('../../../img/photo_monitoring_01.jpg') }
                                     style={ [Styles.onboardingPhotoCycled, {
@@ -950,19 +955,21 @@ class Onboarding extends Component {
                                             outputRange: [0, 1],
                                         }),
                                     }] }>
-                                    <Animated.View style={ [Styles.onboardingFaceTouchGate, {
-                                      opacity: gateHighlighted.interpolate({
-                                          inputRange: [0, 100],
-                                          outputRange: [0, 1],
-                                      }),
-                                    }]}>
-                                        <X.Button
-                                            style={ Styles.onboardingPedalTouchGateButton }
-                                            onPress={ () => { this.handleControlsVisualPressed('monitoring') } } />
-                                    </Animated.View>
                                 </Animated.Image>
-                            ) : null }
-                            { stepPoint == 3 ? (
+                                <Animated.View style={ [Styles.onboardingFaceTouchGate, {
+                                  opacity: gateHighlighted.interpolate({
+                                      inputRange: [0, 100],
+                                      outputRange: [0, 1],
+                                  }),
+                                }]}>
+                                    <X.Button
+                                        style={ Styles.onboardingPedalTouchGateButton }
+                                        onPress={ () => { this.handleControlsVisualPressed('monitoring') } } />
+                                </Animated.View>
+                            </React.Fragment>
+                        ) : null }
+                        { stepPoint == 3 ? (
+                            <React.Fragment>
                                 <Animated.Image
                                     source={ require('../../../img/photo_traffic_light_01.jpg') }
                                     style={ [Styles.onboardingPhotoCycled, {
@@ -970,73 +977,68 @@ class Onboarding extends Component {
                                             inputRange: [0, 100],
                                             outputRange: [0, 1],
                                         }),
-                                    }] }>
-                                    <Animated.View style={ [Styles.onboardingLightTouchGate, {
-                                      opacity: gateHighlighted.interpolate({
-                                          inputRange: [0, 100],
-                                          outputRange: [0, 1],
-                                      }),
-                                    }]}>
-                                        <X.Button
-                                            style={ Styles.onboardingPedalTouchGateButton }
-                                            onPress={ () => { this.handleControlsVisualPressed('limitations') } } />
-                                    </Animated.View>
-                                </Animated.Image>
-                            ) : null }
-                            { stepPoint == 4 ? (
-                                <View style={ Styles.onboardingVisuals }>
-                                    <Animated.Image
-                                        source={ require('../../../img/photo_traffic_light_01.jpg') }
-                                        style={ [Styles.onboardingPhotoCycled] } />
-                                    <Animated.Image
-                                        source={ require('../../../img/photo_pedals_01.jpg') }
-                                        style={ [Styles.onboardingPhotoCycled, {
-                                            opacity: photoCycledLast.interpolate({
-                                                inputRange: [0, 100],
-                                                outputRange: [0, 1],
-                                            }),
-                                        }] }>
-                                        <Animated.View style={ [Styles.onboardingBrakePedalTouchGate, {
-                                          opacity: gateHighlighted.interpolate({
-                                              inputRange: [0, 100],
-                                              outputRange: [0, 1],
-                                          }),
-                                        }]}>
-                                            <X.Button
-                                                style={ Styles.onboardingPedalTouchGateButton }
-                                                onPress={ () => { this.handleControlsVisualPressed('pedal') } } />
-                                        </Animated.View>
-                                        <Animated.View style={ [Styles.onboardingGasPedalTouchGate, {
-                                          opacity: gateHighlighted.interpolate({
-                                              inputRange: [0, 100],
-                                              outputRange: [0, 1],
-                                          }),
-                                        }] }>
-                                            <X.Button
-                                                style={ Styles.onboardingPedalTouchGateButton }
-                                                onPress={ () => { this.handleControlsVisualPressed('pedal') } } />
-                                        </Animated.View>
-                                    </Animated.Image>
-                                </View>
-                            ) : null }
-                        </View>
-                    ) : null }
+                                    }] } />
+                                <Animated.View style={ [Styles.onboardingLightTouchGate, {
+                                  opacity: gateHighlighted.interpolate({
+                                      inputRange: [0, 100],
+                                      outputRange: [0, 1],
+                                  }),
+                                }]}>
+                                    <X.Button
+                                        style={ Styles.onboardingPedalTouchGateButton }
+                                        onPress={ () => { this.handleControlsVisualPressed('limitations') } } />
+                                </Animated.View>
+                            </React.Fragment>
+                        ) : null }
+                        { stepPoint == 4 ? (
+                            <View style={ Styles.onboardingVisuals }>
+                                <Animated.Image
+                                    source={ require('../../../img/photo_pedals_01.jpg') }
+                                    style={ [Styles.onboardingPhotoCycled, Styles.onboardingPhotoPedals, {
+                                        opacity: photoCycledLast.interpolate({
+                                            inputRange: [0, 100],
+                                            outputRange: [0, 1],
+                                        }),
+                                    }] } />
+                                <Animated.View style={ [Styles.onboardingBrakePedalTouchGate, {
+                                  opacity: gateHighlighted.interpolate({
+                                      inputRange: [0, 100],
+                                      outputRange: [0, 1],
+                                  }),
+                                }]}>
+                                    <X.Button
+                                        style={ Styles.onboardingPedalTouchGateButton }
+                                        onPress={ () => { this.handleControlsVisualPressed('pedal') } } />
+                                </Animated.View>
+                                <Animated.View style={ [Styles.onboardingGasPedalTouchGate, {
+                                  opacity: gateHighlighted.interpolate({
+                                      inputRange: [0, 100],
+                                      outputRange: [0, 1],
+                                  }),
+                                }] }>
+                                    <X.Button
+                                        style={ Styles.onboardingPedalTouchGateButton }
+                                        onPress={ () => { this.handleControlsVisualPressed('pedal') } } />
+                                </Animated.View>
+                            </View>
+                        ) : null }
+                    </View>
+                ) : null }
 
-                    <Animated.View
-                        style={ [...overlayStyle, {
-                            transform: [{
-                                translateX: photoOffset.interpolate({
-                                    inputRange: [0, 100],
-                                    outputRange: [0, 50]
-                                })
-                            }],
-                        }] }>
-                        <X.Gradient
-                            color={ gradientColor }>
-                            { this.renderStep() }
-                        </X.Gradient>
-                    </Animated.View>
-                </Animated.Image>
+                <Animated.View
+                    style={ [...overlayStyle, {
+                        transform: [{
+                            translateX: photoOffset.interpolate({
+                                inputRange: [0, 100],
+                                outputRange: [-50, 0]
+                            })
+                        }],
+                    }] }>
+                    <X.Gradient
+                        color={ gradientColor }>
+                        { this.renderStep() }
+                    </X.Gradient>
+                </Animated.View>
             </View>
         )
     }
