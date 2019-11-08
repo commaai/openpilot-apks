@@ -36,7 +36,7 @@ Android SDK Tools:
 curl -o sdk-tools.zip "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
 unzip -o sdk-tools.zip -d "/usr/lib/android-sdk/"
 chmod +x /usr/lib/android-sdk/tools/bin/*
-sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27"
+sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27" "ndk-bundle"
 sdkmanager "extras;android;m2repository"
 sdkmanager "extras;google;m2repository"
 sdkmanager --licenses
