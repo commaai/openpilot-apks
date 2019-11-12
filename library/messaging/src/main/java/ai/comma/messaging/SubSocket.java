@@ -25,6 +25,10 @@ public class SubSocket {
 
   public Message receive(boolean nonBlocking) {
     long messageAddr = nativeReceive(mNativeObjAddress, nonBlocking);
+    if (messageAddr == 0) {
+      return null;
+    }
+
     return new Message(messageAddr);
   }
 

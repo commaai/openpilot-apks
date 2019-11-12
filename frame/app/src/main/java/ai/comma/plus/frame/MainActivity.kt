@@ -215,6 +215,9 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         Log.w("frame", "statusThread")
         while (true) {
             val msg = thermalSock!!.receive()
+            if (msg == null) {
+                continue
+            }
             val msgbuf = ByteBuffer.wrap(msg.data)
             var reader: MessageReader
             try {
@@ -286,8 +289,11 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                 continue
             }
 
-            val msg = poll[0].receive().data
-            val msgbuf = ByteBuffer.wrap(msg)
+            val msg = poll[0].receive()
+            if (msg == null) {
+                continue
+            }
+            val msgbuf = ByteBuffer.wrap(msg.data)
             var reader: MessageReader
             try {
                 reader = Serialize.read(msgbuf)
