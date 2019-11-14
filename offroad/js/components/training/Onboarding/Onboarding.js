@@ -1026,14 +1026,7 @@ class Onboarding extends Component {
                 ) : null }
 
                 <Animated.View
-                    style={ [...overlayStyle, {
-                        transform: [{
-                            translateX: photoOffset.interpolate({
-                                inputRange: [0, 100],
-                                outputRange: [-50, 0]
-                            })
-                        }],
-                    }] }>
+                    style={ overlayStyle }>
                     <X.Gradient
                         color={ gradientColor }>
                         { this.renderStep() }
