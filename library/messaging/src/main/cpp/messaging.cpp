@@ -20,31 +20,23 @@ extern "C" JNIEXPORT void JNICALL Java_ai_comma_messaging_Loader_init(JNIEnv *en
                                                                  jclass cls) {
     const char* pythonPath = getenv("PYTHONPATH");
     const char* messagingLibraryFile = "/cereal/messaging/messaging.so";
-    const char* libcppFile = "/phonelibs/libc++/libc++_shared.so";
-    const char* libGnustlFile = "/phonelibs/libgnustl/libgnustl_shared.so";
     char* messagingLibraryPath = (char*)malloc(strlen(pythonPath) + strlen(messagingLibraryFile) + 1);
     strcpy(messagingLibraryPath, pythonPath);
     strcat(messagingLibraryPath, messagingLibraryFile);
-    char* libcppPath = (char*)malloc(strlen(pythonPath) + strlen(libcppFile) + 1);
-    strcpy(libcppPath, pythonPath);
-    strcat(libcppPath, libcppFile);
-    char* libGnustlPath = (char*)malloc(strlen(pythonPath) + strlen(libGnustlFile) + 1);
-    strcpy(libGnustlPath, pythonPath);
-    strcat(libGnustlPath, libGnustlFile);
+    const char* libcppPath = "/system/comma/usr/lib/libc++_shared.so";
+    const char* libGnustlPath = "/system/comma/usr/lib/libgnustl_shared.so";
 
     void* opened = dlopen(libcppPath, RTLD_NOW | RTLD_GLOBAL);
     if(!opened) {
         char *error = dlerror();
         LOGE ("Error opening libc++_shared ( %s )", (error) ? error : "");
     } else { LOGE("Opened libc++_shared.so"); }
-    free(libcppPath);
 
     opened = dlopen(libGnustlPath, RTLD_NOW | RTLD_GLOBAL);
     if(!opened) {
         char *error = dlerror();
         LOGE ("Error opening libgnustl_shared ( %s )", (error) ? error : "");
     } else { LOGE("Opened libgnustl_shared.so"); }
-    free(libGnustlPath);
 
     opened = dlopen(messagingLibraryPath, RTLD_NOW | RTLD_GLOBAL);
     if(!opened) {
