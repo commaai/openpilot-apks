@@ -20,7 +20,7 @@ fnCreatePoller createPoller;
 extern "C" JNIEXPORT void JNICALL Java_ai_comma_messaging_Loader_init(JNIEnv *env,
                                                                  jclass cls) {
     const char* pythonPath = getenv("PYTHONPATH");
-    const char* messagingLibraryFile = "/cereal/messaging/messaging.so";
+    const char* messagingLibraryFile = "/cereal/libmessaging_shared.so";
     char* messagingLibraryPath = (char*)malloc(strlen(pythonPath) + strlen(messagingLibraryFile) + 1);
     strcpy(messagingLibraryPath, pythonPath);
     strcat(messagingLibraryPath, messagingLibraryFile);
