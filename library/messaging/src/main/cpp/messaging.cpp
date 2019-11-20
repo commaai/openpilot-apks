@@ -3,6 +3,7 @@
 #include <android/log.h>
 #include <libmessaging/messaging.hpp>
 #include <dlfcn.h>
+#include <stdlib.h>
 
 #include "messaging.h"
 
