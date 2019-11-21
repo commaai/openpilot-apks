@@ -852,6 +852,12 @@ class Onboarding extends Component {
                 <Animated.Image
                     source={ require('../../../img/illustration_training_lane_01.png') }
                     style={ [Styles.onboardingVisualLane, {
+                        transform: [{
+                            translateX: photoOffset.interpolate({
+                                inputRange: [0, 100],
+                                outputRange: [50, 0]
+                            })
+                        }],
                         opacity: photoOffset.interpolate({
                             inputRange: [0, 100],
                             outputRange: [0, 1],
@@ -949,7 +955,7 @@ class Onboarding extends Component {
                             <React.Fragment>
                                 <Animated.Image
                                     source={ require('../../../img/photo_monitoring_01.jpg') }
-                                    style={ [Styles.onboardingPhotoCycled, {
+                                    style={ [Styles.onboardingPhotoCycled, Styles.onboardingFaceImage, {
                                         opacity: photoCycled.interpolate({
                                             inputRange: [0, 100],
                                             outputRange: [0, 1],
