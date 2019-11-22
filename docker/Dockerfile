@@ -33,7 +33,7 @@ RUN curl https://pyenv.run | bash \
     && pyenv install 3.7.3 \
     && pyenv global 3.7.3 \
     && pyenv rehash
-RUN pip3 install scons
+RUN pip3 install pyyaml==5.1.2 Cython==0.29.14 scons==3.1.1 pycapnp==0.6.4
 
 ENV ANDROID_HOME=/usr/lib/android-sdk
 ENV PATH="$PATH:/usr/lib/android-sdk/tools/bin"
