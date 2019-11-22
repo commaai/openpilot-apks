@@ -24,6 +24,9 @@ RUN apt-get update && apt-get install -y openjdk-8-jdk openjdk-8-jre android-sdk
 
 WORKDIR /tmp
 
+ENV HOME=/root
+ENV PYENV_ROOT $HOME/.pyenv
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 RUN curl https://pyenv.run | bash \
     && pyenv install 3.7.3 \
     && pyenv global 3.7.3 \
