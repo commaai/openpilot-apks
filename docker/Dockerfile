@@ -1,6 +1,20 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y curl unzip git build-essential make pkg-config wget dh-autoreconf libcapnp-dev
+RUN apt-get update \
+  && apt-get install -y \
+  curl \
+  unzip \
+  git \
+  build-essential \
+  make \
+  pkg-config \
+  wget \
+  dh-autoreconf \
+  libcapnp-dev \
+  libsqlite3-dev \
+  libbz2-dev \
+  libffi-dev \
+  libssl-dev
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -9,6 +23,12 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt-get update && apt-get install -y openjdk-8-jdk openjdk-8-jre android-sdk nodejs yarn
 
 WORKDIR /tmp
+
+RUN curl https://pyenv.run | bash \
+    && pyenv install 3.7.3 \
+    && pyenv global 3.7.3 \
+    && pyenv rehash
+RUN pip3 install scons
 
 ENV ANDROID_HOME=/usr/lib/android-sdk
 ENV PATH="$PATH:/usr/lib/android-sdk/tools/bin"

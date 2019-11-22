@@ -10,7 +10,7 @@ if [ ! -d $CEREAL ]; then
 fi
 
 pushd $CEREAL
-make
+scons -i
 popd
 
 
