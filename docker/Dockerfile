@@ -15,7 +15,8 @@ RUN apt-get update \
   libsqlite3-dev \
   libbz2-dev \
   libffi-dev \
-  libssl-dev
+  libssl-dev \
+  libzmq5-dev
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
