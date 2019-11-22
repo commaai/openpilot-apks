@@ -6,6 +6,7 @@ RUN apt-get update \
   unzip \
   git \
   build-essential \
+  clang \
   make \
   pkg-config \
   wget \
