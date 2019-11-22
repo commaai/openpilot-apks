@@ -25,19 +25,12 @@ extern "C" JNIEXPORT void JNICALL Java_ai_comma_messaging_Loader_init(JNIEnv *en
     strcpy(messagingLibraryPath, pythonPath);
     strcat(messagingLibraryPath, messagingLibraryFile);
     const char* libcppPath = "/system/comma/usr/lib/libc++_shared.so";
-    const char* libGnustlPath = "/system/comma/usr/lib/libgnustl_shared.so";
 
     void* opened = dlopen(libcppPath, RTLD_NOW | RTLD_GLOBAL);
     if(!opened) {
         char *error = dlerror();
         LOGE ("Error opening libc++_shared ( %s )", (error) ? error : "");
     } else { LOGE("Opened libc++_shared.so"); }
-
-    opened = dlopen(libGnustlPath, RTLD_NOW | RTLD_GLOBAL);
-    if(!opened) {
-        char *error = dlerror();
-        LOGE ("Error opening libgnustl_shared ( %s )", (error) ? error : "");
-    } else { LOGE("Opened libgnustl_shared.so"); }
 
     opened = dlopen(messagingLibraryPath, RTLD_NOW | RTLD_GLOBAL);
     if(!opened) {
