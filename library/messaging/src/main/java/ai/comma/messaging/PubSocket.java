@@ -16,5 +16,8 @@ public class PubSocket {
     }
 
     private static native int nativeSend(long sockAddress, byte[] data);
+
     private static native long nativeCreate(long ctxAddress, String endpoint);
+
+    private static native void nativeClose(long sockAddress);
 }

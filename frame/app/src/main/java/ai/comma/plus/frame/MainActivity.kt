@@ -225,6 +225,8 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             } catch (e: IOException) {
                 Log.e("frame", "read")
                 continue
+            } finally {
+                msg.release()
             }
 
             val log = reader.getRoot(CLog.Event.factory)
@@ -300,6 +302,8 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             } catch (e: IOException) {
                 Log.e("frame", "read")
                 continue
+            } finally {
+                msg.release()
             }
 
             val log = reader.getRoot(CLog.Event.factory)

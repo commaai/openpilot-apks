@@ -69,6 +69,8 @@ class ThermalPoller(val delegate: ThermalPollerDelegate) {
             } catch (e: IOException) {
                 android.util.Log.e("offroad", "read")
                 continue
+            } finally {
+                msg.release()
             }
 
             val log = reader.getRoot(Log.Event.factory)

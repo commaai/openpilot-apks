@@ -19,6 +19,10 @@ public class Message {
     return nativeGetData(mNativeObjectAddress);
   }
 
+  public void release() { nativeRelease(mNativeObjectAddress); }
+
+  private native void nativeRelease(long messageAddr);
+
   private native long nativeGetSize(long messageAddr);
 
   private native byte[] nativeGetData(long messageAddr);

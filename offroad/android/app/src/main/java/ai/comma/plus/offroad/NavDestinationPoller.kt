@@ -91,6 +91,8 @@ class NavDestinationPoller(val delegate: NavDestinationPollerDelegate) {
             } catch (e: IOException) {
                 android.util.Log.e("offroad", "read")
                 continue
+            } finally {
+                msg.release()
             }
 
             val log = reader.getRoot(Log.Event.factory)

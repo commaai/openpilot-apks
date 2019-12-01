@@ -80,6 +80,16 @@ Java_ai_comma_messaging_Message_nativeGetSize(
     return (jlong)msg->getSize();
 }
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_ai_comma_messaging_Message_nativeRelease(
+        JNIEnv *env,
+        jobject obj,
+        jlong messageAddr) {
+    Message *msg = (Message *)messageAddr;
+    delete msg;
+}
+
 std::string jStringToStdString(JNIEnv *env, jstring jStr) {
     const jclass stringClass = env->GetObjectClass(jStr);
     const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
@@ -235,4 +245,14 @@ Java_ai_comma_messaging_PubSocket_nativeSend(
     env->ReleaseByteArrayElements(jData, bytes, JNI_ABORT);
 
     return err;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_ai_comma_messaging_PubSocket_nativeClose(
+        JNIEnv *env,
+        jclass cls,
+        jlong sockAddr) {
+    PubSocket *sock = (PubSocket *) sockAddr;
+    delete sock;
 }
