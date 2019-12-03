@@ -550,7 +550,7 @@ class Settings extends Component {
                 Passive: isPassive,
                 PandaFirmware: pandaFirmware,
                 PandaDongleId: pandaDongleId,
-                CommunityFeatures: communityFeatures,
+                CommunityFeaturesToggle: communityFeatures,
             },
         } = this.props;
         const { expandedCell } = this.state;
@@ -592,7 +592,7 @@ class Settings extends Component {
                         <X.TableCell
                             type='switch'
                             title='Enable Community Features'
-                            value={ communityFeatures }
+                            value={ !!parseInt(communityFeatures) }
                             iconSource={ Icons.developer }
                             description='Use features from the open source community that are not officially maintained or supported by comma.'
                             isExpanded={ expandedCell == 'communityFeatures' }
@@ -834,7 +834,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(updateParam(Params.KEY_SPEED_LIMIT_OFFSET, (speedLimitOffset).toString()));
     },
     setCommunityFeatures: (communityFeatures) => {
-        dispatch(updateParam(Params.KEY_COMMUNITY_FEATURES, (communityFeatures).toString()));
+        dispatch(updateParam(Params.KEY_COMMUNITY_FEATURES, (communityFeatures | 0).toString()));
     },
     deleteParam: (param) => {
         dispatch(deleteParam(param));

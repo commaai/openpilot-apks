@@ -36,7 +36,7 @@ const PARAMS = [
   "OpenpilotEnabledToggle",
   "PandaFirmware",
   "PandaDongleId",
-  "CommunityFeatures",
+  "CommunityFeaturesToggle",
 ].concat(ALERT_PARAMS);
 
 export function refreshParams(params) {
