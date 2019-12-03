@@ -15,6 +15,7 @@ import SetupTerms from '../components/SetupTerms';
 import SetupWifi from '../components/SetupWifi';
 import SetupQr from '../components/SetupQr';
 import Onboarding from '../components/training/Onboarding';
+import GiraffeSwitch from '../components/training/GiraffeSwitch'
 import UpdatePrompt from '../components/UpdatePrompt';
 
 export const StackNavigator = RNStackNavigator({
@@ -24,6 +25,7 @@ export const StackNavigator = RNStackNavigator({
     SetupWifi: { screen: SetupWifi },
     SetupQr: { screen: SetupQr },
     Onboarding: { screen: Onboarding },
+    GiraffeSwitch: { screen: GiraffeSwitch },
     Settings: { screen: Settings },
     SettingsWifi: { screen: SettingsWifi },
     UpdatePrompt: { screen: UpdatePrompt },

@@ -50,17 +50,6 @@ export default StyleSheet.create({
         paddingRight: 120,
         zIndex: 3,
     },
-    onboardingPhotoSignal: {
-        height: '120%',
-        position: 'absolute',
-        width: '120%',
-        top: '-10%',
-        left: 0,
-        paddingLeft: 445,
-        paddingTop: 165,
-        paddingRight: 120,
-        zIndex: 3,
-    },
     onboardingPhotoPedals: {
         left: -20,
     },
@@ -143,30 +132,12 @@ export default StyleSheet.create({
         bottom: 94,
         transform: [{ rotate: '-6.25deg'}],
     },
-    onboardingSignalTouchGate: {
-        zIndex: 4,
-        height: 170,
-        width: 80,
-        position: 'absolute',
-        right: 90,
-        bottom: 70,
-        transform: [{ rotate: '-65deg'}],
-    },
-    onboardingWheelTouchGate: {
-        zIndex: 4,
-        height: 300,
-        width: 90,
-        position: 'absolute',
-        right: 30,
-        bottom: -30,
-        transform: [{ rotate: '-25deg'}],
-    },
     onboardingLightTouchGate: {
         zIndex: 4,
         height: 270,
         width: 100,
         position: 'absolute',
-        right: 90,
+        right: 70,
         bottom: 40,
     },
     onboardingBrakePedalTouchGate: {
@@ -185,7 +156,7 @@ export default StyleSheet.create({
         zIndex: 4,
         bottom: 110,
     },
-    onboardingTouchGateButton: {
+    onboardingPedalTouchGateButton: {
         backgroundColor: 'lime',
         zIndex: 1,
         position: 'relative',
