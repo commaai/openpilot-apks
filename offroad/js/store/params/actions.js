@@ -25,7 +25,6 @@ const PARAMS = [
   "HasCompletedSetup",
   "IsGeofenceEnabled",
   "IsMetric",
-  "IsUploadVideoOverCellularEnabled",
   "LimitSetSpeed",
   "LiveParameters",
   "LongitudinalControl",

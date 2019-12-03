@@ -8,7 +8,6 @@ export const Params = {
     KEY_CALIBRATION_PARAMS: 'CalibrationParams',
     KEY_CLOUD_CALIBRATION: 'CloudCalibration',
     KEY_DONGLE_ID: 'DongleId',
-    KEY_UPLOAD_CELLULAR: 'IsUploadVideoOverCellularEnabled',
     KEY_ACCEPTED_TERMS_VERSION: 'HasAcceptedTerms',
     KEY_DO_UNINSTALL: 'DoUninstall',
     KEY_HAS_COMPLETED_SETUP: 'HasCompletedSetup',

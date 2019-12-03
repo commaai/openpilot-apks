@@ -505,11 +505,6 @@ class Settings extends Component {
     }
 
     renderNetworkSettings() {
-        const {
-          params: {
-            IsUploadVideoOverCellularEnabled: isCellularUploadEnabled,
-          },
-        } = this.props;
         const { expandedCell } = this.state;
         return (
             <View style={ Styles.settings }>
@@ -525,17 +520,6 @@ class Settings extends Component {
                     ref="settingsScrollView"
                     style={ Styles.settingsWindow }>
                     <X.Line color='transparent' spacing='tiny' />
-                    <X.Table color='darkBlue'>
-                        <X.TableCell
-                            type='switch'
-                            title='Enable Upload Over Cellular'
-                            value={ !!parseInt(isCellularUploadEnabled) }
-                            iconSource={ Icons.network }
-                            description='Upload driving data over cellular connection if a sim card is used and no wifi network is available. If you have a limited data plan, you might incur in surcharges.'
-                            isExpanded={ expandedCell == 'cellular_enabled' }
-                            handleExpanded={ () => this.handleExpanded('cellular_enabled') }
-                            handleChanged={ this.props.setCellularEnabled } />
-                    </X.Table>
                     <X.Table spacing='big' color='darkBlue'>
                         <X.Button
                             size='small'
@@ -826,9 +810,6 @@ const mapDispatchToProps = dispatch => ({
     },
     setRecordFront: (recordFront) => {
         dispatch(updateParam(Params.KEY_RECORD_FRONT, (recordFront | 0).toString()));
-    },
-    setCellularEnabled: (useCellular) => {
-        dispatch(updateParam(Params.KEY_UPLOAD_CELLULAR, (useCellular | 0).toString()));
     },
     setSshEnabled: (isSshEnabled) => {
         dispatch(updateSshEnabled(!!isSshEnabled));
