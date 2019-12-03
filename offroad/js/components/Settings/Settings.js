@@ -568,33 +568,20 @@ class Settings extends Component {
                 <ScrollView
                     ref="settingsScrollView"
                     style={ Styles.settingsWindow }>
-                    <X.Table spacing='none'>
-                        <X.TableCell
-                            title='Version'
-                            value={ `${ software } v${ version }` } />
-                        <X.TableCell
-                            title='Git Branch'
-                            value={ gitBranch } />
-                        <X.TableCell
-                            title='Git Revision'
-                            value={ gitRevision.slice(0, 12) }
-                            valueTextSize='tiny' />
-                        <X.TableCell
-                            title='Panda Firmware'
-                            value={ pandaFirmware != null ? pandaFirmware : 'N/A' }
-                            valueTextSize='tiny' />
-                        <X.TableCell
-                            title='Panda Dongle ID'
-                            value={ (pandaDongleId != null && pandaDongleId != "unprovisioned") ? pandaDongleId : 'N/A' }
-                            valueTextSize='tiny' />
-                    </X.Table>
                     <X.Table color='darkBlue'>
                         <X.TableCell
                             type='switch'
                             title='Enable Community Features'
                             value={ !!parseInt(communityFeatures) }
                             iconSource={ Icons.developer }
-                            description='Use features from the open source community that are not officially maintained or supported by comma.'
+                            descriptionExtra={
+                              <X.Text color='white' size='tiny'>
+                                  Use features from the open source community that are not officially maintained or supported by comma.ai:{'\n'}
+                                  * GM car port{'\n'}
+                                  * Toyota with DSU unplugged{'\n'}
+                                  * Pedal interceptor{'\n'}
+                              </X.Text>
+                            }
                             isExpanded={ expandedCell == 'communityFeatures' }
                             handleExpanded={ () => this.handleExpanded('communityFeatures') }
                             handleChanged={ this.props.setCommunityFeatures } />
@@ -622,6 +609,26 @@ class Settings extends Component {
                                 { expandedCell === 'ssh_keys' ? 'Cancel' : 'Edit' }
                             </X.Button>
                         </X.TableCell>
+                    </X.Table>
+                    <X.Table spacing='none'>
+                        <X.TableCell
+                            title='Version'
+                            value={ `${ software } v${ version }` } />
+                        <X.TableCell
+                            title='Git Branch'
+                            value={ gitBranch } />
+                        <X.TableCell
+                            title='Git Revision'
+                            value={ gitRevision.slice(0, 12) }
+                            valueTextSize='tiny' />
+                        <X.TableCell
+                            title='Panda Firmware'
+                            value={ pandaFirmware != null ? pandaFirmware : 'N/A' }
+                            valueTextSize='tiny' />
+                        <X.TableCell
+                            title='Panda Dongle ID'
+                            value={ (pandaDongleId != null && pandaDongleId != "unprovisioned") ? pandaDongleId : 'N/A' }
+                            valueTextSize='tiny' />
                     </X.Table>
                     <X.Table color='darkBlue' padding='big'>
                         <X.Button
@@ -834,7 +841,16 @@ const mapDispatchToProps = dispatch => ({
         dispatch(updateParam(Params.KEY_SPEED_LIMIT_OFFSET, (speedLimitOffset).toString()));
     },
     setCommunityFeatures: (communityFeatures) => {
-        dispatch(updateParam(Params.KEY_COMMUNITY_FEATURES, (communityFeatures | 0).toString()));
+        if (communityFeatures == 1) {
+            Alert.alert('Enable Community Features', 'Community maintained features are not confirmed by comma.ai to meet the standard safety model. Be extra cautious using them.', [
+                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                { text: 'Enable', onPress: () => {
+                    dispatch(updateParam(Params.KEY_COMMUNITY_FEATURES, (communityFeatures | 0).toString()));
+                } },
+            ]);
+        } else {
+            dispatch(updateParam(Params.KEY_COMMUNITY_FEATURES, (communityFeatures | 0).toString()));
+        }
     },
     deleteParam: (param) => {
         dispatch(deleteParam(param));
