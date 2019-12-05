@@ -103,7 +103,7 @@ class WifiModule (ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ctx
                 netId = existingNetworkId
             } else {
                 // addNetwork failed and no network already exists
-                promise.reject("E_WIFI_ERR", "WifiManager could not add network. Are the SSID and password proper? ssid: ${ssid} pw ${password}")
+                promise.reject("E_WIFI_ERR", "WifiManager could not add network. Are the SSID and password proper?")
                 return
             }
         }
