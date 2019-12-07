@@ -82,15 +82,19 @@ class SetupWifi extends Component {
     }
 
     onWifiStateChange = ({ isConnected, connectedSsid, hasAuthProblem }) => {
+        let { connectingNetwork } = this.state;
         let _attemptedNetworkSsid = null;
         let _connectedNetworkSsid = null;
+        let _connectingNetwork = connectingNetwork;
         let _hasAuthProblem = false;
 
         if (isConnected && !hasAuthProblem) {
             _connectedNetworkSsid = connectedSsid;
+            _connectingNetwork = null;
         } else if (hasAuthProblem) {
             _attemptedNetworkSsid = connectedSsid;
             _hasAuthProblem = true;
+            _connectingNetwork = null;
         } else {
             _attemptedNetworkSsid = connectedSsid;
         }
@@ -98,6 +102,7 @@ class SetupWifi extends Component {
         this.setState({
             attemptedNetworkSsid: _attemptedNetworkSsid,
             connectedNetworkSsid: _connectedNetworkSsid,
+            connectingNetwork: _connectingNetwork,
             hasAuthProblem: _hasAuthProblem,
         }, () => this.updateAvailableNetworks());
     }
