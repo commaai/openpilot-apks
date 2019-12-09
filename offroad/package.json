@@ -31,6 +31,7 @@
     "@commaai/comma-api": "1.2.1",
     "@sentry/react-native": "^1.0.9",
     "comma-x-native": "git+https://git@github.com/commaai/comma-x-native.git",
+    "@commaai/jsc-android": "250230.0.0",
     "moment": "^2.19.1",
     "react": "16.8.3",
     "react-native": "0.59.10",

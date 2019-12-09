@@ -133,7 +133,8 @@ android {
     packagingOptions {
         doNotStrip '*/mips/*.so'
         doNotStrip '*/mips64/*.so'
-        pickFirst "lib/arm64-v8a/libc++_shared.so"
+        pickFirst "**/arm64-v8a/libc++_shared.so"
+        pickFirst '**/libjsc.so'
     }
     buildTypes {
         release {
@@ -169,6 +170,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.webkit:android-jsc:r250230'
     implementation project(':@sentry-react-native')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-linear-gradient')
