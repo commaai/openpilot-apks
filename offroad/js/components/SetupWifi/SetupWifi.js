@@ -85,7 +85,7 @@ class SetupWifi extends Component {
         let { connectingNetwork } = this.state;
         let _attemptedNetworkSsid = null;
         let _connectedNetworkSsid = null;
-        let _connectingNetwork = connectingNetwork;
+        let _connectingNetwork = { ...connectingNetwork };
         let _hasAuthProblem = false;
 
         if (isConnected && !hasAuthProblem) {
