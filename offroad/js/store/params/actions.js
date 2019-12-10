@@ -37,6 +37,7 @@ const PARAMS = [
   "PandaFirmware",
   "PandaDongleId",
   "CommunityFeaturesToggle",
+  "IsLdwEnabled",
 ].concat(ALERT_PARAMS);
 
 export function refreshParams(params) {

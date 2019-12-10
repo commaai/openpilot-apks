@@ -258,6 +258,7 @@ class Settings extends Component {
                 SpeedLimitOffset: speedLimitOffset,
                 OpenpilotEnabledToggle: openpilotEnabled,
                 Passive: isPassive,
+                IsLdwEnabled: isLaneDepartureWarningEnabled,
             }
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
@@ -289,6 +290,15 @@ class Settings extends Component {
                                 handleExpanded={ () => this.handleExpanded('openpilot_enabled') }
                                 handleChanged={ this.props.setOpenpilotEnabled } />
                         ) : null }
+                        <X.TableCell
+                            type='switch'
+                            title='Enable Lane Departure Warnings'
+                            value={ !!parseInt(isLaneDepartureWarningEnabled) }
+                            iconSource={ Icons.warning }
+                            description='Receive alerts to steer back into the lane when your vehicle drifts over a detected lane line without a turn signal activated while driving over 40mph (64kph).'
+                            isExpanded={ expandedCell == 'ldw' }
+                            handleExpanded={ () => this.handleExpanded('ldw') }
+                            handleChanged={ this.props.setLaneDepartureWarningEnabled } />
                         <X.TableCell
                             type='switch'
                             title='Record and Upload Driver Camera'
@@ -851,6 +861,9 @@ const mapDispatchToProps = dispatch => ({
         } else {
             dispatch(updateParam(Params.KEY_COMMUNITY_FEATURES, (communityFeatures | 0).toString()));
         }
+    },
+    setLaneDepartureWarningEnabled: (isLaneDepartureWarningEnabled) => {
+        dispatch(updateParam(Params.KEY_LANE_DEPARTURE_WARNING_ENABLED, (isLaneDepartureWarningEnabled | 0).toString()));
     },
     deleteParam: (param) => {
         dispatch(deleteParam(param));
