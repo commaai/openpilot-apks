@@ -9,7 +9,6 @@ build/
 .gradle
 local.properties
 *.iml
-android/app/src/main/assets/
 
 # Metro
 metro.config.js
