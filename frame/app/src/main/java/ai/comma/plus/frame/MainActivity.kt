@@ -27,7 +27,6 @@ import java.nio.channels.Channels
 import org.capnproto.Serialize;
 import ai.comma.messaging.Context as MQContext
 import ai.comma.openpilot.cereal.Log as CLog
-import ai.comma.openpilot.cereal.Log.ControlsState.OpenpilotState
 import ai.comma.openpilot.cereal.Log.UiLayoutState
 import android.net.wifi.WifiManager
 import android.net.NetworkInfo
@@ -58,8 +57,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var activeApp: UiLayoutState.App = UiLayoutState.App.HOME
     var isPassive: Boolean = false
 
-    var controlState: OpenpilotState? = null
-
     var frame: View? = null
     var sidebarIndicators: LinearLayout? = null
     var sidebarMetrics: LinearLayout? = null
@@ -85,7 +82,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var activityTouchGate: RelativeLayout? = null
     var settingsButton: ImageView? = null
     var homeButton: ImageView? = null
-    var useMetric: Boolean = false
 
     var msgqCtx: ai.comma.messaging.Context? = null
     var thermalSock: ai.comma.messaging.SubSocket? = null
@@ -96,7 +92,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var offroadNavReceiver: OffroadNavigationReceiver? = null
     var uiLayoutReceiver: UiLayoutReceiver? = null
 
-    var thermalWarningManager: ActivityOverlayManager? = null
     var networkMonitor: NetworkMonitor? = null
     var batteryMonitor: BatteryMonitor? = null
     var pandaConnectionMonitor: PandaConnectionMonitor? = null
@@ -104,7 +99,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var satelliteCount: Int = -1
     var uiLayoutStateThreadHandle: Thread? = null
     var statusThreadHandle: Thread? = null
-    var controlsThreadHandle: Thread? = null
     var ubloxGnssThreadHandle: Thread? = null
 
     var simState: String? = null
@@ -117,7 +111,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var colorRed: Int? = null;
 
     // Drawables
-    var iconBattery: Drawable? = null;
     var iconNetwork0: Drawable? = null;
     var iconNetwork1: Drawable? = null;
     var iconNetwork2: Drawable? = null;
