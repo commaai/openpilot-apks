@@ -28,6 +28,7 @@ import org.capnproto.Serialize;
 import ai.comma.messaging.Context as MQContext
 import ai.comma.openpilot.cereal.Log as CLog
 import ai.comma.openpilot.cereal.Log.ControlsState.OpenpilotState
+import ai.comma.openpilot.cereal.Log.UiLayoutState
 import android.net.wifi.WifiManager
 import android.net.NetworkInfo
 import android.os.*
@@ -46,8 +47,6 @@ import io.sentry.event.UserBuilder
 class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigationReceiverDelegate, UiLayoutReceiverDelegate, ActivityOverlayManagerDelegate {
     private val IMAGE_ALPHA_SELECTED = 255
     private val IMAGE_ALPHA_UNSELECTED = 177
-    private val FRAME_SOCKET_ADDR = "tcp://127.0.0.1:8037"
-    private val UILAYOUT_SOCKET_ADDR = "tcp://127.0.0.1:8060"
 
     val OFFROAD_APP = "ai.comma.plus.offroad/.MainActivity"
     val BLACK_APP = "ai.comma.plus.black/.MainActivity"
@@ -56,12 +55,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     val DRIVING_APP = if (IS_MAP_ENABLED) ONROAD_APP else BLACK_APP
     val IS_RESPONSIVE: Boolean = true
 
-    enum class STATE {
-        HOME,
-        SETTINGS,
-    }
-
-    var state: STATE = STATE.HOME
+    var activeApp: UiLayoutState.App = UiLayoutState.App.HOME
     var isPassive: Boolean = false
 
     var controlState: OpenpilotState? = null
@@ -94,7 +88,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var useMetric: Boolean = false
 
     var msgqCtx: ai.comma.messaging.Context? = null
-    var frameSock: ai.comma.messaging.PubSocket? = null
     var thermalSock: ai.comma.messaging.SubSocket? = null
     var ubloxGnssPoller: ai.comma.messaging.Poller? = null
     var uiLayoutSock: ai.comma.messaging.PubSocket? = null
@@ -109,6 +102,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var pandaConnectionMonitor: PandaConnectionMonitor? = null
     var lastStarted: Boolean = false
     var satelliteCount: Int = -1
+    var uiLayoutStateThreadHandle: Thread? = null
     var statusThreadHandle: Thread? = null
     var controlsThreadHandle: Thread? = null
     var ubloxGnssThreadHandle: Thread? = null
@@ -188,27 +182,20 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         sendBroadcast(pressIntent)
     }
 
-    fun setAndSendState(state: STATE) {
-        this.state = state
-        val buf = ByteBuffer.allocate(1)
-        buf.put(state.ordinal.toByte())
-        frameSock!!.send(buf.array())
-    }
+    fun updateUiLayoutState() {
+        synchronized(this) {
+            val log = LogEvent()
+            val uiLayout = log.root.initUiLayoutState()
+            uiLayout.setSidebarCollapsed(sidebarCollapsed)
+            uiLayout.setMapEnabled(IS_MAP_ENABLED)
+            uiLayout.activeApp = activeApp
 
-    fun updateUiLayoutState(sidebarCollapsed: Boolean,
-                            mapEnabled: Boolean): LogEvent {
-        val log = LogEvent()
-        val uiLayout = log.root.initUiLayoutState()
-        uiLayout.setSidebarCollapsed(sidebarCollapsed && IS_RESPONSIVE)
-        uiLayout.setMapEnabled(mapEnabled)
+            val out = ByteArrayOutputStream()
+            Serialize.write(Channels.newChannel(out), log.msg)
+            val bytes = out.toByteArray()
 
-        val out = ByteArrayOutputStream()
-        Serialize.write(Channels.newChannel(out), log.msg)
-        val bytes = out.toByteArray()
-
-        uiLayoutSock!!.send(bytes)
-
-        return log
+            uiLayoutSock!!.send(bytes)
+        }
     }
 
     fun statusThread() {
@@ -241,7 +228,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                         frame?.background = null
                         synchronized(this) {
                             enterHomeState()
-                            if (state == STATE.HOME) {
+                            if (activeApp == UiLayoutState.App.HOME) {
                                 startInnerActivity(DRIVING_APP)
                                 if (!IS_MAP_ENABLED) {
                                     hideActivityView()
@@ -253,7 +240,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                     runOnUiThread {
                         expandSidebar()
                         frame?.background = gradientBlue
-                        if (state == STATE.HOME) {
+                        if (activeApp == UiLayoutState.App.HOME) {
                             startInnerActivity(OFFROAD_APP)
                         }
                         if (ChffrPlusParams.readParam("UpdateAvailable") == "1") {
@@ -315,6 +302,15 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                     updatePandaConnectionStatus()
                 }
             }
+        }
+    }
+
+    fun uiLayoutStateThread() {
+        while (true) {
+            if (lastStarted) {
+                updateUiLayoutState()
+            }
+            Thread.sleep(2000)
         }
     }
 
@@ -387,7 +383,8 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
         if (startInnerActivity(startApp)) {
             deselectNavItem(settingsButton!!)
-            setAndSendState(STATE.HOME)
+            activeApp = UiLayoutState.App.HOME
+            updateUiLayoutState()
         }
     }
 
@@ -412,7 +409,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             sidebarIndicators?.visibility = View.GONE
             sidebarMetrics?.visibility = View.GONE
             sidebarCollapsed = true
-            updateUiLayoutState(true, IS_MAP_ENABLED)
+            updateUiLayoutState()
         }
     }
 
@@ -425,7 +422,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             sidebarIndicators?.visibility = View.VISIBLE
             sidebarMetrics?.visibility = View.VISIBLE
             sidebarCollapsed = false
-            updateUiLayoutState(false, IS_MAP_ENABLED)
+            updateUiLayoutState()
         }
     }
 
@@ -478,12 +475,12 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
     fun setSettingsState() {
         selectNavItem(settingsButton!!)
-
-        setAndSendState(STATE.SETTINGS)
+        activeApp = UiLayoutState.App.SETTINGS
+        updateUiLayoutState()
     }
 
     fun openSettings() {
-        if (state == STATE.SETTINGS) {
+        if (activeApp == UiLayoutState.App.SETTINGS) {
             return
         }
 
@@ -510,8 +507,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
         isPassive = ChffrPlusParams.readParam("Passive") == "1"
         msgqCtx = ai.comma.messaging.Context()
-
-        frameSock = msgqCtx!!.pubSocket("plusFrame")
 
         uiLayoutSock = msgqCtx!!.pubSocket("uiLayoutState")
 
@@ -568,7 +563,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         activityTouchGate!!.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_UP -> {
-                    if (lastStarted && state == STATE.HOME) {
+                    if (lastStarted && activeApp == UiLayoutState.App.HOME) {
                         if (sidebarCollapsed) {
                             expandSidebar()
                         } else {
@@ -670,9 +665,10 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         })
         ubloxGnssThreadHandle!!.start()
 
-        updateUiLayoutState(false, IS_MAP_ENABLED)
-
-        setAndSendState(STATE.HOME)
+        uiLayoutStateThreadHandle = Thread(Runnable {
+            uiLayoutStateThread()
+        })
+        uiLayoutStateThreadHandle!!.start()
     }
 
     override fun onDestroy() {
