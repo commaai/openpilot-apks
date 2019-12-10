@@ -10,7 +10,7 @@ import { Params } from '../../config';
 import { resetToLaunch } from '../../store/nav/actions';
 import X from '../../themes';
 import Styles from './SetupQrStyles';
-import { setDeviceIds, updateConnectionState, updateDeviceIsPaired, refreshDeviceInfo } from '../../store/host/actions';
+import { updateConnectionState, refreshDeviceInfo } from '../../store/host/actions';
 
 class SetupPair extends Component {
     static navigationOptions = {
@@ -30,14 +30,9 @@ class SetupPair extends Component {
     }
 
     async componentDidMount() {
-        await this.props.setDeviceIds();
-        const { serial, imei } = this.props;
         this.checkPaired = setInterval(async () => {
-            const _isPairedRequest = await fetch(`https://api.commadotai.com/v1/devices/is_paired_setup?serial=${ serial }&imei=${ imei }`);
-            const _isPairedJson = await _isPairedRequest.json();
             this.props.refreshDeviceInfo();
-            this.props.handleDeviceIsPairedChanged(_isPairedJson.is_paired);
-        }, 2500);
+        }, 5000);
         NetInfo.isConnected.addEventListener('connectionChange', this.props.handleConnectionChange);
         NetInfo.isConnected.fetch().then(this.props.handleConnectionChange);
         ChffrPlus.createJwt({ pair: true }).then((pairToken) => {
@@ -51,7 +46,7 @@ class SetupPair extends Component {
     }
 
     render() {
-        const { serial, imei, deviceIsPaired } = this.props;
+        const { serial, imei, isPaired} = this.props;
         return (
             <X.Gradient
                 color='flat_blue'>
@@ -68,7 +63,7 @@ class SetupPair extends Component {
                         <View style={ Styles.setupPairingCode }>
                             { this.state.pairToken && serial && imei ? (
                                 <View style={ Styles.setupPairingCodeWrapper }>
-                                    { deviceIsPaired ? (
+                                    { isPaired ? (
                                       <View style={ Styles.setupPairingCodeOverlay }>
                                           <View style={ Styles.setupPairingCodeOverlayBar }>
                                               <View style={ Styles.setupPairingCodeOverlayBarCheckmark }>
@@ -102,14 +97,14 @@ class SetupPair extends Component {
                                 <X.Text>
                                     <X.Text
                                         color='white'>
-                                        { deviceIsPaired ? 'Successfully paired to an account in ' : 'Download ' }
+                                        { isPaired ? 'Successfully paired to an account in ' : 'Download ' }
                                     </X.Text>
                                     <X.Text
                                         color='white'
                                         weight='bold'>
                                         { 'comma connect ' }
                                     </X.Text>
-                                    { deviceIsPaired ? null : (
+                                    { isPaired ? null : (
                                       <X.Text
                                           color='white'>
                                           { 'and scan this code to pair.' }
@@ -133,7 +128,7 @@ class SetupPair extends Component {
                                 </View>
                             </View>
                             <View style={ Styles.setupPairingButtons }>
-                                { deviceIsPaired ? (
+                                { isPaired ? (
                                     <X.Button
                                         color='setupPrimary'
                                         onPress={ this.props.handleSetupComplete }
@@ -162,18 +157,12 @@ function mapStateToProps(state) {
     return {
         imei: state.host.imei,
         serial: state.host.serial,
-        deviceIsPaired: state.host.deviceIsPaired,
         isConnected: state.host.isConnected,
+        isPaired: state.host.device && state.host.device.is_paired,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    setDeviceIds: () => {
-        return dispatch(setDeviceIds());
-    },
-    handleDeviceIsPairedChanged: (deviceIsPaired) => {
-        dispatch(updateDeviceIsPaired(deviceIsPaired));
-    },
     handleConnectionChange: (isConnected) => {
         dispatch(updateConnectionState(isConnected));
     },

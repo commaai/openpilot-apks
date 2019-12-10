@@ -13,7 +13,6 @@ export const ACTION_THERMAL_DATA_CHANGED = 'ACTION_THERMAL_DATA_CHANGED';
 export const ACTION_WIFI_STATE_CHANGED = 'ACTION_WIFI_STATE_CHANGED';
 export const ACTION_DEVICE_IDS_AVAILABLE = 'ACTION_DEVICE_IDS_AVAILABLE';
 export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
-export const ACTION_DEVICE_IS_PAIRED_CHANGED = 'ACTION_DEVICE_IS_PAIRED_CHANGED';
 export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
 export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
 export const ACTION_UPDATE_IS_AVAILABLE_CHANGED = 'ACTION_UPDATE_IS_AVAILABLE_CHANGED';
@@ -92,16 +91,7 @@ export function setDeviceIds() {
     }
 }
 
-export function updateDeviceIsPaired(deviceIsPaired) {
-    return async (dispatch, getState) => {
-        dispatch({
-            type: ACTION_DEVICE_IS_PAIRED_CHANGED,
-            deviceIsPaired,
-        });
-    }
-}
-
-export function updateUpdateIsAvailable(deviceIsPaired) {
+export function updateUpdateIsAvailable() {
     return async (dispatch, getState) => {
         const isUpdateAvailableStr = await ChffrPlus.readParam(Params.KEY_IS_UPDATE_AVAILABLE);
         const updateIsAvailable = ((isUpdateAvailableStr && isUpdateAvailableStr.trim() === "1") || false);

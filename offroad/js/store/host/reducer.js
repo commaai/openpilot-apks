@@ -7,7 +7,6 @@ import {
     ACTION_DEVICE_IDS_AVAILABLE,
     ACTION_DEVICE_REFRESHED,
     ACTION_HOST_IS_SSH_ENABLED,
-    ACTION_DEVICE_IS_PAIRED_CHANGED,
     ACTION_ACCOUNT_CHANGED,
     ACTION_DEVICE_STATS_CHANGED,
     ACTION_UPDATE_IS_AVAILABLE_CHANGED,
@@ -24,7 +23,6 @@ const initialHostState = {
     serial: null,
     device: null,
     isSshEnabled: false,
-    deviceIsPaired: false,
     hasPrime: false,
     account: {},
     deviceStats: {},
@@ -74,11 +72,6 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 isSshEnabled: action.isSshEnabled,
-            }
-        case ACTION_DEVICE_IS_PAIRED_CHANGED:
-            return {
-                ...state,
-                deviceIsPaired: action.deviceIsPaired,
             }
         case ACTION_ACCOUNT_CHANGED:
             return {
