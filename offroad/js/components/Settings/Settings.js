@@ -295,7 +295,7 @@ class Settings extends Component {
                             title='Enable Lane Departure Warnings'
                             value={ !!parseInt(isLaneDepartureWarningEnabled) }
                             iconSource={ Icons.warning }
-                            description='Receive alerts to steer back into the lane when your vehicle drifts over a detected lane line without a turn signal activated while driving over 40mph (64kph).'
+                            description='Receive alerts to steer back into the lane when your vehicle drifts over a detected lane line without a turn signal activated while driving over 31mph (50kph).'
                             isExpanded={ expandedCell == 'ldw' }
                             handleExpanded={ () => this.handleExpanded('ldw') }
                             handleChanged={ this.props.setLaneDepartureWarningEnabled } />
