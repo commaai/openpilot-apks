@@ -252,7 +252,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             runOnUiThread {
                 updateSidebarMetrics(
                   log.thermal.freeSpace,
-                  log.thermal.bat,
+                  log.thermal.pa0,
                   log.thermal.thermalStatus.toString());
             }
         }
@@ -329,7 +329,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         }
     }
 
-    fun updateSidebarMetrics(freeSpace: Float, batteryTemp: Int, thermalStatus: String) {
+    fun updateSidebarMetrics(freeSpace: Float, paTemp: Short, thermalStatus: String) {
       // Storage
       var storagePct = (1.0-freeSpace)*100;
       sidebarMetricStorage?.text = String.format("%.0f", storagePct).plus("%");
@@ -345,8 +345,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
       }
 
       // Temperature
-      var batteryTempC = batteryTemp/1000;
-      sidebarMetricTemp?.text = Integer.toString(batteryTempC).plus("°C");
+      sidebarMetricTemp?.text = Integer.toString(paTemp.toInt()).plus("°C");
       if (thermalStatus==="GREEN") {
         sidebarMetricTempEdge?.setColorFilter(colorWhite!!);
         sidebarMetricTempBorder?.background = borderEmpty;
