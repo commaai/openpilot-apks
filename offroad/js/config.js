@@ -30,7 +30,7 @@ export const Params = {
     KEY_OFFROAD_CONNECTIVITY_NEEDED: 'Offroad_ConnectivityNeeded',
     KEY_OFFROAD_PANDA_FIRMWARE_MISMATCH: 'Offroad_PandaFirmwareMismatch',
     KEY_OFFROAD_INVALID_TIME: 'Offroad_InvalidTime',
-    KEY_OFFROAD_INVALID_TIME: 'Offroad_IsTakingSnapshot',
+    KEY_OFFROAD_IS_TAKING_SNAPSHOT: 'Offroad_IsTakingSnapshot',
     KEY_COMMUNITY_FEATURES: 'CommunityFeaturesToggle',
     KEY_LANE_DEPARTURE_WARNING_ENABLED: 'IsLdwEnabled',
 };
