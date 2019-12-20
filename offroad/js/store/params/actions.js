@@ -36,6 +36,7 @@ const PARAMS = [
   "Version",
   "OpenpilotEnabledToggle",
   "PandaFirmware",
+  "PandaFirmwareHex",
   "PandaDongleId",
   "CommunityFeaturesToggle",
   "IsLdwEnabled",

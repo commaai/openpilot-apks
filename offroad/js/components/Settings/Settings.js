@@ -558,7 +558,7 @@ class Settings extends Component {
                 GitBranch: gitBranch,
                 GitCommit: gitRevision,
                 Passive: isPassive,
-                PandaFirmware: pandaFirmware,
+                PandaFirmwareHex: pandaFirmwareHex,
                 PandaDongleId: pandaDongleId,
                 CommunityFeaturesToggle: communityFeatures,
             },
@@ -633,7 +633,7 @@ class Settings extends Component {
                             valueTextSize='tiny' />
                         <X.TableCell
                             title='Panda Firmware'
-                            value={ pandaFirmware != null ? pandaFirmware : 'N/A' }
+                            value={ pandaFirmwareHex != null ? pandaFirmwareHex : 'N/A' }
                             valueTextSize='tiny' />
                         <X.TableCell
                             title='Panda Dongle ID'
