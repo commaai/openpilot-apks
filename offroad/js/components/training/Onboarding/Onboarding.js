@@ -372,7 +372,7 @@ class Onboarding extends Component {
                         isChecked={ stepChecks.includes('camera') }
                         hasAppend={ true }
                         onPress={ () => this.handleSensorRadioPressed('camera') }
-                        label='Camera from EON' />
+                        label='Camera from Device' />
                     <X.RadioField
                         size='big'
                         color='white'
@@ -399,12 +399,12 @@ class Onboarding extends Component {
                     openpilot sensors
                 </X.Button>
                 <X.Text size='medium' color='white' weight='bold'>
-                    Camera from EON
+                    Camera from Device
                 </X.Text>
                 <X.Text
                     size='small' color='white' weight='light'
                     style={ Styles.onboardingStepContextSmaller }>
-                    A vision algorithm leverages EON’s road-facing
+                    A vision algorithm leverages the road-facing
                     camera to determine the path to drive.
                 </X.Text>
                 <X.Text
@@ -749,7 +749,7 @@ class Onboarding extends Component {
                     color='white' weight='light'
                     style={ Styles.onboardingStepContextSmaller }>
                     This guide can be replayed at any time from the
-                    EON settings. To learn more about openpilot, read the
+                    device settings. To learn more about openpilot, read the
                     wiki and join the community at discord.comma.ai
                 </X.Text>
                 <X.Line color='transparent' spacing='small' />

@@ -463,7 +463,7 @@ class Settings extends Component {
                             type='custom'
                             title='Camera Calibration'
                             iconSource={ Icons.calibration }
-                            description='The calibration algorithm is always active on the road facing camera. Resetting calibration is only advised when EON reports an invalid calibration alert or when EON is remounted in a different position.'
+                            description='The calibration algorithm is always active on the road facing camera. Resetting calibration is only advised when the device reports an invalid calibration alert or when the device is remounted in a different position.'
                             isExpanded={ expandedCell == 'calibration' }
                             handleExpanded={ () => this.handleExpanded('calibration') }>
                             <X.Button
@@ -600,7 +600,7 @@ class Settings extends Component {
                             title='Enable SSH'
                             value={ isSshEnabled }
                             iconSource={ Icons.developer }
-                            description='Allow devices to connect to your EON using Secure Shell (SSH).'
+                            description='Allow devices to connect to your device using Secure Shell (SSH).'
                             isExpanded={ expandedCell == 'ssh' }
                             handleExpanded={ () => this.handleExpanded('ssh') }
                             handleChanged={ this.props.setSshEnabled } />
