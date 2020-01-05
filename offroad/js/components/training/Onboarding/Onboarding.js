@@ -513,7 +513,7 @@ class Onboarding extends Component {
                 </View>
                 <View style={ Styles.onboardingStepPointBody }>
                     <X.Text size='bigger' color='white' weight='bold'>
-                        openpilot will start driving when cruise control is set.
+                        openpilot will engage when cruise control is set.
                     </X.Text>
                     <X.Text
                         size='smallish' color='white' weight='light'
