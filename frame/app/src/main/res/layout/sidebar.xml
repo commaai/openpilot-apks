@@ -140,7 +140,7 @@
                     android:id="@+id/sidebarMetricTempLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="EON TEMP"
+                    android:text="TEMP"
                     android:textColor="#ffffff"
                     android:layout_marginTop="26dp"
                     android:textSize="12sp" />
