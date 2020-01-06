@@ -57,6 +57,7 @@
                     android:textSize="12sp" />
                 <ImageView
                     android:id="@+id/indicator_battery_icon"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="14dp"
                     android:adjustViewBounds="true"
