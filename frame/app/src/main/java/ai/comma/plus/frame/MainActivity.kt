@@ -282,12 +282,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             val log = reader.getRoot(CLog.Event.factory)
             assert(log.isHealth)
 
-            runOnUiThread {
-              hwType = log.health.hwType.toString()
-              if (hwType == "UNO") {
-                batteryLevelView?.visibility = View.INVISIBLE
-              }
-            }
+            hwType = log.health.hwType.toString()
         }
     }
 
@@ -758,15 +753,12 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         val pct = 100 * (level / (scale * 1.0))
 
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
-
         val batteryPctRound = if (pct > 0) (Math.ceil(pct / 25) * 25).toInt() else 0
-
         val suffix = if (isCharging) "_charging" else ""
-        val iconId = resources.getIdentifier("indicator_battery_${batteryPctRound}${suffix}", "drawable", packageName)
+        val iconAsset = if (hwType == "UNO") "indicator_battery_100_charging" else "indicator_battery_${batteryPctRound}${suffix}"
+        val iconId = resources.getIdentifier(iconAsset, "drawable", packageName)
         val iconBattery = resources.getDrawable(iconId, null);
-        if (hwType !== "UNO") {
-          batteryLevelView?.setImageDrawable(iconBattery);
-        }
+        batteryLevelView?.setImageDrawable(iconBattery);
     }
 
     inner class NetworkMonitor : BroadcastReceiver() {
