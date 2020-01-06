@@ -2106,7 +2106,7 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
 
 "comma-x-native@git+https://git@github.com/commaai/comma-x-native.git":
   version "0.2.0"
-  resolved "git+https://git@github.com/commaai/comma-x-native.git#6f76a1a50a08d5cfe4770ea4002a73f2d35e3b8e"
+  resolved "git+https://git@github.com/commaai/comma-x-native.git#1ad501e7a4d48ba33b9241bfb095dcfc219db458"
   dependencies:
     react-native-linear-gradient "^2.3.0"
 
