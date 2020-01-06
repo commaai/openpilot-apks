@@ -85,6 +85,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
     var msgqCtx: ai.comma.messaging.Context? = null
     var thermalSock: ai.comma.messaging.SubSocket? = null
+    var healthSock: ai.comma.messaging.SubSocket? = null
     var ubloxGnssPoller: ai.comma.messaging.Poller? = null
     var uiLayoutSock: ai.comma.messaging.PubSocket? = null
 
@@ -99,10 +100,12 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var satelliteCount: Int = -1
     var uiLayoutStateThreadHandle: Thread? = null
     var statusThreadHandle: Thread? = null
+    var healthThreadHandle: Thread? = null
     var ubloxGnssThreadHandle: Thread? = null
 
     var simState: String? = null
     var lastNetworkType: String? = null
+    var hwType: String? = null
 
     // Colors
     var colorGreen: Int? = null;
@@ -254,6 +257,36 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                   log.thermal.freeSpace,
                   log.thermal.pa0,
                   log.thermal.thermalStatus.toString());
+            }
+        }
+    }
+
+    fun healthThread() {
+        Log.w("frame", "healthThread")
+        while (true) {
+            val msg = healthSock!!.receive()
+            if (msg == null) {
+                continue
+            }
+            val msgbuf = ByteBuffer.wrap(msg.data)
+            var reader: MessageReader
+            try {
+                reader = Serialize.read(msgbuf)
+            } catch (e: IOException) {
+                Log.e("frame", "read")
+                continue
+            } finally {
+                msg.release()
+            }
+
+            val log = reader.getRoot(CLog.Event.factory)
+            assert(log.isHealth)
+
+            runOnUiThread {
+              hwType = log.health.hwType.toString()
+              if (hwType == "UNO") {
+                batteryLevelView?.visibility = View.INVISIBLE
+              }
             }
         }
     }
@@ -503,6 +536,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         uiLayoutSock = msgqCtx!!.pubSocket("uiLayoutState")
 
         thermalSock = msgqCtx!!.subSocket("thermal")
+        healthSock = msgqCtx!!.subSocket("health")
 
         ubloxGnssPoller = Poller(arrayOf(msgqCtx!!.subSocket("ubloxGnss")))
 
@@ -645,6 +679,11 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         })
         statusThreadHandle!!.start()
 
+        healthThreadHandle = Thread(Runnable {
+            healthThread()
+        })
+        healthThreadHandle!!.start()
+
         /* if (!isPassive) {
             controlsThreadHandle = Thread(Runnable {
                 controlsThread()
@@ -725,7 +764,9 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         val suffix = if (isCharging) "_charging" else ""
         val iconId = resources.getIdentifier("indicator_battery_${batteryPctRound}${suffix}", "drawable", packageName)
         val iconBattery = resources.getDrawable(iconId, null);
-        batteryLevelView?.setImageDrawable(iconBattery);
+        if (hwType !== "UNO") {
+          batteryLevelView?.setImageDrawable(iconBattery);
+        }
     }
 
     inner class NetworkMonitor : BroadcastReceiver() {
