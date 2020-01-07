@@ -697,8 +697,7 @@ class Onboarding extends Component {
                     <X.Text
                         size='smallish' color='white' weight='light'
                         style={ Styles.onboardingStepContextSmall }>
-                        You must confirm it is safe to change lanes, nudge the
-                        wheel, and be driving over 45 mph.
+                        openpilot is not capable of checking if a lane change is safe. This is your job. openpilot will change lanes regardless if another vehicle is present.
                     </X.Text>
                     <X.RadioField
                         size='big'
