@@ -692,13 +692,13 @@ class Onboarding extends Component {
                 </View>
                 <View style={ Styles.onboardingStepPointBody }>
                     <X.Text size='bigger' color='white' weight='bold'>
-                        openpilot will perform lane changes with assistance.
+                        openpilot can change lanes with your assistance.
                     </X.Text>
                     <X.Text
                         size='smallish' color='white' weight='light'
                         style={ Styles.onboardingStepContextSmall }>
-                        Lane changes are done with your help. Check for safety,
-                        activate your signal then nudge the wheel.
+                        You must confirm it is safe to change lanes, nudge the
+                        wheel, and be driving over 45 mph.
                     </X.Text>
                     <X.RadioField
                         size='big'
@@ -739,9 +739,8 @@ class Onboarding extends Component {
                     <X.Text
                         size='small' color='white' weight='light'
                         style={ Styles.onboardingStepContextSmaller }>
-                        When openpilot is engaged, you may trigger an assisted
-                        lane change by first checking your surroundings for cars,
-                        then activating your turn signal when it is safe.
+                        With openpilot engaged, turn on your signal, check
+                        your surroundings, and confirm it is safe to change lanes.
                     </X.Text>
                     <X.Button color='ghost'
                         style={ Styles.onboardingStepPointInstruction }
@@ -779,10 +778,10 @@ class Onboarding extends Component {
                     <X.Text
                         size='small' color='white' weight='light'
                         style={ Styles.onboardingStepContextSmaller }>
-                        To complete the assisted lane change, check again for
-                        safety, then gently nudge the steering wheel towards the
-                        desired lane. You may release controls as openpilot
-                        centers your car into the new lane.
+                        Continuously observe your surroundings for safety while
+                        gently nudging the steering wheel towards your desired
+                        lane. The combination of turn signal and wheel nudge
+                        will prompt openpilot to change lanes.
                     </X.Text>
                     <X.Button color='ghost'
                         style={ Styles.onboardingStepPointInstruction }
