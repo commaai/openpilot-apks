@@ -31,7 +31,6 @@ import ai.comma.openpilot.cereal.Log.UiLayoutState
 import android.net.wifi.WifiManager
 import android.net.NetworkInfo
 import android.os.*
-import android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY
 import android.telephony.PhoneStateListener
 import android.telephony.ServiceState
 import android.telephony.SignalStrength
@@ -93,7 +92,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     var uiLayoutReceiver: UiLayoutReceiver? = null
 
     var networkMonitor: NetworkMonitor? = null
-    var batteryMonitor: BatteryMonitor? = null
     var pandaConnectionMonitor: PandaConnectionMonitor? = null
     var lastStarted: Boolean = false
     var satelliteCount: Int = -1
@@ -254,6 +252,9 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                   log.thermal.freeSpace,
                   log.thermal.pa0,
                   log.thermal.thermalStatus.toString());
+                onBatteryChange(
+                  log.thermal.batteryPercent.toInt(),
+                  log.thermal.batteryStatus.toString())
             }
         }
     }
@@ -622,13 +623,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         uiLayoutReceiver = UiLayoutReceiver(this)
         registerReceiver(uiLayoutReceiver, UiLayoutReceiver.uiLayoutIntentFilter)
 
-        batteryMonitor = BatteryMonitor()
-        val batteryIntentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        registerReceiver(batteryMonitor, batteryIntentFilter)
-        val batteryManager = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-        val status = if (batteryManager.isCharging) BatteryManager.BATTERY_STATUS_CHARGING else BatteryManager.BATTERY_STATUS_NOT_CHARGING
-        onBatteryChange(batteryManager.getIntProperty(BATTERY_PROPERTY_CAPACITY), 100, status)
-
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(CellStateListener(), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS or PhoneStateListener.LISTEN_SERVICE_STATE)
 
@@ -666,7 +660,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     override fun onDestroy() {
         unregisterReceiver(newDestinationReceiver)
         unregisterReceiver(networkMonitor)
-        unregisterReceiver(batteryMonitor)
 
         pandaConnectionMonitor?.destroy()
 
@@ -715,12 +708,10 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         networkTypeText?.text = networkType
     }
 
-    fun onBatteryChange(level: Int, scale: Int, status: Int) {
-        val pct = 100 * (level / (scale * 1.0))
-
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
-        val batteryPctRound = if (pct > 0) (Math.ceil(pct / 25) * 25).toInt() else 0
+    fun onBatteryChange(level: Int, status: String) {
+        val isCharging = status == "Charging"
         val suffix = if (isCharging) "_charging" else ""
+        val batteryPctRound = if (level > 0) (Math.ceil(level.toDouble() / 25) * 25).toInt() else 0
         val iconAsset = "indicator_battery_${batteryPctRound}${suffix}"
         val iconId = resources.getIdentifier(iconAsset, "drawable", packageName)
         val iconBattery = resources.getDrawable(iconId, null);
@@ -744,19 +735,6 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                     simState = intent.getStringExtra("ss")
 
                     onNetworkStateChange()
-                }
-            }
-        }
-    }
-
-    inner class BatteryMonitor : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent?.action) {
-                Intent.ACTION_BATTERY_CHANGED -> {
-                    val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                    val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-                    val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-                    onBatteryChange(level, scale, status)
                 }
             }
         }
