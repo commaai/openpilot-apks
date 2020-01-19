@@ -53,21 +53,6 @@ jobs:
           name: Store offroad apk
           path: offroad/ai.comma.plus.offroad.apk
           destination: ai.comma.plus.offroad.apk
-  setup:
-    machine:
-      docker_layer_caching: true
-    steps:
-      - checkout
-      - run:
-          name: Build docker SDK image
-          command: docker build -t apks -f docker/Dockerfile docker
-      - run:
-          name: Build setup
-          command: docker run -v $PWD:/tmp/openpilot/apks --rm apks /bin/sh -c 'cd setup && ./build.sh'
-      - store_artifacts:
-          name: Store setup apk
-          path: setup/out.apk
-          destination: ai.comma.neos.setup.apk
 
 workflows:
   version: 2
@@ -81,9 +66,6 @@ workflows:
           requires:
             - sdk
       - offroad:
-          requires:
-            - sdk
-      - setup:
           requires:
             - sdk
 

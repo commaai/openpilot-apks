@@ -16,10 +16,6 @@ frame contains the sidebar and manages the background color behind openpilot UI.
 
 black draws a box behind the openpilot `ui.c` while driving.
 
-## setup
-
-NEOS setup compatible with the `openpilot.comma.ai` installation configuration server. Based on CyanogenOS setup.
-
 ## Shared Dependencies
 
 Ubuntu 16.04:
