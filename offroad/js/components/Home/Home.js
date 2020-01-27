@@ -469,7 +469,7 @@ class Home extends Component {
                                                   color='white'
                                                   size='tiny'
                                                   weight='semibold'>
-                                                  14 days of storage
+                                                  1 year of storage
                                               </X.Text>
                                           </View>
                                           <View style={ Styles.homeBodyAccountUpgradeFeature }>
