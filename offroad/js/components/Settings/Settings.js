@@ -313,7 +313,7 @@ class Settings extends Component {
                             title='Use Metric System'
                             value={ !!parseInt(isMetric) }
                             iconSource={ Icons.metric }
-                            description='Display speed in km/h instead of mp/h and temperature in °C instead of °F.'
+                            description='Display speed in km/h instead of mp/h.'
                             isExpanded={ expandedCell == 'metric' }
                             handleExpanded={ () => this.handleExpanded('metric') }
                             handleChanged={ this.props.setMetric } />
