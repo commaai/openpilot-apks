@@ -1,6 +1,9 @@
 #!/bin/bash
 
 set -e
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+cd $DIR
+
 APK_OUT=${1:-ai.comma.plus.frame.apk}
 TOOLS="$PWD/../tools"
 CEREAL="$PWD/../../cereal"
