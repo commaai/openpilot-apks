@@ -66,7 +66,10 @@ class Home extends Component {
     _handleConnectionChange = (isConnected) => {
         console.log('Connection status is ' + (isConnected ? 'online' : 'offline') + ' ' + isConnected);
         this.props.updateConnectionState(isConnected);
-    };
+        if (isConnected) {
+          this.props.fetchDeviceStats();
+        }
+    }
 
     refreshOffroadParams = async () => {
         await this.props.refreshAlertParams();

@@ -27,6 +27,7 @@ export function thermalDataChanged(thermalData) {
             if (isUpdateAvailable) {
                 dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt', params: { releaseNotes: releaseNotes }}));
             }
+            dispatch(fetchDeviceStats());
         }
 
         dispatch({
