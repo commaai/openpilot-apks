@@ -61,11 +61,21 @@ class OfflineGeocoderModule(val ctx: ReactApplicationContext) : ReactContextBase
     }
 
     @ReactMethod
+    fun getLastKnownLocation(promise: Promise) {
+        val lastLoc = locationManager?.getLastKnownLocation(provider)
+        if (lastLoc != null) {
+            promise.resolve(geocodeLocation(lastLoc))
+        } else {
+            promise.resolve(null);
+        }
+    }
+
+    @ReactMethod
     fun requestLocationUpdate() {
         locationManager?.requestSingleUpdate(provider, this, null)
     }
 
-    override fun onLocationChanged(location: Location) {
+    fun geocodeLocation(location: Location): WritableNativeMap {
         synchronized(geocoderLock) {
             while (reverseGeocoder == null && !didFailToInitializeReverseGeocoder) {
                 geocoderLock.wait()
@@ -78,6 +88,11 @@ class OfflineGeocoderModule(val ctx: ReactApplicationContext) : ReactContextBase
         geocode.putString("name", geoname)
         geocode.putDouble("lat", location.latitude)
         geocode.putDouble("lng", location.longitude)
+        return geocode
+    }
+
+    override fun onLocationChanged(location: Location) {
+        val geocode = geocodeLocation(location)
 
         ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                 .emit("onGeocodeChanged", geocode)
