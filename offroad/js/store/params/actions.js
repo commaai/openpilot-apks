@@ -40,6 +40,7 @@ const PARAMS = [
   "PandaDongleId",
   "CommunityFeaturesToggle",
   "IsLdwEnabled",
+  "LaneChangeEnabled",
 ].concat(ALERT_PARAMS);
 
 export function refreshParams(params) {
