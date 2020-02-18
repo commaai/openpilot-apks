@@ -17,25 +17,32 @@ export const ACTION_DEVICE_REFRESHED = 'ACTION_DEVICE_REFRESHED';
 export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
 export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
 export const ACTION_UPDATE_IS_AVAILABLE_CHANGED = 'ACTION_UPDATE_IS_AVAILABLE_CHANGED';
+export const ACTION_LAST_ROUTE_NAME_CHANGED = 'ACTION_LAST_ROUTE_NAME_CHANGED';
 
 export function thermalDataChanged(thermalData) {
     return async (dispatch, getState) => {
         const oldThermal = getState().host.thermal;
-        if (oldThermal.started === true && thermalData.started === false) {
-            Geocoder.requestLocationUpdate();
-            dispatch(fetchDeviceStats());
-
-            const isUpdateAvailableStr = await ChffrPlus.readParam(Params.KEY_IS_UPDATE_AVAILABLE);
-            const isUpdateAvailable = ((isUpdateAvailableStr && isUpdateAvailableStr.trim() === "1") || false);
-            const releaseNotes = await ChffrPlus.readParam(Params.KEY_RELEASE_NOTES);
-            if (isUpdateAvailable) {
-                dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt', params: { releaseNotes: releaseNotes }}));
-            }
-        }
-
         dispatch({
             type: ACTION_THERMAL_DATA_CHANGED,
             thermalData,
+        });
+
+        if (oldThermal.started === true && thermalData.started === false) {
+            Geocoder.requestLocationUpdate();
+            dispatch(fetchDeviceStats());
+            dispatch(updateUpdateIsAvailable());
+            await dispatch(updateLastRouteName());
+            dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
+        }
+    }
+}
+
+export function updateLastRouteName() {
+    return async dispatch => {
+        const lastRouteName = await ChffrPlus.getLastRouteName();
+        dispatch({
+            type: ACTION_LAST_ROUTE_NAME_CHANGED,
+            payload: { lastRouteName }
         });
     }
 }

@@ -81,6 +81,10 @@ export let ChffrPlusTheme = {
                 borderColor: 'transparent',
                 borderRadius: 13,
             },
+            transparent: {
+                backgroundColor: Colors.transparent,
+                borderColor: Colors.transparent,
+            },
         },
     },
     radioField: {
