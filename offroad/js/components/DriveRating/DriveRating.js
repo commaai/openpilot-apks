@@ -43,7 +43,7 @@ class DriveRating extends Component {
 
     renderRatingFaces() {
         const { selectedRating } = this.state;
-        let ratings = ['1', '2', '3'];
+        let ratings = ['3', '2', '1'];
         return ratings.map((r) => {
             const ratingColor = selectedRating == r ? 'color' : 'white';
             const ratingStyle = [
