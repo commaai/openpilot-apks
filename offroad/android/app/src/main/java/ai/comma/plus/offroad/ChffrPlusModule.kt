@@ -24,12 +24,16 @@ import android.util.Base64
 import android.util.Log
 import io.jsonwebtoken.Jwts
 import java.io.File
+import java.io.ByteArrayOutputStream
+import java.nio.channels.Channels
 import java.security.GeneralSecurityException
 import java.security.KeyFactory
 import java.security.PrivateKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.regex.Pattern
+import org.capnproto.Serialize;
+import ai.comma.openpilot.cereal.Log.UiLayoutState
 
 
 /**
@@ -49,6 +53,11 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     private var navDestinationPoller: NavDestinationPoller? = null
     private var settingsClickReceiver: SettingsClickReceiver? = null
     private var thermalPoller: ThermalPoller? = null
+
+    var msgqCtx: ai.comma.messaging.Context? = null
+    var uiLayoutSock: ai.comma.messaging.PubSocket? = null
+    var activeApp: UiLayoutState.App? = UiLayoutState.App.HOME
+    var sidebarCollapsed: Boolean = false
 
     override fun getName(): String = "ChffrPlus"
 
@@ -72,6 +81,9 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
         thermalPoller = ThermalPoller(this)
         thermalPoller!!.start()
+
+        msgqCtx = ai.comma.messaging.Context()
+        uiLayoutSock = msgqCtx!!.pubSocket("uiLayoutState")
     }
 
     override fun onCatalystInstanceDestroy() {
@@ -86,6 +98,21 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         thermalPoller!!.stop()
     }
 
+    fun updateUiLayoutState() {
+        synchronized(this) {
+            val log = LogEvent()
+            val uiLayout = log.root.initUiLayoutState()
+            uiLayout.setSidebarCollapsed(sidebarCollapsed)
+            uiLayout.activeApp = activeApp
+
+            val out = ByteArrayOutputStream()
+            Serialize.write(Channels.newChannel(out), log.msg)
+            val bytes = out.toByteArray()
+
+            uiLayoutSock!!.send(bytes)
+        }
+    }
+
     override fun onThermalDataChanged(thermalSample: ThermalSample) {
         ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                 .emit("onThermalDataChanged", thermalSample.toWritableMap())
@@ -97,13 +124,27 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     }
 
     override fun onHomePress() {
+        activeApp = UiLayoutState.App.HOME
+        updateUiLayoutState()
         ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                 .emit("onHomePress", WritableNativeMap())
     }
 
     override fun onSettingsClicked() {
+        activeApp = UiLayoutState.App.SETTINGS
+        updateUiLayoutState()
         ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                 .emit("onSettingsClick", WritableNativeMap())
+    }
+
+    fun onSidebarExpanded() {
+        sidebarCollapsed = false;
+        updateUiLayoutState();
+    }
+
+    fun onSidebarCollapsed() {
+        sidebarCollapsed = true;
+        updateUiLayoutState();
     }
 
     private fun startActivityWithIntent(intent: Intent) {
@@ -115,6 +156,23 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             reactApplicationContext.startActivity(intent)
         }
+    }
+
+    @ReactMethod
+    fun emitHomePress() {
+        if (activeApp != UiLayoutState.App.HOME) {
+            onHomePress()
+        }
+    }
+
+    @ReactMethod
+    fun emitSidebarCollapsed() {
+        onSidebarCollapsed()
+    }
+
+    @ReactMethod
+    fun emitSidebarExpanded() {
+        onSidebarExpanded()
     }
 
     @ReactMethod

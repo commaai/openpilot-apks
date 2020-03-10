@@ -8,14 +8,6 @@ The source code for the APKs that run inside openpilot.
 
 offroad is the interactive UI displayed while your car is off. Its main features are device setup, comma account pairing, and settings management.
 
-## frame
-
-frame contains the sidebar and manages the background color behind openpilot UI.
-
-## black
-
-black draws a box behind the openpilot `ui.c` while driving.
-
 ## Shared Dependencies
 
 Ubuntu 16.04:
@@ -61,4 +53,3 @@ sudo make install
 Clone or move this repository under the [openpilot](https://github.com/commaai/openpilot) repository before building.  If you have not generated the capnp java files in the openpilot/cereal/ director you need to run "make" in that directory to generate the files needed for building Offroad.  This only needs to be done once.
 
 See build.sh in project directories.
-

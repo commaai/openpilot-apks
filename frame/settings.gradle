@@ -1,3 +1,0 @@
-include ':messaging'
-project(':messaging').projectDir = file("../library/messaging")
-include ':app'
