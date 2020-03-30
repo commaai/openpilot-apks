@@ -34,10 +34,15 @@ export function thermalDataChanged(thermalData) {
             await dispatch(updateLastRouteName());
             await dispatch(updateSidebarCollapsed(false));
             await ChffrPlus.emitSidebarExpanded();
-            dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
+            await dispatch(updateUpdateIsAvailable());
             Geocoder.requestLocationUpdate();
             dispatch(fetchDeviceStats());
-            dispatch(updateUpdateIsAvailable());
+
+            if (getState().host.updateIsAvailable) {
+                dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt' });
+            } else {
+                dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
+            }
         } else if (oldThermal.started === false && thermalData.started === true) {
             if (oldRoute !== 'Home') {
                 await dispatch(updateSidebarCollapsed(false));
