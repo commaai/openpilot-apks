@@ -4,8 +4,9 @@ export default StyleSheet.create({
     onboardingContainer: {
         flex: 1,
         height: '100%',
-        width: '100%',
+        overflow: 'hidden',
         position: 'relative',
+        width: '100%',
     },
     onboardingActionsRow: {
         flexDirection: 'row',

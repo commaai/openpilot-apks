@@ -18,7 +18,7 @@ import { NetworkInfo } from 'react-native-network-info';
 
 import Logging from '../../native/Logging';
 import WifiModule from '../../native/Wifi';
-import { updateConnectionState } from '../../store/host/actions';
+import { updateConnectionState, updateSidebarCollapsed } from '../../store/host/actions';
 import { resetToLaunch } from '../../store/nav/actions';
 import { Params } from '../../config';
 import X from '../../themes';
@@ -436,18 +436,22 @@ const mapDispatchToProps = dispatch => ({
     handleSetupWifiMoreOptionsPressed: () => {
         ChffrPlus.openWifiSettings();
     },
-    handleSetupWifiCompleted: (hasBackButton) => {
-        dispatch(updateConnectionState(true));
-        dispatch(resetToLaunch());
+    handleSetupWifiCompleted: async (hasBackButton) => {
+        await dispatch(updateSidebarCollapsed(false));
+        await dispatch(updateConnectionState(true));
+        await dispatch(resetToLaunch());
+        ChffrPlus.emitSidebarExpanded();
         if (hasBackButton) {
-            ChffrPlus.sendBroadcast("ai.comma.plus.offroad.NAVIGATED_FROM_SETTINGS");
+            ChffrPlus.emitHomePress();
         }
     },
     handleSetupWifiSkip: async (hasBackButton) => {
         await ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
-        dispatch(resetToLaunch());
+        await dispatch(updateSidebarCollapsed(false));
+        await dispatch(resetToLaunch());
+        ChffrPlus.emitSidebarExpanded();
         if (hasBackButton) {
-            ChffrPlus.sendBroadcast("ai.comma.plus.offroad.NAVIGATED_FROM_SETTINGS");
+            ChffrPlus.emitHomePress();
         }
     },
 });

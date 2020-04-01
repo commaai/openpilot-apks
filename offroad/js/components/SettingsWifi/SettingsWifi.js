@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
+import ChffrPlus from '../../native/ChffrPlus';
 
 import { View } from 'react-native';
 
 import X from '../../themes';
 import SetupWifi from '../SetupWifi';
+import { updateSidebarCollapsed } from '../../store/host/actions';
 
 class SettingsWifi extends Component {
     static navigationOptions = {
         header: null,
+    }
+
+    async componentWillUnmount() {
+        await this.props.handleSidebarExpanded();
     }
 
     render() {
@@ -24,14 +30,20 @@ class SettingsWifi extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        handleBackPressed: () => {
-            dispatch(NavigationActions.reset({
+        handleBackPressed: async () => {
+            await dispatch(NavigationActions.reset({
                 index: 0,
                 key: null,
                 actions: [
                     NavigationActions.navigate({ routeName: 'Settings' })
                 ]
             }));
+            await dispatch(updateSidebarCollapsed(false));
+            ChffrPlus.emitSidebarExpanded();
+        },
+        handleSidebarExpanded: async () => {
+            await dispatch(updateSidebarCollapsed(false));
+            await ChffrPlus.emitSidebarExpanded();
         }
     }
 }

@@ -11,6 +11,7 @@ import {
     ACTION_DEVICE_STATS_CHANGED,
     ACTION_UPDATE_IS_AVAILABLE_CHANGED,
     ACTION_LAST_ROUTE_NAME_CHANGED,
+    ACTION_SIDEBAR_TOGGLED,
 } from './actions';
 import SimState from './SimState';
 
@@ -30,6 +31,7 @@ const initialHostState = {
     updateIsAvailable: false,
     updateReleaseNotes: "",
     lastRouteName: "",
+    sidebarCollapsed: false,
 };
 
 export default (state = initialHostState, action) => {
@@ -95,6 +97,11 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 lastRouteName: action.payload.lastRouteName,
+            }
+        case ACTION_SIDEBAR_TOGGLED:
+            return {
+                ...state,
+                sidebarCollapsed: action.payload.sidebarCollapsed,
             }
         default:
             return state;

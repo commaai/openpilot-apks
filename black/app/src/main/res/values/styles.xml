@@ -1,9 +1,0 @@
-<resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowAnimationStyle">@null</item>
-    </style>
-
-</resources>

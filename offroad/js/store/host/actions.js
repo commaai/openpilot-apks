@@ -18,21 +18,31 @@ export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
 export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
 export const ACTION_UPDATE_IS_AVAILABLE_CHANGED = 'ACTION_UPDATE_IS_AVAILABLE_CHANGED';
 export const ACTION_LAST_ROUTE_NAME_CHANGED = 'ACTION_LAST_ROUTE_NAME_CHANGED';
+export const ACTION_SIDEBAR_TOGGLED = 'ACTION_SIDEBAR_TOGGLED';
 
 export function thermalDataChanged(thermalData) {
     return async (dispatch, getState) => {
         const oldThermal = getState().host.thermal;
+        const oldRoutes = getState().nav.routes;
+        const oldRoute = oldRoutes[oldRoutes.length - 1].routeName;
         dispatch({
             type: ACTION_THERMAL_DATA_CHANGED,
             thermalData,
         });
 
         if (oldThermal.started === true && thermalData.started === false) {
+            await dispatch(updateLastRouteName());
+            await dispatch(updateSidebarCollapsed(false));
+            await ChffrPlus.emitSidebarExpanded();
+            dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
             Geocoder.requestLocationUpdate();
             dispatch(fetchDeviceStats());
             dispatch(updateUpdateIsAvailable());
-            await dispatch(updateLastRouteName());
-            dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
+        } else if (oldThermal.started === false && thermalData.started === true) {
+            if (oldRoute !== 'Home') {
+                await dispatch(updateSidebarCollapsed(false));
+                await ChffrPlus.emitHomePress();
+            }
         }
     }
 }
@@ -172,5 +182,14 @@ export function refreshDeviceInfo() {
             type: ACTION_DEVICE_REFRESHED,
             device,
         })
+    }
+}
+
+export function updateSidebarCollapsed(sidebarCollapsed) {
+    return async dispatch => {
+        dispatch({
+            type: ACTION_SIDEBAR_TOGGLED,
+            payload: { sidebarCollapsed }
+        });
     }
 }
