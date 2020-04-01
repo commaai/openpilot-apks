@@ -260,6 +260,7 @@ class Settings extends Component {
                 Passive: isPassive,
                 IsLdwEnabled: isLaneDepartureWarningEnabled,
                 LaneChangeEnabled: laneChangeEnabled,
+                IsDriverViewEnabled: isDriverViewEnabled,
             }
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
@@ -486,6 +487,15 @@ class Settings extends Component {
                                 Reset
                             </X.Button>
                         </X.TableCell>
+                        <X.TableCell
+                            type='switch'
+                            title='Show Driver Camera in UI (offroad only)'
+                            value={ !!parseInt(isDriverViewEnabled) }
+                            iconSource={ Icons.network }
+                            description='Show the driver camera view to help optimize device mounting position for driver monitoring.'
+                            isExpanded={ expandedCell == 'driver_view_enabled' }
+                            handleExpanded={ () => this.handleExpanded('driver_view_enabled') }
+                            handleChanged={ this.props.setIsDriverViewEnabled } />
                     </X.Table>
                     <X.Table>
                         <X.TableCell
@@ -849,6 +859,9 @@ const mapDispatchToProps = dispatch => ({
     },
     setRecordFront: (recordFront) => {
         dispatch(updateParam(Params.KEY_RECORD_FRONT, (recordFront | 0).toString()));
+    },
+    setIsDriverViewEnabled: (isDriverViewEnabled) => {
+        dispatch(updateParam(Params.KEY_RECORD_FRONT, (isDriverViewEnabled | 0).toString()));
     },
     setSshEnabled: (isSshEnabled) => {
         dispatch(updateSshEnabled(!!isSshEnabled));
