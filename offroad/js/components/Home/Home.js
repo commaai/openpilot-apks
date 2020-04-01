@@ -111,16 +111,6 @@ class Home extends Component {
         this.props.openPairing();
     }
 
-    checkIsInAmerica = () => {
-        const { latitude, longitude } = this.props;
-        const top = 49.3457868; // north lat
-        const left = -124.7844079; // west long
-        const right = -66.9513812; // east long
-        const bottom =  24.7433195; // south lat
-
-        return ((bottom <= latitude) && (latitude <= top) && (left <= longitude) && (longitude <= right));
-    }
-
     render() {
         const {
             alerts,
@@ -144,7 +134,6 @@ class Home extends Component {
 
         const softwareName = !!parseInt(params.Passive) ? 'dashcam' : 'openpilot';
         const softwareString = `${ softwareName } v${ params.Version }`;
-        const isAmerica = this.checkIsInAmerica();
         const hasDeviceStats = typeof(deviceStats.all) !== 'undefined';
         const isMetric = !!parseInt(params.IsMetric);
 
@@ -402,7 +391,7 @@ class Home extends Component {
                                   </View>
                               </View>
                           </View>
-                          { isPaired && (hasPrime || !isAmerica) ? (
+                          { isPaired && hasPrime ? (
                               <View style={ Styles.homeBodyAccount }>
                                   <View style={ Styles.homeBodyAccountPoints }>
                                       <X.Text
