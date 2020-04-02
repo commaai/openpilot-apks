@@ -50,6 +50,7 @@ const Icons = {
     minus: require('../../img/icon_minus.png'),
     mapSpeed: require('../../img/icon_map.png'),
     openpilot: require('../../img/icon_openpilot.png'),
+    monitoring: require('../../img/icon_monitoring.png'),
 }
 
 class Settings extends Component {
@@ -264,7 +265,6 @@ class Settings extends Component {
                 Passive: isPassive,
                 IsLdwEnabled: isLaneDepartureWarningEnabled,
                 LaneChangeEnabled: laneChangeEnabled,
-                IsDriverViewEnabled: isDriverViewEnabled,
             }
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
@@ -459,6 +459,7 @@ class Settings extends Component {
             params: {
                 DongleId: dongleId,
                 Passive: isPassive,
+                IsDriverViewEnabled: isDriverViewEnabled,
             },
         } = this.props;
         const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
@@ -491,15 +492,18 @@ class Settings extends Component {
                                 Reset
                             </X.Button>
                         </X.TableCell>
+                    </X.Table>
+                    <X.Table color='darkBlue'>
                         <X.TableCell
                             type='switch'
-                            title='Show Driver Camera in UI (offroad only)'
+                            title='Preview Driver Camera'
+                            iconSource={ Icons.monitoring }
                             value={ !!parseInt(isDriverViewEnabled) }
-                            iconSource={ Icons.network }
-                            description='Show the driver camera view to help optimize device mounting position for driver monitoring.'
+                            description='Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (offroad use only)'
                             isExpanded={ expandedCell == 'driver_view_enabled' }
                             handleExpanded={ () => this.handleExpanded('driver_view_enabled') }
-                            handleChanged={ this.props.setIsDriverViewEnabled } />
+                            handleChanged={ this.props.setIsDriverViewEnabled } >
+                        </X.TableCell>
                     </X.Table>
                     <X.Table>
                         <X.TableCell
@@ -874,7 +878,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(updateParam(Params.KEY_RECORD_FRONT, (recordFront | 0).toString()));
     },
     setIsDriverViewEnabled: (isDriverViewEnabled) => {
-        dispatch(updateParam(Params.KEY_RECORD_FRONT, (isDriverViewEnabled | 0).toString()));
+        dispatch(updateParam(Params.KEY_IS_DRIVER_VIEW_ENABLED, (isDriverViewEnabled | 0).toString()));
     },
     setSshEnabled: (isSshEnabled) => {
         dispatch(updateSshEnabled(!!isSshEnabled));
