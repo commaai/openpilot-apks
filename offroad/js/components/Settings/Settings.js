@@ -495,14 +495,19 @@ class Settings extends Component {
                     </X.Table>
                     <X.Table color='darkBlue'>
                         <X.TableCell
-                            type='switch'
-                            title='Preview Driver Camera'
+                            type='custom'
+                            title='Driver Camera View'
                             iconSource={ Icons.monitoring }
-                            value={ !!parseInt(isDriverViewEnabled) }
                             description='Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (offroad use only)'
                             isExpanded={ expandedCell == 'driver_view_enabled' }
-                            handleExpanded={ () => this.handleExpanded('driver_view_enabled') }
-                            handleChanged={ this.props.setIsDriverViewEnabled } >
+                            handleExpanded={ () => this.handleExpanded('driver_view_enabled') } >
+                            <X.Button
+                                size='tiny'
+                                color='settingsDefault'
+                                onPress={ this.props.setIsDriverViewEnabled  }
+                                style={ { minWidth: '100%' } }>
+                                Preview
+                            </X.Button>
                         </X.TableCell>
                     </X.Table>
                     <X.Table>
@@ -878,7 +883,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(updateParam(Params.KEY_RECORD_FRONT, (recordFront | 0).toString()));
     },
     setIsDriverViewEnabled: (isDriverViewEnabled) => {
-        dispatch(updateParam(Params.KEY_IS_DRIVER_VIEW_ENABLED, (isDriverViewEnabled | 0).toString()));
+        dispatch(updateParam(Params.KEY_IS_DRIVER_VIEW_ENABLED, (isDriverViewEnabled | 1).toString()));
     },
     setSshEnabled: (isSshEnabled) => {
         dispatch(updateSshEnabled(!!isSshEnabled));
