@@ -39,7 +39,7 @@ export function thermalDataChanged(thermalData) {
             dispatch(fetchDeviceStats());
 
             if (getState().host.updateIsAvailable) {
-                dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt' });
+                dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt' }));
             } else {
                 dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
             }
