@@ -39,9 +39,10 @@ if [ -z "$DEBUG" ]; then
     APK_PATH=app/build/outputs/apk/release/app-release-unsigned.apk
     ./gradlew assembleRelease
 else
-    APK_PATH=android/app/build/outputs/apk/debug/app-debug.apk
+    APK_PATH=app/build/outputs/apk/debug/app-debug.apk
     ./gradlew assembleDebug
 fi
+
 
 java -jar $TOOLS/signapk/signapk.jar $TOOLS/signapk/certificate.pem $TOOLS/signapk/key.pk8 $APK_PATH $APK_OUT
 echo "build complete"
