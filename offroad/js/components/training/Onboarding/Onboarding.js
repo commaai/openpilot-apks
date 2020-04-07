@@ -620,7 +620,7 @@ class Onboarding extends Component {
                     <X.Text
                         size='small' color='white' weight='semibold'
                         style={ Styles.onboardingStepPointInstructionText }>
-                        Tap "SET" to engage
+                        Tap "SET" (on screen) to engage
                     </X.Text>
                     <X.Image
                         source={ require('../../../img/icon_chevron_right.png') }
