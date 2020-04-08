@@ -74,8 +74,6 @@ class ThermalPoller(val delegate: ThermalPollerDelegate) {
             }
 
             val log = reader.getRoot(Log.Event.factory)
-            assert(log.isNavStatus)
-
             val thermalEvent = log.thermal
             try {
                 val thermal = ThermalSample.readFromThermalEvent(thermalEvent)

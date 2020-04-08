@@ -3,7 +3,7 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd $DIR
 
-APK_OUT=${1:-ai.comma.plus.offroad.apk}
+APK_OUT=${1:-$PWD/ai.comma.plus.offroad.apk}
 TOOLS="$PWD/../tools"
 CEREAL="$PWD/../../cereal"
 export SENTRY_SKIP_UPLOAD=${SENTRY_SKIP_UPLOAD:-1}
@@ -30,12 +30,17 @@ android/app/src/main/res/drawable-xhdpi
 android/app/src/main/res/drawable-xxhdpi
 android/app/src/main/res/drawable-xxxhdpi"| xargs rm -r || true
 
+cd android
+
+if [ -z "$NOCLEAN" ]; then
+  ./gradlew clean
+fi
 if [ -z "$DEBUG" ]; then
-    APK_PATH=android/app/build/outputs/apk/release/app-release-unsigned.apk
-    (cd android && ./gradlew clean && (./gradlew assembleRelease || ./gradlew assembleRelease))
+    APK_PATH=app/build/outputs/apk/release/app-release-unsigned.apk
+    ./gradlew assembleRelease
 else
-    APK_PATH=android/app/build/outputs/apk/debug/app-debug.apk
-    (cd android && ./gradlew clean && (./gradlew assembleDebug || ./gradlew assembleDebug))
+    APK_PATH=app/build/outputs/apk/debug/app-debug.apk
+    ./gradlew assembleDebug
 fi
 
 java -jar $TOOLS/signapk/signapk.jar $TOOLS/signapk/certificate.pem $TOOLS/signapk/key.pk8 $APK_PATH $APK_OUT
