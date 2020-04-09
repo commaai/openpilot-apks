@@ -1,9 +1,3 @@
-/*
-main
-settings
-transparent (don't draw)
-*/
-
 package ai.comma.plus.offroad
 
 import ai.comma.messaging.Context
