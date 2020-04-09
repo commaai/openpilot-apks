@@ -50,7 +50,9 @@ const Icons = {
     minus: require('../../img/icon_minus.png'),
     mapSpeed: require('../../img/icon_map.png'),
     openpilot: require('../../img/icon_openpilot.png'),
+    openpilot_mirrored: require('../../img/icon_openpilot_mirrored.png'),
     monitoring: require('../../img/icon_monitoring.png'),
+    road: require('../../img/icon_road.png'),
 }
 
 class Settings extends Component {
@@ -257,6 +259,7 @@ class Settings extends Component {
         const {
             params: {
                 RecordFront: recordFront,
+                IsRHD: isRHD,
                 IsMetric: isMetric,
                 LongitudinalControl: hasLongitudinalControl,
                 LimitSetSpeed: limitSetSpeed,
@@ -265,6 +268,7 @@ class Settings extends Component {
                 Passive: isPassive,
                 IsLdwEnabled: isLaneDepartureWarningEnabled,
                 LaneChangeEnabled: laneChangeEnabled,
+                IsOffroad: isOffroad,
             }
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
@@ -301,7 +305,7 @@ class Settings extends Component {
                                 type='switch'
                                 title='Enable Lane Change Assist'
                                 value={ !!parseInt(laneChangeEnabled) }
-                                iconSource={ Icons.openpilot }
+                                iconSource={ Icons.road }
                                 description='Perform assisted lane changes with openpilot by checking your surroundings for safety, activating the turn signal and gently nudging the steering wheel towards your desired lane. openpilot is not capable of checking if a lane change is safe. You must continuously observe your surroundings to use this feature.'
                                 isExpanded={ expandedCell == 'lanechange_enabled' }
                                 handleExpanded={ () => this.handleExpanded('lanechange_enabled') }
@@ -321,10 +325,19 @@ class Settings extends Component {
                             title='Record and Upload Driver Camera'
                             value={ !!parseInt(recordFront) }
                             iconSource={ Icons.network }
-                            description='Upload data from the driver facing camera and help improve the Driver Monitoring algorithm.'
+                            description='Upload data from the driver facing camera and help improve the driver monitoring algorithm.'
                             isExpanded={ expandedCell == 'record_front' }
                             handleExpanded={ () => this.handleExpanded('record_front') }
                             handleChanged={ this.props.setRecordFront } />
+                        <X.TableCell
+                            type='switch'
+                            title='Enable Right-Hand Drive'
+                            value={ !!parseInt(isRHD) }
+                            iconSource={ Icons.openpilot_mirrored }
+                            description='Allow openpilot to obey left-hand traffic conventions and perform driver monitoring on right driver seat.'
+                            isExpanded={ expandedCell == 'is_rhd' }
+                            handleExpanded={ () => this.handleExpanded('is_rhd') }
+                            handleChanged={ this.props.setIsRHD } />
                         <X.TableCell
                             type='switch'
                             title='Use Metric System'
@@ -459,7 +472,7 @@ class Settings extends Component {
             params: {
                 DongleId: dongleId,
                 Passive: isPassive,
-                IsDriverViewEnabled: isDriverViewEnabled,
+                IsOffroad: isOffroad,
             },
         } = this.props;
         const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
@@ -504,6 +517,7 @@ class Settings extends Component {
                             <X.Button
                                 size='tiny'
                                 color='settingsDefault'
+                                isDisabled={ !parseInt(isOffroad) }
                                 onPress={ this.props.setIsDriverViewEnabled  }
                                 style={ { minWidth: '100%' } }>
                                 Preview
@@ -881,6 +895,9 @@ const mapDispatchToProps = dispatch => ({
     },
     setRecordFront: (recordFront) => {
         dispatch(updateParam(Params.KEY_RECORD_FRONT, (recordFront | 0).toString()));
+    },
+    setIsRHD: (isRHD) => {
+        dispatch(updateParam(Params.KEY_IS_RHD, (isRHD | 0).toString()));
     },
     setIsDriverViewEnabled: (isDriverViewEnabled) => {
         dispatch(updateParam(Params.KEY_IS_DRIVER_VIEW_ENABLED, (isDriverViewEnabled | 1).toString()));
