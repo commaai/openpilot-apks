@@ -20,7 +20,6 @@ import kotlin.math.roundToInt
 
 class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ctx) {
     var msgqCtx: Context? = null
-    var sock: SubSocket? = null
     var running: Boolean = true
     var pollThread: Thread? = null
     var _mockEngaged: Boolean = false
@@ -34,8 +33,6 @@ class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ct
     override fun initialize() {
         msgqCtx = Context()
         uiLayoutSock = msgqCtx!!.pubSocket("uiLayoutState")
-        sock = msgqCtx!!.subSocket("offroadLayout")
-        sock!!.setTimeout(1000)
         pollThread = Thread(Runnable {
             loop()
         })
@@ -45,6 +42,10 @@ class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ct
 
     fun updateUiLayoutState() {
         synchronized(this) {
+            if (uiLayoutSock == null) {
+                return
+            }
+
             val log = LogEvent()
             val uiLayout = log.root.initUiLayoutState()
             uiLayout.setSidebarCollapsed(sidebarCollapsed)
@@ -145,8 +146,11 @@ class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ct
     }
 
     fun loop() {
+        val sock = msgqCtx!!.subSocket("offroadLayout")
+        sock.setTimeout(1000)
+
         while(running) {
-            val msg = sock!!.receive()
+            val msg = sock.receive()
             if (msg == null || msg.size < 4) {
                 continue
             }
@@ -164,14 +168,15 @@ class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ct
 
             val log = reader.getRoot(Log.Event.factory)
             val layoutState = log.uiLayoutState
+            if (sidebarCollapsed == layoutState.sidebarCollapsed && activeApp == layoutState.activeApp) {
+                continue
+            }
 
             when(layoutState.activeApp) {
                 Log.UiLayoutState.App.HOME -> {
-                    if (activeApp != Log.UiLayoutState.App.NONE) {
-                        reactApplicationContext
-                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                                .emit("onHomePress", null)
-                    }
+                    reactApplicationContext
+                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                            .emit("onHomePress", null)
                 }
                 Log.UiLayoutState.App.SETTINGS -> {
                     setSidebarCollapsedSync(false)
@@ -185,11 +190,14 @@ class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ct
             setActiveAppSync(layoutState.activeApp)
             updateUiLayoutState()
         }
+
+        sock.close()
     }
 
     override fun onCatalystInstanceDestroy() {
         super.onCatalystInstanceDestroy()
         running = false
-        sock!!.close()
+        uiLayoutSock!!.close()
+        uiLayoutSock = null
     }
 }
