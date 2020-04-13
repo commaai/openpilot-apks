@@ -124,7 +124,6 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     fun closeActivites() {
         ActivityRequestCode.values().forEach {
             try {
-                Log.d("offroad", "close ${it.code}")
                 currentActivity?.finishActivity(it.code)
             } catch(e: Exception) {}
         }

@@ -65,7 +65,7 @@ class LayoutModule(ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ct
                 prevActiveApp = activeApp ?: Log.UiLayoutState.App.HOME
                 activeApp = app
                 if (activeApp == Log.UiLayoutState.App.NONE) {
-                    setVisibility(View.INVISIBLE)
+                    setVisibility(View.GONE)
                 } else {
                     setVisibility(View.VISIBLE)
                 }
