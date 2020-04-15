@@ -34,4 +34,7 @@ export const Params = {
     KEY_COMMUNITY_FEATURES: 'CommunityFeaturesToggle',
     KEY_LANE_DEPARTURE_WARNING_ENABLED: 'IsLdwEnabled',
     KEY_LANE_CHANGE_ENABLED: 'LaneChangeEnabled',
+    KEY_IS_DRIVER_VIEW_ENABLED: 'IsDriverViewEnabled',
+    KEY_IS_RHD: 'IsRHD',
+    KEY_IS_OFFROAD: 'IsOffroad',
 };

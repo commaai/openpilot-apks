@@ -19,6 +19,7 @@ export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
 export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
 export const ACTION_UPDATE_IS_AVAILABLE_CHANGED = 'ACTION_UPDATE_IS_AVAILABLE_CHANGED';
 export const ACTION_LAST_ROUTE_NAME_CHANGED = 'ACTION_LAST_ROUTE_NAME_CHANGED';
+export const ACTION_IS_OFFROAD_CHANGED = 'ACTION_IS_OFFROAD_CHANGED';
 
 export function thermalDataChanged(thermalData) {
     return async (dispatch, getState) => {
@@ -31,6 +32,7 @@ export function thermalDataChanged(thermalData) {
         });
 
         if (oldThermal.started === true && thermalData.started === false) {
+            dispatch({type: ACTION_IS_OFFROAD_CHANGED, payload: { isOffroad: true }});
             await dispatch(updateLastRouteName());
             await Layout.emitSidebarExpanded();
             await dispatch(updateUpdateIsAvailable());
@@ -43,7 +45,9 @@ export function thermalDataChanged(thermalData) {
                 dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
             }
         } else if (oldThermal.started === false && thermalData.started === true) {
+            dispatch({type: ACTION_IS_OFFROAD_CHANGED, payload: { isOffroad: false }});
             ChffrPlus.closeActivites();
+
         }
     }
 }
