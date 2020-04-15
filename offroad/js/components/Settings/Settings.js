@@ -10,6 +10,7 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import ChffrPlus from '../../native/ChffrPlus';
+import Layout from '../../native/Layout';
 import UploadProgressTimer from '../../timers/UploadProgressTimer';
 import { formatSize } from '../../utils/bytes';
 import { mpsToKph, mpsToMph, kphToMps, mphToMps } from '../../utils/conversions';
@@ -18,7 +19,6 @@ import { resetToLaunch } from '../../store/nav/actions';
 
 import {
     updateSshEnabled,
-    updateSidebarCollapsed,
 } from '../../store/host/actions';
 import {
     deleteParam,
@@ -98,8 +98,7 @@ class Settings extends Component {
     }
 
     async componentWillUnmount() {
-        await this.props.handleSidebarExpanded();
-        await ChffrPlus.emitSidebarExpanded();
+        await Layout.emitSidebarExpanded();
         UploadProgressTimer.stop();
     }
 
@@ -112,10 +111,8 @@ class Settings extends Component {
 
     handlePressedBack() {
         const { route } = this.state;
-        this.props.handleSidebarExpanded();
         if (route == SettingsRoutes.PRIMARY) {
-            ChffrPlus.sendBroadcast("ai.comma.plus.offroad.NAVIGATED_FROM_SETTINGS");
-            this.props.navigateHome();
+            this.props.goBack();
         } else {
             this.handleNavigatedFromMenu(SettingsRoutes.PRIMARY);
         }
@@ -731,6 +728,8 @@ class Settings extends Component {
                     <TextInput
                         style={ Styles.githubUsernameInput }
                         onChangeText={ (text) => this.setState({ githubUsername: text, authKeysUpdateState: null })}
+                        onFocus={ () => Layout.emitSidebarCollapsed() }
+                        onBlur={ () => Layout.emitSidebarExpanded() }
                         value={ githubUsername }
                         ref={ ref => this.githubInput = ref }
                         underlineColorAndroid='transparent'
@@ -842,22 +841,19 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     dispatch,
-    navigateHome: async () => {
-        await dispatch(updateSidebarCollapsed(false));
+    goBack: async () => {
         await dispatch(resetToLaunch());
-        await ChffrPlus.emitHomePress();
+        await Layout.goBack();
     },
     openPairing: () => {
         dispatch(NavigationActions.navigate({ routeName: 'SetupQr' }));
     },
     openWifiSettings: async () => {
-        await dispatch(updateSidebarCollapsed(true));
         await dispatch(NavigationActions.navigate({ routeName: 'SettingsWifi' }));
-        ChffrPlus.emitSidebarCollapsed();
+        Layout.emitSidebarCollapsed();
     },
     openTetheringSettings: async () => {
-        await dispatch(updateSidebarCollapsed(true));
-        ChffrPlus.emitSidebarCollapsed();
+        Layout.emitSidebarCollapsed();
         ChffrPlus.openTetheringSettings();
     },
     reboot: () => {
@@ -937,14 +933,6 @@ const mapDispatchToProps = dispatch => ({
     },
     refreshParams: () => {
         dispatch(refreshParams());
-    },
-    handleSidebarCollapsed: async () => {
-        await dispatch(updateSidebarCollapsed(true));
-        ChffrPlus.emitSidebarCollapsed();
-    },
-    handleSidebarExpanded: async () => {
-        await dispatch(updateSidebarCollapsed(false));
-        ChffrPlus.emitSidebarExpanded();
     },
 });
 

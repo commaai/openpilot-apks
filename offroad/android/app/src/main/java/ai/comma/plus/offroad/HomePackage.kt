@@ -27,6 +27,9 @@ class HomePackage : MainReactPackage() {
                 }),
                 ModuleSpec.nativeModuleSpec(CellularModule::class.java, {
                     CellularModule(context!!)
+                }),
+                ModuleSpec.nativeModuleSpec(LayoutModule::class.java, {
+                    LayoutModule(context!!)
                 })
         )
 

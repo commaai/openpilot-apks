@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
-import ChffrPlus from '../../native/ChffrPlus';
+import Layout from '../../native/Layout';
 
 import { View } from 'react-native';
 
 import X from '../../themes';
 import SetupWifi from '../SetupWifi';
-import { updateSidebarCollapsed } from '../../store/host/actions';
 
 class SettingsWifi extends Component {
     static navigationOptions = {
@@ -15,7 +14,7 @@ class SettingsWifi extends Component {
     }
 
     async componentWillUnmount() {
-        await this.props.handleSidebarExpanded();
+        await Layout.emitSidebarExpanded();
     }
 
     render() {
@@ -38,13 +37,8 @@ function mapDispatchToProps(dispatch) {
                     NavigationActions.navigate({ routeName: 'Settings' })
                 ]
             }));
-            await dispatch(updateSidebarCollapsed(false));
-            ChffrPlus.emitSidebarExpanded();
+            Layout.emitSidebarExpanded();
         },
-        handleSidebarExpanded: async () => {
-            await dispatch(updateSidebarCollapsed(false));
-            await ChffrPlus.emitSidebarExpanded();
-        }
     }
 }
 

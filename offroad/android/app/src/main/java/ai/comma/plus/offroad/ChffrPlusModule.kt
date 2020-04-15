@@ -41,34 +41,24 @@ import ai.comma.openpilot.cereal.Log.UiLayoutState
  */
 class ChffrPlusModule(val ctx: ReactApplicationContext) :
         ReactContextBaseJavaModule(ctx),
-        HomeButtonReceiverDelegate,
         NavDestinationPollerDelegate,
-        SettingsClickReceiverDelegate,
         ThermalPollerDelegate {
     val WIFI_STATE_EVENT_NAME = "WIFI_STATE_CHANGED"
     val SIM_STATE_EVENT_NAME = "SIM_STATE_CHANGED"
-
-    private var homeBtnReceiver: HomeButtonReceiver? = null
+    enum class ActivityRequestCode(val code: Int) {
+        WIFI_SETTINGS(0),
+        BLUETOOTH_SETTINGS(1),
+        TETHERING_SETTINGS(2),
+        CELLULAR_SETTINGS(3),
+        DATE_SETTINGS(4)
+    }
     private var networkMonitor: NetworkMonitor? = null
-    private var navDestinationPoller: NavDestinationPoller? = null
-    private var settingsClickReceiver: SettingsClickReceiver? = null
     private var thermalPoller: ThermalPoller? = null
-
-    var msgqCtx: ai.comma.messaging.Context? = null
-    var uiLayoutSock: ai.comma.messaging.PubSocket? = null
-    var activeApp: UiLayoutState.App? = UiLayoutState.App.HOME
-    var sidebarCollapsed: Boolean = false
 
     override fun getName(): String = "ChffrPlus"
 
     override fun initialize() {
         super.initialize()
-
-        homeBtnReceiver = HomeButtonReceiver(this)
-        ctx.registerReceiver(homeBtnReceiver, HomeButtonReceiver.pressIntentFilter)
-
-        settingsClickReceiver = SettingsClickReceiver(this)
-        ctx.registerReceiver(settingsClickReceiver, SettingsClickReceiver.pressIntentFilter)
 
         networkMonitor = NetworkMonitor()
         val filter = IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION)
@@ -76,42 +66,17 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
         ctx.registerReceiver(networkMonitor, filter)
 
-        navDestinationPoller = NavDestinationPoller(this)
-//        navDestinationPoller!!.start()
-
         thermalPoller = ThermalPoller(this)
         thermalPoller!!.start()
-
-        msgqCtx = ai.comma.messaging.Context()
-        uiLayoutSock = msgqCtx!!.pubSocket("uiLayoutState")
     }
 
     override fun onCatalystInstanceDestroy() {
         super.onCatalystInstanceDestroy()
-
-        Log.d("offroad", "catalyst destroyed")
-        ctx.unregisterReceiver(homeBtnReceiver)
         ctx.unregisterReceiver(networkMonitor)
-        ctx.unregisterReceiver(settingsClickReceiver)
-
-//        navDestinationPoller!!.stop()
         thermalPoller!!.stop()
     }
 
-    fun updateUiLayoutState() {
-        synchronized(this) {
-            val log = LogEvent()
-            val uiLayout = log.root.initUiLayoutState()
-            uiLayout.setSidebarCollapsed(sidebarCollapsed)
-            uiLayout.activeApp = activeApp
 
-            val out = ByteArrayOutputStream()
-            Serialize.write(Channels.newChannel(out), log.msg)
-            val bytes = out.toByteArray()
-
-            uiLayoutSock!!.send(bytes)
-        }
-    }
 
     override fun onThermalDataChanged(thermalSample: ThermalSample) {
         ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -123,69 +88,15 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
                 .emit("onDestinationChanged", destination.toWritableMap())
     }
 
-    override fun onHomePress() {
-        activeApp = UiLayoutState.App.HOME
-        updateUiLayoutState()
-        ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                .emit("onHomePress", WritableNativeMap())
-    }
-
-    override fun onSettingsClicked() {
-        activeApp = UiLayoutState.App.SETTINGS
-        updateUiLayoutState()
-        ctx.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                .emit("onSettingsClick", WritableNativeMap())
-    }
-
-    fun onSidebarExpanded() {
-        sidebarCollapsed = false;
-        updateUiLayoutState();
-    }
-
-    fun onSidebarCollapsed() {
-        sidebarCollapsed = true;
-        updateUiLayoutState();
-    }
-
-    private fun startActivityWithIntent(intent: Intent) {
+    private fun startActivityWithIntent(intent: Intent, code: Int) {
         val currentActivity = currentActivity
 
         if (currentActivity != null) {
-            currentActivity.startActivity(intent)
+            currentActivity.startActivityForResult(intent, code)
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             reactApplicationContext.startActivity(intent)
         }
-    }
-
-    @ReactMethod
-    fun emitHomePress() {
-        if (activeApp != UiLayoutState.App.HOME) {
-            onHomePress()
-        }
-    }
-
-    @ReactMethod
-    fun emitSidebarCollapsed() {
-        onSidebarCollapsed()
-    }
-
-    @ReactMethod
-    fun emitSidebarExpanded() {
-        onSidebarExpanded()
-    }
-
-    @ReactMethod
-    fun sendBroadcast(action: String) {
-        val intent = Intent(action)
-        currentActivity?.sendBroadcast(intent)
-    }
-
-    @ReactMethod
-    fun isNavAvailable(promise: Promise) {
-        val pm = reactApplicationContext.packageManager
-        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA).map { it.packageName }
-        promise.resolve(packages.contains("com.waze"))
     }
 
     @ReactMethod
@@ -207,6 +118,15 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
                 promise.resolve(kbps)
             }
         }, 1000)
+    }
+
+    @ReactMethod
+    fun closeActivites() {
+        ActivityRequestCode.values().forEach {
+            try {
+                currentActivity?.finishActivity(it.code)
+            } catch(e: Exception) {}
+        }
     }
 
     @ReactMethod
@@ -266,14 +186,14 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     fun openWifiSettings() {
         val intent = Intent(WifiManager.ACTION_PICK_WIFI_NETWORK)
         intent.putExtra("extra_prefs_show_button_bar", true)
-        startActivityWithIntent(intent)
+        startActivityWithIntent(intent, ActivityRequestCode.WIFI_SETTINGS.code)
     }
 
     @ReactMethod
     fun openBluetoothSettings() {
         val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
         intent.putExtra("extra_prefs_show_button_bar", true)
-        startActivityWithIntent(intent)
+        startActivityWithIntent(intent, ActivityRequestCode.BLUETOOTH_SETTINGS.code)
     }
 
     @ReactMethod
@@ -281,21 +201,21 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         val intent = Intent("android.intent.action.MAIN")
         intent.component = ComponentName("com.android.settings", "com.android.settings.TetherSettings")
         intent.putExtra("extra_prefs_show_button_bar", true)
-        startActivityWithIntent(intent)
+        startActivityWithIntent(intent, ActivityRequestCode.TETHERING_SETTINGS.code)
     }
 
     @ReactMethod
     fun openCellularSettings() {
         val intent = Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS)
         intent.putExtra("extra_prefs_show_button_bar", true)
-        startActivityWithIntent(intent)
+        startActivityWithIntent(intent, ActivityRequestCode.CELLULAR_SETTINGS.code)
     }
 
     @ReactMethod
     fun openDateTimeSettings() {
         val intent = Intent(Settings.ACTION_DATE_SETTINGS)
         intent.putExtra("extra_prefs_show_button_bar", true)
-        startActivityWithIntent(intent)
+        startActivityWithIntent(intent, ActivityRequestCode.DATE_SETTINGS.code)
     }
 
     @ReactMethod

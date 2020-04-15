@@ -1,10 +1,6 @@
 import { StackNavigator } from '../../navigators/StackNavigator';
 import Logging from '../../native/Logging';
-
-const getCurrentRouteName = (state) => {
-  const route = state.routes[state.index];
-  return typeof route.index === 'undefined' ? route.routeName : getCurrentRouteName(route);
-}
+import { getCurrentRouteName } from '../../utils/nav';
 
 export default (state, action) => {
   const nextState = StackNavigator.router.getStateForAction(action, state);

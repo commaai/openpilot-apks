@@ -18,11 +18,12 @@ import { NetworkInfo } from 'react-native-network-info';
 
 import Logging from '../../native/Logging';
 import WifiModule from '../../native/Wifi';
-import { updateConnectionState, updateSidebarCollapsed } from '../../store/host/actions';
+import { updateConnectionState } from '../../store/host/actions';
 import { resetToLaunch } from '../../store/nav/actions';
 import { Params } from '../../config';
 import X from '../../themes';
 import ChffrPlus from '../../native/ChffrPlus';
+import Layout from '../../native/Layout';
 import Styles from './SetupWifiStyles';
 
 const SECURITY_UNSECURED = 'Unsecured';
@@ -428,32 +429,26 @@ class SetupWifi extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {}
-}
-
 const mapDispatchToProps = dispatch => ({
     handleSetupWifiMoreOptionsPressed: () => {
         ChffrPlus.openWifiSettings();
     },
     handleSetupWifiCompleted: async (hasBackButton) => {
-        await dispatch(updateSidebarCollapsed(false));
         await dispatch(updateConnectionState(true));
         await dispatch(resetToLaunch());
-        ChffrPlus.emitSidebarExpanded();
+        Layout.emitSidebarExpanded();
         if (hasBackButton) {
-            ChffrPlus.emitHomePress();
+            Layout.emitHomePress();
         }
     },
     handleSetupWifiSkip: async (hasBackButton) => {
         await ChffrPlus.writeParam(Params.KEY_HAS_COMPLETED_SETUP, "1");
-        await dispatch(updateSidebarCollapsed(false));
         await dispatch(resetToLaunch());
-        ChffrPlus.emitSidebarExpanded();
+        Layout.emitSidebarExpanded();
         if (hasBackButton) {
-            ChffrPlus.emitHomePress();
+            Layout.emitHomePress();
         }
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SetupWifi);
+export default connect(null, mapDispatchToProps)(SetupWifi);

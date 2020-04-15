@@ -11,9 +11,10 @@ let subscription;
 
 function onSettingsPress(dispatch) {
     return () => {
+        dispatch(NavigationActions.navigate({ routeName: 'Settings', key: null }));
         checkHasCompletedSetup().then((hasCompletedSetup) => {
-            if (hasCompletedSetup) {
-                dispatch(NavigationActions.navigate({ routeName: 'Settings', key: null }));
+            if (!hasCompletedSetup) {
+                dispatch(NavigationActions.back({ key: null }));
             }
         });
     }

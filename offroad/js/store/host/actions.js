@@ -3,6 +3,7 @@ import { AsyncStorage } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import { request as Request, devices as Devices } from '@commaai/comma-api';
 import ChffrPlus from '../../native/ChffrPlus';
+import Layout from '../../native/Layout';
 import Geocoder from '../../native/Geocoder';
 import { Params } from '../../config';
 
@@ -18,7 +19,6 @@ export const ACTION_ACCOUNT_CHANGED = 'ACTION_ACCOUNT_CHANGED';
 export const ACTION_DEVICE_STATS_CHANGED = 'ACTION_DEVICE_STATS_CHANGED';
 export const ACTION_UPDATE_IS_AVAILABLE_CHANGED = 'ACTION_UPDATE_IS_AVAILABLE_CHANGED';
 export const ACTION_LAST_ROUTE_NAME_CHANGED = 'ACTION_LAST_ROUTE_NAME_CHANGED';
-export const ACTION_SIDEBAR_TOGGLED = 'ACTION_SIDEBAR_TOGGLED';
 
 export function thermalDataChanged(thermalData) {
     return async (dispatch, getState) => {
@@ -32,17 +32,18 @@ export function thermalDataChanged(thermalData) {
 
         if (oldThermal.started === true && thermalData.started === false) {
             await dispatch(updateLastRouteName());
-            await dispatch(updateSidebarCollapsed(false));
-            await ChffrPlus.emitSidebarExpanded();
-            dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
+            await Layout.emitSidebarExpanded();
+            await dispatch(updateUpdateIsAvailable());
             Geocoder.requestLocationUpdate();
             dispatch(fetchDeviceStats());
-            dispatch(updateUpdateIsAvailable());
-        } else if (oldThermal.started === false && thermalData.started === true) {
-            if (oldRoute !== 'Home') {
-                await dispatch(updateSidebarCollapsed(false));
-                await ChffrPlus.emitHomePress();
+
+            if (getState().host.updateIsAvailable) {
+                dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt' }));
+            } else {
+                dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
             }
+        } else if (oldThermal.started === false && thermalData.started === true) {
+            ChffrPlus.closeActivites();
         }
     }
 }
@@ -75,17 +76,6 @@ export function updateSimState() {
         dispatch({
             type: ACTION_SIM_STATE_CHANGED,
             simState,
-        });
-    }
-}
-
-export function updateNavAvailability() {
-    return async dispatch => {
-        const isNavAvailable = await ChffrPlus.isNavAvailable();
-
-        dispatch({
-            type: ACTION_NAV_AVAILABILITY_CHANGED,
-            isNavAvailable,
         });
     }
 }
@@ -182,14 +172,5 @@ export function refreshDeviceInfo() {
             type: ACTION_DEVICE_REFRESHED,
             device,
         })
-    }
-}
-
-export function updateSidebarCollapsed(sidebarCollapsed) {
-    return async dispatch => {
-        dispatch({
-            type: ACTION_SIDEBAR_TOGGLED,
-            payload: { sidebarCollapsed }
-        });
     }
 }
