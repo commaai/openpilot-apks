@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.facebook.react.ReactApplication;
-import io.sentry.RNSentryPackage;
 import com.horcrux.svg.SvgPackage;
 import com.pusherman.networkinfo.RNNetworkInfoPackage;
 

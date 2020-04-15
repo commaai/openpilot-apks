@@ -170,7 +170,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(':@sentry_react-native')
     implementation 'org.webkit:android-jsc:r250230'
     implementation project(':@sentry-react-native')
     compile project(':react-native-fetch-blob')
