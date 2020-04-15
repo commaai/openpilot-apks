@@ -265,8 +265,7 @@ class Settings extends Component {
                 Passive: isPassive,
                 IsLdwEnabled: isLaneDepartureWarningEnabled,
                 LaneChangeEnabled: laneChangeEnabled,
-                IsOffroad: isOffroad,
-            }
+            },
         } = this.props;
         const { expandedCell, speedLimitOffsetInt } = this.state;
         return (
@@ -469,8 +468,8 @@ class Settings extends Component {
             params: {
                 DongleId: dongleId,
                 Passive: isPassive,
-                IsOffroad: isOffroad,
             },
+            isOffroad,
         } = this.props;
         const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
         return (
@@ -514,7 +513,7 @@ class Settings extends Component {
                             <X.Button
                                 size='tiny'
                                 color='settingsDefault'
-                                isDisabled={ !parseInt(isOffroad) }
+                                isDisabled={ !isOffroad }
                                 onPress={ this.props.setIsDriverViewEnabled  }
                                 style={ { minWidth: '100%' } }>
                                 Preview
@@ -831,6 +830,7 @@ const mapStateToProps = state => ({
     simState: state.host.simState,
     wifiState: state.host.wifiState,
     isPaired: state.host.device && state.host.device.is_paired,
+    isOffroad: state.host.isOffroad,
 
     // Uploader
     txSpeedKbps: parseInt(state.uploads.txSpeedKbps),

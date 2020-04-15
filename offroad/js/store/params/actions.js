@@ -42,8 +42,7 @@ const PARAMS = [
   "CommunityFeaturesToggle",
   "IsLdwEnabled",
   "LaneChangeEnabled",
-  "IsRHD",
-  "IsOffroad",
+  "IsRHD"
 ].concat(ALERT_PARAMS);
 
 export function refreshParams(params) {

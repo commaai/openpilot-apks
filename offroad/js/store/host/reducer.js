@@ -10,6 +10,7 @@ import {
     ACTION_DEVICE_STATS_CHANGED,
     ACTION_UPDATE_IS_AVAILABLE_CHANGED,
     ACTION_LAST_ROUTE_NAME_CHANGED,
+    ACTION_IS_OFFROAD_CHANGED,
 } from './actions';
 import SimState from './SimState';
 
@@ -28,6 +29,7 @@ const initialHostState = {
     updateIsAvailable: false,
     updateReleaseNotes: "",
     lastRouteName: "",
+    isOffroad: true,
 };
 
 export default (state = initialHostState, action) => {
@@ -88,6 +90,11 @@ export default (state = initialHostState, action) => {
             return {
                 ...state,
                 lastRouteName: action.payload.lastRouteName,
+            }
+        case ACTION_IS_OFFROAD_CHANGED:
+            return {
+                ...state,
+                isOffroad: action.payload.isOffroad,
             }
         default:
             return state;
