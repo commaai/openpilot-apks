@@ -522,7 +522,7 @@ const mapStateToProps = (state) => {
     return {
         username: state.host.account && state.host.account.username,
         commaPoints: state.host.account && state.host.account.points,
-        hasPrime: state.host.device && state.host.device.sim_id !== null,
+        hasPrime: state.host.device && state.host.device.prime,
         isPaired: state.host.device && state.host.device.is_paired,
         latitude: state.environment.latitude,
         longitude: state.environment.longitude,
