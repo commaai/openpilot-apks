@@ -206,7 +206,7 @@ class Settings extends Component {
             },
             {
                 icon: Icons.network,
-                title: 'Network',
+                title: 'WiFi',
                 context: connectivity,
                 route: SettingsRoutes.NETWORK,
             },
