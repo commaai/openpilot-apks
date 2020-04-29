@@ -126,6 +126,7 @@ class Settings extends Component {
 
     handlePressedResetCalibration = async () => {
         this.props.deleteParam(Params.KEY_CALIBRATION_PARAMS);
+        this.props.deleteParam(Params.KEY_LIVE_PARAMETERS);
         this.setState({ calibration: null });
         Alert.alert('Reboot', 'Resetting calibration requires a reboot.', [
             { text: 'Later', onPress: () => {}, style: 'cancel' },
