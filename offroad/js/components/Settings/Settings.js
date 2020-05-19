@@ -55,6 +55,7 @@ const Icons = {
     road: require('../../img/icon_road.png'),
 }
 
+
 class Settings extends Component {
     static navigationOptions = {
         header: null,
@@ -451,6 +452,7 @@ class Settings extends Component {
         )
     }
 
+
     renderDeviceSettings() {
         const {
             expandedCell,
@@ -464,10 +466,12 @@ class Settings extends Component {
             params: {
                 DongleId: dongleId,
                 Passive: isPassive,
+                CalibrationParams: calibrationParams,
             },
             isOffroad,
         } = this.props;
         const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
+
         return (
             <View style={ Styles.settings }>
                 <View style={ Styles.settingsHeader }>
@@ -486,7 +490,7 @@ class Settings extends Component {
                             type='custom'
                             title='Camera Calibration'
                             iconSource={ Icons.calibration }
-                            description='The calibration algorithm is always active on the road facing camera. Resetting calibration is only advised when the device reports an invalid calibration alert or when the device is remounted in a different position.'
+                            description={calibrationParams.toString()}
                             isExpanded={ expandedCell == 'calibration' }
                             handleExpanded={ () => this.handleExpanded('calibration') }>
                             <X.Button
