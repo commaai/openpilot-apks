@@ -451,6 +451,31 @@ class Settings extends Component {
         )
     }
 
+    calib_description(params){
+      var intro = 'The calibration algorithm is always active and determines the orientation of the device relative to your car. ';
+      var end = 'Openpilot requires the pitch calibration to be within 5° and yaw calibration within 4°.';
+      var calib_json = JSON.parse(params);
+      if (calib_json.hasOwnProperty('calib_radians')) {
+        var calibArr = (calib_json.calib_radians).toString().split(',');
+        var pi = Math.PI;
+        var pitch = parseFloat(calibArr[1]) * (180/pi)
+        var yaw = parseFloat(calibArr[2]) * (180/pi)
+        if (pitch > 0) {
+          var pitch_str = Math.abs(pitch).toFixed(1).concat('° up')
+        } else {
+          var pitch_str = Math.abs(pitch).toFixed(1).concat('° down')
+        }
+        if (yaw > 0) {
+          var yaw_str = Math.abs(yaw).toFixed(1).concat('° right')
+        } else {
+          var yaw_str = Math.abs(yaw).toFixed(1).concat('° left')
+        }
+        intro = intro.concat('Your device is pointed ', pitch_str, ' and ', yaw_str, '. ')
+      }
+      full_msg = intro.concat(end);
+      return full_msg;
+    }
+
     renderDeviceSettings() {
         const {
             expandedCell,
@@ -487,7 +512,7 @@ class Settings extends Component {
                             type='custom'
                             title='Camera Calibration'
                             iconSource={ Icons.calibration }
-                            description={ calibrationParams }
+                            description={ this.calib_description(calibrationParams) }
                             isExpanded={ expandedCell == 'calibration' }
                             handleExpanded={ () => this.handleExpanded('calibration') }>
                             <X.Button
