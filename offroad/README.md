@@ -15,7 +15,7 @@ Note: CLI builds fail if the gradle daemon is running. Android Studio's gradle d
 
 # Building for debug
 
-Connect EON ethernet with smays. Set your static IP to 192.168.5.19 (see RN_DEBUG_HOST in app/build.gradle)
+Connect EON ethernet with smays. Set your static IP to 192.168.5.19 (see RN_DEBUG_HOST in android/app/build.gradle)
 
 ```
 Debug build with debug, hot reloadable JS bundle:
