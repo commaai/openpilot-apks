@@ -464,6 +464,7 @@ class Settings extends Component {
             params: {
                 DongleId: dongleId,
                 Passive: isPassive,
+                CalibrationParams: calibrationParams,
             },
             isOffroad,
         } = this.props;
@@ -486,7 +487,7 @@ class Settings extends Component {
                             type='custom'
                             title='Camera Calibration'
                             iconSource={ Icons.calibration }
-                            description='The calibration algorithm is always active on the road facing camera. Resetting calibration is only advised when the device reports an invalid calibration alert or when the device is remounted in a different position.'
+                            description={ calibrationParams }
                             isExpanded={ expandedCell == 'calibration' }
                             handleExpanded={ () => this.handleExpanded('calibration') }>
                             <X.Button
