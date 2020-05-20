@@ -1,12 +1,16 @@
 version: 2
 jobs:
   sdk:
+    machine:
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
       - run:
           name: Build docker SDK image
           command: docker build -t apks -f docker/Dockerfile docker
   offroad:
+    machine:
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
       - run:
