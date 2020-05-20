@@ -452,8 +452,8 @@ class Settings extends Component {
     }
 
     calib_description(params){
-      var intro = 'The calibration algorithm is always active and determines the orientation of the device relative to your car.\n';
-      var end = 'openpilot requires the up/down calibration to be within 5° and left/right calibration within 4°.';
+      var text = 'The calibration algorithm is always active and determines the orientation of the device relative to your car, ';
+      text = text.concat('openpilot requires the up/down calibration to be within 5° and left/right calibration within 4°.';
       var calib_json = JSON.parse(params);
       if (calib_json.hasOwnProperty('calib_radians')) {
         var calibArr = (calib_json.calib_radians).toString().split(',');
@@ -470,10 +470,9 @@ class Settings extends Component {
         } else {
           var yaw_str = Math.abs(yaw).toFixed(1).concat('° left')
         }
-        intro = intro.concat('Your device is pointed ', pitch_str, ' and ', yaw_str, '. ')
+        text = text.concat('\n\nYour device is pointed ', pitch_str, ' and ', yaw_str, '. ')
       }
-      full_msg = intro.concat(end);
-      return full_msg;
+      return text;
     }
 
     renderDeviceSettings() {
