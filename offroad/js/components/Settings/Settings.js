@@ -453,7 +453,7 @@ class Settings extends Component {
 
     calib_description(params){
       var text = 'The calibration algorithm is always active and determines the orientation of the device relative to your car, ';
-      text = text.concat('openpilot requires the up/down calibration to be within 5° and left/right calibration within 4°.';
+      text = text.concat('openpilot requires the up/down calibration to be within 5° and left/right calibration within 4°.');
       var calib_json = JSON.parse(params);
       if (calib_json.hasOwnProperty('calib_radians')) {
         var calibArr = (calib_json.calib_radians).toString().split(',');
