@@ -451,6 +451,29 @@ class Settings extends Component {
         )
     }
 
+    calib_description(params){
+      var text = 'openpilot requires the device to be mounted within 4° left or right and within 5° up or down. openpilot is continuously calibrating, resetting is rarely required.';
+      var calib_json = JSON.parse(params);
+      if (calib_json.hasOwnProperty('calib_radians')) {
+        var calibArr = (calib_json.calib_radians).toString().split(',');
+        var pi = Math.PI;
+        var pitch = parseFloat(calibArr[1]) * (180/pi)
+        var yaw = parseFloat(calibArr[2]) * (180/pi)
+        if (pitch > 0) {
+          var pitch_str = Math.abs(pitch).toFixed(1).concat('° up')
+        } else {
+          var pitch_str = Math.abs(pitch).toFixed(1).concat('° down')
+        }
+        if (yaw > 0) {
+          var yaw_str = Math.abs(yaw).toFixed(1).concat('° right')
+        } else {
+          var yaw_str = Math.abs(yaw).toFixed(1).concat('° left')
+        }
+        text = text.concat('\n\nYour device is pointed ', pitch_str, ' and ', yaw_str, '. ')
+      }
+      return text;
+    }
+
     renderDeviceSettings() {
         const {
             expandedCell,
@@ -464,6 +487,7 @@ class Settings extends Component {
             params: {
                 DongleId: dongleId,
                 Passive: isPassive,
+                CalibrationParams: calibrationParams,
             },
             isOffroad,
         } = this.props;
@@ -486,7 +510,7 @@ class Settings extends Component {
                             type='custom'
                             title='Camera Calibration'
                             iconSource={ Icons.calibration }
-                            description='The calibration algorithm is always active on the road facing camera. Resetting calibration is only advised when the device reports an invalid calibration alert or when the device is remounted in a different position.'
+                            description={ this.calib_description(calibrationParams) }
                             isExpanded={ expandedCell == 'calibration' }
                             handleExpanded={ () => this.handleExpanded('calibration') }>
                             <X.Button

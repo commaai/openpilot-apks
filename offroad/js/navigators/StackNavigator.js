@@ -16,7 +16,6 @@ import SetupWifi from '../components/SetupWifi';
 import SetupQr from '../components/SetupQr';
 import Onboarding from '../components/training/Onboarding';
 import UpdatePrompt from '../components/UpdatePrompt';
-import DriveRating from '../components/DriveRating';
 
 export const StackNavigator = RNStackNavigator({
     Loader: { screen: Loader },
@@ -28,7 +27,6 @@ export const StackNavigator = RNStackNavigator({
     Settings: { screen: Settings },
     SettingsWifi: { screen: SettingsWifi },
     UpdatePrompt: { screen: UpdatePrompt },
-    DriveRating: { screen: DriveRating },
 }, {
     transitionConfig : () => ({
         transitionSpec: {

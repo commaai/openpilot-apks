@@ -41,8 +41,6 @@ export function thermalDataChanged(thermalData) {
 
             if (getState().host.updateIsAvailable) {
                 dispatch(NavigationActions.navigate({ routeName: 'UpdatePrompt' }));
-            } else {
-                dispatch(NavigationActions.navigate({ routeName: 'DriveRating' }));
             }
         } else if (oldThermal.started === false && thermalData.started === true) {
             dispatch({type: ACTION_IS_OFFROAD_CHANGED, payload: { isOffroad: false }});
