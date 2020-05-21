@@ -452,7 +452,7 @@ class Settings extends Component {
     }
 
     calib_description(params){
-      var text = 'openpilot requires the device to be mounted within 4° in yaw (left/right) and within 5° in pitch (up/down). The calibration algorithm is always active, resetting calibration is rarely required.';
+      var text = 'openpilot requires the device to be mounted within 4° left or right and within 5° up or down. openpilot is continuously calibrating, resetting is rarely required.';
       var calib_json = JSON.parse(params);
       if (calib_json.hasOwnProperty('calib_radians')) {
         var calibArr = (calib_json.calib_radians).toString().split(',');
