@@ -1,0 +1,17 @@
+name: openpilot tests
+on: [push, pull_request]
+
+env:
+  RUN: docker run --rm tmppilot /bin/sh -c
+  BUILD: |
+      docker pull $(grep -ioP '(?<=^from)\s+\S+' Dockerfile) || true
+      docker pull docker.io/commaai/openpilot-apks:latest || true
+      docker build --cache-from docker.io/commaai/openpilot-apks:latest -t tmppilot -f Dockerfile .
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-16.04
+    steps:
+      - run: echo "test"
+
