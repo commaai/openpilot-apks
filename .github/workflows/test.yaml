@@ -2,16 +2,44 @@ name: openpilot tests
 on: [push, pull_request]
 
 env:
-  RUN: docker run --rm tmppilot /bin/sh -c
+  RUN: docker run --rm apks /bin/sh -c
   BUILD: |
-      docker pull $(grep -ioP '(?<=^from)\s+\S+' Dockerfile) || true
-      docker pull docker.io/commaai/openpilot-apks:latest || true
-      docker build --cache-from docker.io/commaai/openpilot-apks:latest -t tmppilot -f Dockerfile .
-
 jobs:
-  test:
-    name: test
+  docker_push:
+    name: docker push
+    runs-on: ubuntu-16.04
+    #if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'commaai/openpilot-apks'
+    if: false
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: |
+          #docker pull $(grep -ioP '(?<=^from)\s+\S+' Dockerfile) || true
+          #docker pull docker.io/commaai/openpilot-apks:latest || true
+          #docker build --cache-from docker.io/commaai/openpilot-apks:latest -t apks -f Dockerfile .
+          docker build -t apks -f Dockerfile .
+      - name: Push to dockerhub
+        run: |
+          docker login -u wmelching -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker tag apks docker.io/commaai/openpilot-apks:latest
+          docker push docker.io/commaai/openpilot-apks:latest
+
+  offroad:
+    name: offroad
     runs-on: ubuntu-16.04
     steps:
-      - run: echo "test"
-
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: |
+          #docker pull $(grep -ioP '(?<=^from)\s+\S+' Dockerfile) || true
+          #docker pull docker.io/commaai/openpilot-apks:latest || true
+          #docker build --cache-from docker.io/commaai/openpilot-apks:latest -t apks -f Dockerfile .
+          docker build -t apks -f Dockerfile .
+      - name: Build offroad apk
+        run: docker run --name apks apks /bin/sh -c "cd offroad && ./build.sh"
+      - name: Copy artifacts
+        run: docker cp apks:/tmp/openpilot/apks/offroad/ai.comma.plus.offroad.apk ai.comma.plus.offroad.apk
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ai.comma.plus.offroad.apk
+          path: ai.comma.plus.offroad.apk
