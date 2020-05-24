@@ -1,4 +1,4 @@
-name: openpilot tests
+name: openpilot apk tests
 on: [push, pull_request]
 
 env:
