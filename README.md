@@ -2,7 +2,7 @@
 
 The source code for the APKs that run inside openpilot.
 
-[![CircleCI](https://circleci.com/gh/commaai/openpilot-apks.svg?style=svg)](https://circleci.com/gh/commaai/openpilot-apks)
+[![openpilot apk tests](https://github.com/commaai/openpilot-apks/workflows/openpilot%20apk%20tests/badge.svg)](https://github.com/commaai/openpilot-apks/actions)
 
 ## offroad
 
