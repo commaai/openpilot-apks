@@ -655,7 +655,7 @@ class Settings extends Component {
                             iconSource={ Icons.developer }
                             descriptionExtra={
                               <X.Text color='white' size='tiny'>
-                                  Use features from the open source community that are not maintained or supported by comma.ai and have not been confirmed to meet the standard safety model. These features include community supported cars and community support hardware. Be extra cautious when using these features.{'\n'}
+                                  Use features from the open source community that are not maintained or supported by comma.ai and have not been confirmed to meet the standard safety model. These features include community supported cars and community supported hardware. Be extra cautious when using these features.{'\n'}
                               </X.Text>
                             }
                             isExpanded={ expandedCell == 'communityFeatures' }
