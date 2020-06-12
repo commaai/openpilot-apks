@@ -4,7 +4,6 @@
 #include <libmessaging/messaging.hpp>
 #include <dlfcn.h>
 #include <stdlib.h>
-
 #include "messaging.h"
 
 
@@ -24,32 +23,30 @@ extern "C" JNIEXPORT void JNICALL Java_ai_comma_messaging_Loader_init(JNIEnv *en
     char* messagingLibraryPath = (char*)malloc(strlen(pythonPath) + strlen(messagingLibraryFile) + 1);
     strcpy(messagingLibraryPath, pythonPath);
     strcat(messagingLibraryPath, messagingLibraryFile);
-    const char* libcppPath = "/system/comma/usr/lib/libc++_shared.so";
-    const char* libGnustlPath = "/system/comma/usr/lib/libgnustl_shared.so";
+    std::vector<const char *> libs = {
+        "/system/comma/usr/lib/libc++_shared.so",
+        "/system/comma/usr/lib/libgnustl_shared.so",
+        "/system/comma/usr/lib/libkj-0.6.1.so",
+        "/system/comma/usr/lib/libcapnp-0.6.1.so",
+        messagingLibraryPath, // must be last
+    };
 
-    void* opened = dlopen(libcppPath, RTLD_NOW | RTLD_GLOBAL);
-    if(!opened) {
+    void *opened;
+    for (auto & lib : libs) {
+      opened = dlopen(lib, RTLD_NOW | RTLD_GLOBAL);
+      if (!opened) {
         char *error = dlerror();
-        LOGE ("Error opening libc++_shared ( %s )", (error) ? error : "");
-    } else { LOGE("Opened libc++_shared.so"); }
-
-    opened = dlopen(libGnustlPath, RTLD_NOW | RTLD_GLOBAL);
-    if(!opened) {
-        char *error = dlerror();
-        LOGE ("Error opening libgnustl_shared ( %s )", (error) ? error : "");
-    } else { LOGE("Opened libgnustl_shared.so"); }
-
-    opened = dlopen(messagingLibraryPath, RTLD_NOW | RTLD_GLOBAL);
-    if(!opened) {
-        char *error = dlerror();
-        LOGE ("Error opening %s ( %s )", messagingLibraryPath, (error) ? error : "");
-    } else { LOGE("Opened messaging.so"); }
-    free(messagingLibraryPath);
+        LOGE("Error opening %s (%s)", lib, (error) ? error : "");
+      } else {
+        LOGE("Opened %s", lib);
+      }
+    }
 
     createContext = (fnCreateContext) dlsym(opened, "messaging_context_create");
     createSubSocket = (fnCreateSubSocket) dlsym(opened, "messaging_subsocket_create");
     createPubSocket = (fnCreatePubSocket) dlsym(opened, "messaging_pubsocket_create");
     createPoller = (fnCreatePoller)  dlsym(opened, "messaging_poller_create");
+    free(messagingLibraryPath);
 }
 
 extern "C"
@@ -139,7 +136,7 @@ Java_ai_comma_messaging_SubSocket_nativeConnect(
     SubSocket *sock = (SubSocket*)sockAddr;
     std::string endpointStr = jStringToStdString(env, endpoint);
 
-    sock->connect(ctx, endpointStr, conflate);
+    sock->connect(ctx, endpointStr, "127.0.0.1", conflate);
 }
 
 

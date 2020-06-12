@@ -23,7 +23,7 @@ public:
 
 class SubSocket {
 public:
-  virtual void connect(Context *context, std::string endpoint, bool conflate=false) = 0;
+  virtual int connect(Context *context, std::string endpoint, std::string address, bool conflate=false) = 0;
   virtual void setTimeout(int timeout) = 0;
   virtual Message *receive(bool non_blocking=false) = 0;
   virtual void * getRawSocket() = 0;
@@ -34,7 +34,7 @@ public:
 
 class PubSocket {
 public:
-  virtual void connect(Context *context, std::string endpoint) = 0;
+  virtual int connect(Context *context, std::string endpoint) = 0;
   virtual int sendMessage(Message *message) = 0;
   virtual int send(char *data, size_t size) = 0;
   static PubSocket * create();
