@@ -180,7 +180,7 @@ class Settings extends Component {
                 Version: version,
             },
         } = this.props;
-        const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
+        const software = !!parseInt(isPassive) ? 'dashcam' : 'openpilot';
         let connectivity = 'Disconnected'
         if (wifiState.isConnected && wifiState.ssid) {
             connectivity = wifiState.ssid;
@@ -495,7 +495,7 @@ class Settings extends Component {
             },
             isOffroad,
         } = this.props;
-        const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
+        const software = !!parseInt(isPassive) ? 'dashcam' : 'openpilot';
         return (
             <View style={ Styles.settings }>
                 <View style={ Styles.settingsHeader }>
@@ -633,7 +633,7 @@ class Settings extends Component {
             },
         } = this.props;
         const { expandedCell } = this.state;
-        const software = !!parseInt(isPassive) ? 'chffrplus' : 'openpilot';
+        const software = !!parseInt(isPassive) ? 'dashcam' : 'openpilot';
         return (
             <View style={ Styles.settings }>
                 <View style={ Styles.settingsHeader }>
