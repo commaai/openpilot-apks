@@ -26,8 +26,8 @@ extern "C" JNIEXPORT void JNICALL Java_ai_comma_messaging_Loader_init(JNIEnv *en
     std::vector<const char *> libs = {
         "/system/comma/usr/lib/libc++_shared.so",
         "/system/comma/usr/lib/libgnustl_shared.so",
-        "/system/comma/usr/lib/libkj-0.6.1.so",
-        "/system/comma/usr/lib/libcapnp-0.6.1.so",
+        "/system/comma/usr/lib/libkj.so",
+        "/system/comma/usr/lib/libcapnp.so",
         messagingLibraryPath, // must be last
     };
 
