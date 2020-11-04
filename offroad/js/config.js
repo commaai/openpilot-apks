@@ -33,6 +33,7 @@ export const Params = {
     KEY_OFFROAD_IS_TAKING_SNAPSHOT: 'Offroad_IsTakingSnapshot',
     KEY_OFFROAD_NEOS_UPDATE: 'Offroad_NeosUpdate',
     KEY_OFFROAD_UPDATE_FAILED: 'Offroad_UpdateFailed',
+    KEY_OFFROAD_HARDWARE_UNSUPPORTED: 'Offroad_HardwareUnsupported',
     KEY_COMMUNITY_FEATURES: 'CommunityFeaturesToggle',
     KEY_LANE_DEPARTURE_WARNING_ENABLED: 'IsLdwEnabled',
     KEY_LANE_CHANGE_ENABLED: 'LaneChangeEnabled',
