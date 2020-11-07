@@ -531,7 +531,7 @@ class Settings extends Component {
                             type='custom'
                             title='Driver Camera View'
                             iconSource={ Icons.monitoring }
-                            description='Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (offroad use only)'
+                            description='Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (vehicle must be off)'
                             isExpanded={ expandedCell == 'driver_view_enabled' }
                             handleExpanded={ () => this.handleExpanded('driver_view_enabled') } >
                             <X.Button
