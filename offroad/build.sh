@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/bin/bash -e
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd $DIR
 
@@ -8,12 +8,14 @@ TOOLS="$PWD/../tools"
 CEREAL="$PWD/../../cereal"
 export SENTRY_SKIP_UPLOAD=${SENTRY_SKIP_UPLOAD:-1}
 
+export ANDROID_NDK_HOME="/usr/lib/android-sdk/ndk/19.2.5345600"
+
 if [ ! -d $CEREAL ]; then
   git clone https://github.com/commaai/cereal.git $CEREAL
 fi
 
 pushd $CEREAL
-scons -i
+scons -i -j$(nproc)
 popd
 
 export SENTRY_WIZARD_INTEGRATION=reactNative
@@ -36,11 +38,11 @@ if [ -z "$NOCLEAN" ]; then
   ./gradlew clean
 fi
 if [ -z "$DEBUG" ]; then
-    APK_PATH=app/build/outputs/apk/release/app-release-unsigned.apk
-    ./gradlew assembleRelease
+  APK_PATH=app/build/outputs/apk/release/app-release-unsigned.apk
+  ./gradlew assembleRelease
 else
-    APK_PATH=app/build/outputs/apk/debug/app-debug.apk
-    ./gradlew assembleDebug
+  APK_PATH=app/build/outputs/apk/debug/app-debug.apk
+  ./gradlew assembleDebug
 fi
 
 java -jar $TOOLS/signapk/signapk.jar $TOOLS/signapk/certificate.pem $TOOLS/signapk/key.pk8 $APK_PATH $APK_OUT

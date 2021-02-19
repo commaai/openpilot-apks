@@ -48,7 +48,7 @@ RUN curl -o sdk-tools.zip "https://dl.google.com/android/repository/sdk-tools-li
     unzip -o sdk-tools.zip -d "/usr/lib/android-sdk/" && \
     chmod +x /usr/lib/android-sdk/tools/bin/*
 
-RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27" "extras;android;m2repository" "extras;google;m2repository" "ndk-bundle"
+RUN yes | sdkmanager "platform-tools" "platforms;android-23" "platforms;android-27" "extras;android;m2repository" "extras;google;m2repository" "ndk;19.2.5345600"
 
 # install capnpc-java
 RUN git clone https://github.com/capnproto/capnproto-java.git && cd capnproto-java && make && cp capnpc-java /usr/local/bin/
